@@ -1,0 +1,19 @@
+{
+  "modes": {
+    "resume": {
+      "prompt_template": "[RESUME] {agent_id} resuming autonomous operations."
+    },
+    "cleanup": {
+      "prompt_template": "[CLEANUP] {agent_id} begin system-cleanup sequence."
+    },
+    "captain": {
+      "prompt_template": "[CAPTAIN] {agent_id} taking campaign lead – report status."
+    },
+    "task": {
+      "prompt_template": "[TASK] {agent_id} scan + update task board."
+    },
+    "integrate": {
+      "prompt_template": "[INTEGRATE] {agent_id} run integration tests."
+    }
+  }
+} 
