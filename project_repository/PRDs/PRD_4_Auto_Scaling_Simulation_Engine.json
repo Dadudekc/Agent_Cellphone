@@ -1,0 +1,281 @@
+{
+  "prd_id": "PRD-004",
+  "project_name": "dreamos-sim-engine",
+  "title": "Auto-Scaling Simulation Engine",
+  "objective": "Create a containerized simulation engine that can run \"what-if\" agent scenarios at scale, auto-scaling worker nodes based on queue depth",
+  "background": "To validate new coordination protocols, we need to simulate thousands of agents in parallel",
+  "priority": "high",
+  "complexity": "high",
+  "estimated_duration": "6 weeks",
+  "team_size": 3,
+  
+  "key_features": [
+    {
+      "name": "Message Queue",
+      "description": "Queue: RabbitMQ topics per scenario",
+      "priority": "critical"
+    },
+    {
+      "name": "Auto-Scaling Workers",
+      "description": "Workers: Dockerized sim-agent; auto-scale on Kubernetes HPA",
+      "priority": "critical"
+    },
+    {
+      "name": "Scenario DSL",
+      "description": "Scenario DSL: YAML-based definition of agent behaviors",
+      "priority": "high"
+    },
+    {
+      "name": "Reporting",
+      "description": "Reporting: Aggregate metrics in Grafana",
+      "priority": "high"
+    },
+    {
+      "name": "CLI Interface",
+      "description": "CLI: simctl start|stop|status <scenario>",
+      "priority": "medium"
+    }
+  ],
+  
+  "deliverables": [
+    "Helm charts + HPA config",
+    "Scenario DSL spec + examples",
+    "Worker container + unit tests",
+    "Demo scripts for \"load test\" and \"failure injection\""
+  ],
+  
+  "success_metrics": [
+    {
+      "metric": "scaling_speed",
+      "target": "Scale from 100→5,000 workers in <3 min",
+      "measurement": "minutes"
+    },
+    {
+      "metric": "throughput",
+      "target": "Scenario throughput ≥1M events/hour",
+      "measurement": "events_per_hour"
+    },
+    {
+      "metric": "worker_success_rate",
+      "target": "≥95% worker success rate on nominal runs",
+      "measurement": "percentage"
+    },
+    {
+      "metric": "fail_fast",
+      "target": "Fail-fast on worker crashes",
+      "measurement": "boolean"
+    }
+  ],
+  
+  "technical_requirements": {
+    "infrastructure": {
+      "orchestration": "Kubernetes",
+      "message_queue": "RabbitMQ",
+      "monitoring": "Prometheus + Grafana",
+      "containerization": "Docker"
+    },
+    "scaling_config": {
+      "min_replicas": 10,
+      "max_replicas": 5000,
+      "target_cpu_utilization": 70,
+      "target_memory_utilization": 80,
+      "scale_up_cooldown": "30s",
+      "scale_down_cooldown": "5m"
+    },
+    "scenario_dsl": {
+      "format": "YAML",
+      "components": [
+        "Agent definitions",
+        "Behavior patterns",
+        "Communication protocols",
+        "Failure scenarios"
+      ]
+    }
+  },
+  
+  "development_phases": [
+    {
+      "phase": 1,
+      "name": "Infrastructure Setup",
+      "duration": "2 weeks",
+      "tasks": [
+        "Kubernetes cluster setup",
+        "RabbitMQ deployment",
+        "Prometheus + Grafana setup",
+        "HPA configuration"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Worker Development",
+      "duration": "2 weeks",
+      "tasks": [
+        "Sim-agent container development",
+        "Message queue integration",
+        "Scenario execution logic",
+        "Error handling and recovery"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Scenario DSL",
+      "duration": "1 week",
+      "tasks": [
+        "YAML schema definition",
+        "Scenario parser implementation",
+        "Validation logic",
+        "Example scenarios"
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "CLI & Monitoring",
+      "duration": "1 week",
+      "tasks": [
+        "simctl CLI development",
+        "Grafana dashboard creation",
+        "Demo scripts",
+        "Documentation"
+      ]
+    }
+  ],
+  
+  "architecture": {
+    "components": {
+      "scenario_manager": {
+        "role": "Parse and deploy scenarios",
+        "technology": "Python + Kubernetes API"
+      },
+      "worker_pool": {
+        "role": "Execute agent simulations",
+        "technology": "Docker containers + HPA"
+      },
+      "message_queue": {
+        "role": "Inter-agent communication",
+        "technology": "RabbitMQ with topic exchanges"
+      },
+      "metrics_collector": {
+        "role": "Aggregate simulation data",
+        "technology": "Prometheus + Grafana"
+      }
+    },
+    "data_flow": [
+      "Scenario YAML → Scenario Manager",
+      "Scenario Manager → Kubernetes HPA",
+      "Workers → RabbitMQ → Workers",
+      "Workers → Prometheus → Grafana"
+    ]
+  },
+  
+  "scenario_dsl_spec": {
+    "version": "1.0",
+    "schema": {
+      "scenario": {
+        "name": "string",
+        "description": "string",
+        "agents": "array",
+        "behaviors": "array",
+        "duration": "string",
+        "failure_modes": "array"
+      },
+      "agent": {
+        "id": "string",
+        "type": "string",
+        "initial_state": "object",
+        "behavior_pattern": "string"
+      },
+      "behavior": {
+        "name": "string",
+        "type": "string",
+        "parameters": "object",
+        "triggers": "array"
+      }
+    }
+  },
+  
+  "risk_mitigation": [
+    {
+      "risk": "Resource Exhaustion",
+      "mitigation": [
+        "Resource limits and requests",
+        "Auto-scaling policies",
+        "Circuit breakers",
+        "Graceful degradation"
+      ]
+    },
+    {
+      "risk": "Message Queue Overload",
+      "mitigation": [
+        "Queue partitioning",
+        "Message persistence",
+        "Dead letter queues",
+        "Queue monitoring"
+      ]
+    },
+    {
+      "risk": "Scenario Complexity",
+      "mitigation": [
+        "Scenario validation",
+        "Incremental deployment",
+        "Rollback mechanisms",
+        "Testing environments"
+      ]
+    }
+  ],
+  
+  "testing_strategy": {
+    "unit_tests": [
+      "Worker logic testing",
+      "Scenario parser testing",
+      "Message handling testing"
+    ],
+    "integration_tests": [
+      "End-to-end scenario execution",
+      "Auto-scaling behavior",
+      "Failure recovery"
+    ],
+    "load_tests": [
+      "Large-scale scenario testing",
+      "Performance benchmarking",
+      "Resource utilization testing"
+    ]
+  },
+  
+  "monitoring": {
+    "key_metrics": [
+      "Worker count and scaling events",
+      "Message queue depth",
+      "Scenario execution time",
+      "Error rates and types"
+    ],
+    "alerts": [
+      "Worker count at max capacity",
+      "Queue depth > 1000 messages",
+      "Scenario execution time > 1 hour",
+      "Worker crash rate > 5%"
+    ]
+  },
+  
+  "demo_scenarios": [
+    {
+      "name": "load_test",
+      "description": "Simulate 1000 agents with high communication load",
+      "agents": 1000,
+      "duration": "30 minutes",
+      "expected_behavior": "Auto-scale to handle load"
+    },
+    {
+      "name": "failure_injection",
+      "description": "Inject failures and test recovery",
+      "agents": 100,
+      "duration": "15 minutes",
+      "failure_rate": "10%",
+      "expected_behavior": "Graceful degradation and recovery"
+    }
+  ],
+  
+  "dependencies": ["PRD-003"],
+  "stakeholders": ["platform-team", "devops-team", "agent-coordinator"],
+  "created_date": "2025-06-29",
+  "status": "draft"
+} 

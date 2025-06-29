@@ -1,0 +1,63 @@
+{
+  "name": "Auto-Ingest + ETL Pipeline",
+  "description": "A continuous data ingestion system for log analysis and agent telemetry with automated transformation and reporting capabilities",
+  "requirements": [
+    "Ingest .json logs from /logs directory",
+    "Transform into agent-task rows",
+    "Aggregate by agent/task/state/time",
+    "Export visual report + summary",
+    "Real-time data processing",
+    "Data validation and quality checks",
+    "Error handling and retry mechanisms",
+    "Data lineage tracking",
+    "Incremental processing support",
+    "Configurable transformation rules",
+    "Scheduled data processing",
+    "Data archiving and retention",
+    "Performance monitoring",
+    "Alert system for data issues",
+    "Comprehensive logging and audit trails"
+  ],
+  "features": [
+    "Apache Airflow for workflow orchestration",
+    "Apache Kafka for real-time streaming",
+    "PostgreSQL for data warehouse",
+    "Redis for caching and queuing",
+    "Docker containerization",
+    "Kubernetes deployment",
+    "Grafana for visualization",
+    "Prometheus monitoring",
+    "ELK stack for logging",
+    "Jupyter notebooks for analysis"
+  ],
+  "constraints": [
+    "Process 1GB+ of log data daily",
+    "Data processing latency < 5 minutes",
+    "99.9% data accuracy requirement",
+    "Support for 100+ concurrent data sources",
+    "Cross-platform compatibility",
+    "Secure data handling and encryption"
+  ],
+  "timeline_days": 60,
+  "priority": "medium",
+  "estimated_effort": "high",
+  "target_audience": "Data engineers, analysts, and system administrators",
+  "success_metrics": [
+    "Data processing accuracy > 99.9%",
+    "Processing latency < 5 minutes",
+    "System uptime > 99.5%",
+    "Data completeness > 99%"
+  ],
+  "milestones": [
+    "FileWatcher + JSON ingestion",
+    "DataTransformer module",
+    "Aggregator class (task stats)",
+    "ReportGenerator with Markdown/HTML output"
+  ],
+  "roles": {
+    "Agent-1": ["Ingestion"],
+    "Agent-2": ["Transformer"],
+    "Agent-3": ["Aggregator"],
+    "Agent-4": ["ReportGenerator"]
+  }
+} 

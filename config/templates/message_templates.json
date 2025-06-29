@@ -1,0 +1,35 @@
+{
+  "templates": {
+    "status_request": {
+      "format": "@{recipient} STATUS REQUEST {priority} {timestamp}",
+      "description": "Request status from specific agent"
+    },
+    "task_assignment": {
+      "format": "@{recipient} TASK \"{task_description}\" {priority} {timestamp}",
+      "description": "Assign task to specific agent"
+    },
+    "ping": {
+      "format": "@{recipient} PING HEALTH_CHECK {priority} {timestamp}",
+      "description": "Health check ping to agent"
+    },
+    "broadcast": {
+      "format": "@all {message} {priority} {timestamp}",
+      "description": "Broadcast message to all agents"
+    },
+    "emergency": {
+      "format": "@emergency {emergency_type} {action} {details} {timestamp}",
+      "description": "Emergency broadcast message"
+    },
+    "sync": {
+      "format": "@{recipient} SYNC \"{sync_message}\" {priority} {timestamp}",
+      "description": "Synchronization message"
+    }
+  },
+  "priorities": {
+    "LOW": "Non-urgent messages",
+    "NORMAL": "Standard priority messages",
+    "HIGH": "Important messages",
+    "URGENT": "Time-sensitive messages",
+    "EMERGENCY": "Critical messages"
+  }
+} 

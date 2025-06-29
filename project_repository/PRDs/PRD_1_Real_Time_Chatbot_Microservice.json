@@ -1,0 +1,212 @@
+{
+  "prd_id": "PRD-001",
+  "project_name": "dreamos-chat-microservice",
+  "title": "Real-Time Chatbot Microservice",
+  "objective": "Build a scalable REST API that serves AI-powered chatbot responses with sub-100 ms latency",
+  "background": "Many agents need conversational context for coordination. A dedicated microservice will centralize NLP and reduce per-agent overhead",
+  "priority": "high",
+  "complexity": "medium",
+  "estimated_duration": "8 weeks",
+  "team_size": 3,
+  
+  "key_features": [
+    {
+      "name": "Chat API Endpoint",
+      "description": "POST /v1/chat accepts JSON { session_id, message }",
+      "priority": "critical"
+    },
+    {
+      "name": "Session Management",
+      "description": "Maintains per-session context (short-term memory) in Redis",
+      "priority": "high"
+    },
+    {
+      "name": "Pluggable Models",
+      "description": "Pluggable model back-end (e.g. GPT-j, local LLM)",
+      "priority": "high"
+    },
+    {
+      "name": "Rate Limiting",
+      "description": "Rate-limit 500 req/s with API key auth",
+      "priority": "medium"
+    },
+    {
+      "name": "Monitoring",
+      "description": "Health-check endpoint + Prometheus metrics",
+      "priority": "medium"
+    }
+  ],
+  
+  "deliverables": [
+    "Docker image + Kubernetes helm chart",
+    "OpenAPI spec + client SDK (Python)",
+    "Integration tests (pytest + mock server)",
+    "Load-test report (Locust)"
+  ],
+  
+  "success_metrics": [
+    {
+      "metric": "latency",
+      "target": "95th-pct latency <100 ms under 200 RPS",
+      "measurement": "milliseconds"
+    },
+    {
+      "metric": "uptime",
+      "target": "99.9% uptime in 7-day soak",
+      "measurement": "percentage"
+    },
+    {
+      "metric": "error_rate",
+      "target": "≤1% error rate on invalid payloads",
+      "measurement": "percentage"
+    },
+    {
+      "metric": "automation",
+      "target": "Automated CI/CD pipelines in place",
+      "measurement": "boolean"
+    }
+  ],
+  
+  "technical_requirements": {
+    "api_endpoints": [
+      "POST /v1/chat - Main chat endpoint",
+      "GET /health - Health check",
+      "GET /metrics - Prometheus metrics",
+      "POST /v1/session/{session_id}/reset - Reset session context"
+    ],
+    "data_models": {
+      "request": {
+        "session_id": "string",
+        "message": "string",
+        "context_length": "number",
+        "model_version": "string"
+      },
+      "response": {
+        "response": "string",
+        "session_id": "string",
+        "tokens_used": "number",
+        "latency_ms": "number",
+        "model_version": "string"
+      }
+    },
+    "technology_stack": {
+      "backend": "FastAPI (Python)",
+      "database": "Redis (session storage)",
+      "llm": "OpenAI GPT-4 / Local models",
+      "monitoring": "Prometheus + Grafana",
+      "containerization": "Docker + Kubernetes"
+    }
+  },
+  
+  "development_phases": [
+    {
+      "phase": 1,
+      "name": "Core API",
+      "duration": "2 weeks",
+      "tasks": [
+        "Basic FastAPI setup",
+        "Chat endpoint implementation",
+        "Redis session management",
+        "Basic error handling"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Model Integration",
+      "duration": "2 weeks",
+      "tasks": [
+        "OpenAI API integration",
+        "Local model support",
+        "Response caching",
+        "Token usage tracking"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Production Features",
+      "duration": "2 weeks",
+      "tasks": [
+        "Rate limiting",
+        "Authentication",
+        "Metrics collection",
+        "Health checks"
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "Deployment",
+      "duration": "2 weeks",
+      "tasks": [
+        "Docker containerization",
+        "Kubernetes manifests",
+        "CI/CD pipeline",
+        "Load testing"
+      ]
+    }
+  ],
+  
+  "risk_mitigation": [
+    {
+      "risk": "High Latency",
+      "mitigation": [
+        "Implement response caching",
+        "Use async processing",
+        "Optimize model loading"
+      ]
+    },
+    {
+      "risk": "Session Management",
+      "mitigation": [
+        "Redis clustering for high availability",
+        "Session timeout handling",
+        "Context size limits"
+      ]
+    },
+    {
+      "risk": "Model Failures",
+      "mitigation": [
+        "Fallback to simpler models",
+        "Circuit breaker pattern",
+        "Graceful degradation"
+      ]
+    }
+  ],
+  
+  "testing_strategy": {
+    "unit_tests": [
+      "API endpoint validation",
+      "Session management logic",
+      "Model integration tests"
+    ],
+    "integration_tests": [
+      "End-to-end chat flows",
+      "Redis connectivity",
+      "External API mocking"
+    ],
+    "load_tests": [
+      "Locust performance testing",
+      "Stress testing scenarios",
+      "Latency benchmarking"
+    ]
+  },
+  
+  "monitoring": {
+    "key_metrics": [
+      "Request latency (p95, p99)",
+      "Error rates",
+      "Token usage",
+      "Session count"
+    ],
+    "alerts": [
+      "Latency > 100ms for 5 minutes",
+      "Error rate > 1% for 2 minutes",
+      "Redis connection failures",
+      "Model API failures"
+    ]
+  },
+  
+  "dependencies": [],
+  "stakeholders": ["agent-coordinator", "nlp-team", "devops-team"],
+  "created_date": "2025-06-29",
+  "status": "draft"
+} 

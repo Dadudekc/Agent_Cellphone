@@ -29,16 +29,35 @@ cd Agent_CellPhone
 pip install -r requirements.txt
 ```
 
-3. **Initialize layouts:**
+3. **Launch the system:**
 ```bash
-python agent_cell_phone.py
+python launch.py
 ```
 
 ### Basic Usage
 
+#### Main Launcher (Recommended)
+```bash
+python launch.py
+```
+This provides a menu-driven interface to access all components.
+
+#### Direct GUI Access
+```bash
+# Launch modern PyQt GUI (recommended)
+python gui/dream_os_gui.py
+
+# Alternative launcher
+python gui/run_gui.py
+
+# Legacy GUIs (archived)
+# python archive/simple_gui.py
+# python archive/cell_phone_gui.py
+```
+
 #### Command Line Interface
 ```python
-from agent_cell_phone import AgentCellPhone
+from src.agent_cell_phone import AgentCellPhone
 
 # Initialize agent
 acp = AgentCellPhone("agent-1")
@@ -49,15 +68,6 @@ acp.send("agent-2", "Hello from agent-1!")
 
 # Broadcast to all agents
 acp.broadcast("Status update: All systems operational")
-```
-
-#### GUI Interface
-```bash
-# Launch desktop GUI
-python simple_gui.py
-
-# Open web GUI in browser
-# Open agent_resume_web_gui.html
 ```
 
 ## 🧩 System Components
@@ -79,11 +89,13 @@ python simple_gui.py
 - Examples: `@agent-2 resume`, `@all status_ping`
 
 ### 4. GUI Interface
-- Modern Tkinter-based desktop application
-- Web-based interface with HTML/CSS/JavaScript
+- Modern PyQt5-based desktop application with dark theme
+- Three-tab interface: Controls, Messaging, Status
 - Agent selection and individual controls
 - Broadcast functionality for all agents
-- Real-time status monitoring and logging
+- Real-time status monitoring and message history
+- Professional styling with color-coded buttons
+- Alternative launcher script for easy access
 
 ### 5. Inbox Listener (Phase 2)
 - Passive file tail or OCR stream
@@ -94,60 +106,91 @@ python simple_gui.py
 
 ```
 Agent_CellPhone/
-├── agent_cell_phone.py      # Core messaging system
-├── simple_gui.py            # ✅ Desktop GUI interface
-├── agent_resume_web_gui.html # ✅ Web-based interface
-├── test_harness.py          # CLI test harness
-├── coordinate_finder.py     # Coordinate mapping utility
-├── example_usage.py         # Basic usage example
-├── diagnostic_test.py       # Diagnostic testing tools
-├── test_8_agent_coordinates.py # 8-agent coordinate testing
-├── requirements.txt         # Dependencies
-├── README.md               # This file
-├── PROJECT_STATUS.md       # Project status and progress
-├── PROJECT_ROADMAP.md      # Development roadmap
-├── PRODUCT_REQUIREMENTS_DOCUMENT.md # PRD
-├── GUI_DEVELOPMENT_SUMMARY.md # GUI development documentation
-├── runtime/config/         # Configuration files
-│   └── cursor_agent_coords.json  # Cursor agent coordinates
-└── agent-*/                # Agent-specific logs
-    └── devlog.md           # Message logs
+├── launch.py                    # 🚀 Main launcher script
+├── README.md                    # 📖 This file
+├── requirements.txt             # 📦 Dependencies
+├── .gitignore                   # 🚫 Git ignore rules
+├── src/                         # 🔧 Core system files
+│   ├── agent_cell_phone.py      # Core messaging system
+│   ├── inter_agent_framework.py # Inter-agent communication
+│   └── main.py                  # Main system entry point
+├── gui/                         # 🖥️ GUI interfaces
+│   ├── dream_os_gui.py          # ✅ Modern PyQt GUI (main)
+│   ├── run_gui.py               # ✅ GUI launcher script
+│   └── agent_resume_web_gui.html # ✅ Web-based interface
+├── tests/                       # 🧪 Test suite
+│   ├── test_harness.py          # Main test harness
+│   ├── test_8_agent_coordinates.py # 8-agent coordinate testing
+│   ├── test_inter_agent_framework.py # Framework testing
+│   ├── test_special_chars.py    # Special character testing
+│   ├── diagnostic_test.py       # Diagnostic testing tools
+│   └── coordinate_finder.py     # Coordinate mapping utility
+├── scripts/                     # 🔧 Utility scripts
+│   ├── agent_messenger.py       # Agent messaging utilities
+│   ├── agent_onboarding_sequence.py # Onboarding system
+│   ├── send_onboarding.py       # Onboarding sender
+│   ├── send_single_onboarding.py # Single agent onboarding
+│   ├── send_specific_onboarding.py # Specific onboarding
+│   ├── send_to_agents.py        # Agent communication
+│   └── onboarding_messages.py   # Onboarding message templates
+├── examples/                    # 🎯 Example code
+│   ├── agent_conversation_demo.py # Conversation examples
+│   ├── coordination_demo.py     # Coordination examples
+│   ├── real_agent_messages.py   # Real message examples
+│   └── example_usage.py         # Basic usage examples
+├── docs/                        # 📚 Documentation
+│   ├── PROJECT_STATUS.md        # Project status and progress
+│   ├── PROJECT_ROADMAP.md       # Development roadmap
+│   ├── PRODUCT_REQUIREMENTS_DOCUMENT.md # PRD
+│   ├── GUI_DEVELOPMENT_SUMMARY.md # GUI development documentation
+│   ├── INTER_AGENT_FRAMEWORK_SUMMARY.md # Framework documentation
+│   ├── GUI_CONSOLIDATION_SUMMARY.md # GUI consolidation summary
+│   ├── DREAM_OS_BRANDING_UPDATE.md # Branding updates
+│   └── PUSH_SUMMARY.md          # Push summaries
+├── archive/                     # 📦 Archived versions
+│   ├── simple_gui.py            # Legacy tkinter GUI
+│   └── cell_phone_gui.py        # Legacy PyQt GUI
+├── runtime/                     # ⚙️ Runtime configuration
+│   └── config/                  # Configuration files
+│       └── cursor_agent_coords.json # Cursor agent coordinates
+└── agent-*/                     # 🤖 Agent-specific logs
+    └── devlog.md                # Message logs
 ```
 
 ## 🛠️ Testing
 
 ### Run Demo
 ```bash
-python test_harness.py --mode demo
+python tests/test_harness.py --mode demo
 ```
 
 ### Interactive Mode
 ```bash
-python test_harness.py --mode interactive --agent agent-1
+python tests/test_harness.py --mode interactive --agent agent-1
 ```
 
 ### Test Specific Functions
 ```bash
 # Test message sending
-python test_harness.py --mode send --agent agent-1 --target agent-2 --message "Test message"
+python tests/test_harness.py --mode send --agent agent-1 --target agent-2 --message "Test message"
 
 # Test broadcasting
-python test_harness.py --mode broadcast --agent agent-1 --message "Broadcast test"
+python tests/test_harness.py --mode broadcast --agent agent-1 --message "Broadcast test"
 
 # Test message parsing
-python test_harness.py --mode parse
+python tests/test_harness.py --mode parse
 
 # Test layout loading
-python test_harness.py --mode layout --layout 8
+python tests/test_harness.py --mode layout --layout 8
 ```
 
 ### Diagnostic Testing
 ```bash
 # Run comprehensive diagnostic tests
-python diagnostic_test.py
+python tests/diagnostic_test.py
 
 # Test 8-agent coordinate system
-python test_8_agent_coordinates.py
+python tests/test_8_agent_coordinates.py
 ```
 
 ## 📊 Layout Configurations
@@ -207,16 +250,16 @@ Use the coordinate finder utility to set up your cursor agent coordinates:
 
 ```bash
 # Interactive coordinate finder
-python coordinate_finder.py --mode find
+python tests/coordinate_finder.py --mode find
 
 # Show current coordinates
-python coordinate_finder.py --mode show
+python tests/coordinate_finder.py --mode show
 
 # Update specific agent coordinates
-python coordinate_finder.py --mode update
+python tests/coordinate_finder.py --mode update
 
 # Track mouse position
-python coordinate_finder.py --mode track
+python tests/coordinate_finder.py --mode track
 ```
 
 ## 🎨 GUI Features

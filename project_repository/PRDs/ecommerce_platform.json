@@ -1,0 +1,51 @@
+{
+  "name": "Modern E-Commerce Platform",
+  "description": "A full-featured e-commerce platform with modern UI, payment processing, inventory management, and analytics",
+  "requirements": [
+    "User authentication and authorization system",
+    "Product catalog with search and filtering",
+    "Shopping cart and checkout process",
+    "Payment gateway integration (Stripe/PayPal)",
+    "Order management and tracking",
+    "Inventory management system",
+    "Admin dashboard for store management",
+    "Customer review and rating system",
+    "Email notification system",
+    "Analytics and reporting dashboard",
+    "Mobile-responsive design",
+    "SEO optimization features",
+    "Multi-language support",
+    "Security and fraud prevention",
+    "Performance optimization and caching"
+  ],
+  "features": [
+    "Modern React/Next.js frontend",
+    "Node.js/Express backend API",
+    "PostgreSQL database with Redis caching",
+    "Stripe payment processing",
+    "AWS S3 for media storage",
+    "Docker containerization",
+    "CI/CD pipeline with GitHub Actions",
+    "Real-time inventory updates",
+    "Advanced search with Elasticsearch",
+    "Email marketing integration"
+  ],
+  "constraints": [
+    "Must be PCI DSS compliant for payments",
+    "Support 10,000+ concurrent users",
+    "99.9% uptime requirement",
+    "Mobile-first responsive design",
+    "Multi-currency support",
+    "GDPR compliance for EU customers"
+  ],
+  "timeline_days": 90,
+  "priority": "high",
+  "estimated_effort": "large",
+  "target_audience": "Online retailers and e-commerce businesses",
+  "success_metrics": [
+    "Page load time under 2 seconds",
+    "99.9% uptime",
+    "Successful payment processing rate > 99%",
+    "Mobile conversion rate > 3%"
+  ]
+} 

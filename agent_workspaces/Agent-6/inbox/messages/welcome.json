@@ -1,0 +1,9 @@
+{
+  "message_id": "msg_001",
+  "from": "system",
+  "to": "Agent-6",
+  "subject": "Welcome to Dream.OS",
+  "content": "Welcome to the autonomous development system!",
+  "timestamp": "D:\\Agent_CellPhone",
+  "read": false
+}

@@ -1,0 +1,308 @@
+{
+  "prd_id": "PRD-005",
+  "project_name": "dreamos-kb-portal",
+  "title": "Knowledge Base & Training Docs Portal",
+  "objective": "Develop a static site generator + CMS where agents and humans can read, edit, and version training docs, coding standards, and runbooks",
+  "background": "Onboarding and continuous learning require a centralized, versioned repository of best practices",
+  "priority": "medium",
+  "complexity": "low",
+  "estimated_duration": "4 weeks",
+  "team_size": 2,
+  
+  "key_features": [
+    {
+      "name": "Markdown Documentation",
+      "description": "Docs in Markdown in Git repo",
+      "priority": "critical"
+    },
+    {
+      "name": "Static Site Generation",
+      "description": "Static site via Hugo or Docusaurus",
+      "priority": "critical"
+    },
+    {
+      "name": "Edit Workflow",
+      "description": "Inline \"Suggest Edit\" → GitHub pull request",
+      "priority": "high"
+    },
+    {
+      "name": "Search Functionality",
+      "description": "Search powered by Algolia or Lunr.js",
+      "priority": "high"
+    },
+    {
+      "name": "Access Control",
+      "description": "Role-based access control for human editors",
+      "priority": "medium"
+    }
+  ],
+  
+  "deliverables": [
+    "Site generator config + theme",
+    "CMS integration (Netlify CMS or similar)",
+    "Authentication via GitHub SSO",
+    "\"Edit on GitHub\" links on every page"
+  ],
+  
+  "success_metrics": [
+    {
+      "metric": "documentation_coverage",
+      "target": "Docs coverage ≥90% of core modules",
+      "measurement": "percentage"
+    },
+    {
+      "metric": "pr_turnaround",
+      "target": "PR turnaround time <24 h",
+      "measurement": "hours"
+    },
+    {
+      "metric": "search_relevancy",
+      "target": "Search relevancy ≥80% click-through",
+      "measurement": "percentage"
+    },
+    {
+      "metric": "active_contributors",
+      "target": "Contributors ≥5 active editors",
+      "measurement": "count"
+    }
+  ],
+  
+  "technical_requirements": {
+    "site_generator": {
+      "engine": "Hugo or Docusaurus",
+      "theme": "Custom Dream.OS theme",
+      "output": "Static HTML/CSS/JS"
+    },
+    "content_management": {
+      "cms": "Netlify CMS or Forestry",
+      "storage": "Git repository",
+      "workflow": "GitHub pull request based"
+    },
+    "search": {
+      "engine": "Algolia or Lunr.js",
+      "indexing": "Automatic on build",
+      "features": [
+        "Full-text search",
+        "Fuzzy matching",
+        "Search suggestions"
+      ]
+    },
+    "authentication": {
+      "provider": "GitHub OAuth",
+      "roles": [
+        "viewer",
+        "editor",
+        "admin"
+      ]
+    }
+  },
+  
+  "development_phases": [
+    {
+      "phase": 1,
+      "name": "Site Setup",
+      "duration": "1 week",
+      "tasks": [
+        "Hugo/Docusaurus setup",
+        "Custom theme development",
+        "Basic content structure",
+        "GitHub integration"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "CMS Integration",
+      "duration": "1 week",
+      "tasks": [
+        "Netlify CMS setup",
+        "Content editing workflow",
+        "GitHub PR automation",
+        "Preview functionality"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Search & Navigation",
+      "duration": "1 week",
+      "tasks": [
+        "Search engine integration",
+        "Navigation structure",
+        "Breadcrumbs",
+        "Related content"
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "Content & Deployment",
+      "duration": "1 week",
+      "tasks": [
+        "Initial content migration",
+        "Deployment pipeline",
+        "Documentation",
+        "User training"
+      ]
+    }
+  ],
+  
+  "content_structure": {
+    "sections": [
+      {
+        "name": "Getting Started",
+        "pages": [
+          "Quick Start Guide",
+          "Installation",
+          "First Steps",
+          "Troubleshooting"
+        ]
+      },
+      {
+        "name": "Agent Training",
+        "pages": [
+          "Agent Onboarding",
+          "Communication Protocols",
+          "Task Management",
+          "Best Practices"
+        ]
+      },
+      {
+        "name": "Development",
+        "pages": [
+          "Coding Standards",
+          "API Documentation",
+          "Testing Guidelines",
+          "Deployment Procedures"
+        ]
+      },
+      {
+        "name": "Operations",
+        "pages": [
+          "Runbooks",
+          "Monitoring",
+          "Incident Response",
+          "Maintenance Procedures"
+        ]
+      }
+    ]
+  },
+  
+  "ui_requirements": {
+    "design_principles": [
+      "Clean and modern interface",
+      "Mobile-responsive design",
+      "Fast loading times",
+      "Accessibility compliance"
+    ],
+    "navigation": [
+      "Sidebar navigation",
+      "Breadcrumbs",
+      "Search bar",
+      "Table of contents"
+    ],
+    "features": [
+      "Dark/light mode toggle",
+      "Print-friendly pages",
+      "Share functionality",
+      "Version history"
+    ]
+  },
+  
+  "workflow": {
+    "content_creation": [
+      "Author creates/edit content via CMS",
+      "Preview changes in staging",
+      "Submit pull request",
+      "Review and merge",
+      "Automatic deployment"
+    ],
+    "content_approval": [
+      "Automated checks (spelling, links)",
+      "Manual review by maintainers",
+      "Stakeholder approval for major changes",
+      "Merge to main branch"
+    ]
+  },
+  
+  "risk_mitigation": [
+    {
+      "risk": "Content Quality",
+      "mitigation": [
+        "Automated quality checks",
+        "Review process",
+        "Style guide enforcement",
+        "Regular audits"
+      ]
+    },
+    {
+      "risk": "Search Performance",
+      "mitigation": [
+        "Search index optimization",
+        "Caching strategies",
+        "CDN deployment",
+        "Performance monitoring"
+      ]
+    },
+    {
+      "risk": "Content Synchronization",
+      "mitigation": [
+        "Automated sync processes",
+        "Version control",
+        "Backup strategies",
+        "Rollback procedures"
+      ]
+    }
+  ],
+  
+  "testing_strategy": {
+    "functional_tests": [
+      "Content rendering",
+      "Search functionality",
+      "Edit workflow",
+      "Authentication"
+    ],
+    "performance_tests": [
+      "Page load times",
+      "Search response time",
+      "Build time optimization",
+      "Mobile performance"
+    ],
+    "user_tests": [
+      "Content findability",
+      "Edit workflow usability",
+      "Navigation effectiveness",
+      "Search accuracy"
+    ]
+  },
+  
+  "deployment": {
+    "hosting": "Netlify or Vercel",
+    "domain": "docs.dreamos.ai",
+    "ssl": "Automatic HTTPS",
+    "cdn": "Global CDN",
+    "monitoring": [
+      "Uptime monitoring",
+      "Performance tracking",
+      "Error tracking",
+      "Analytics"
+    ]
+  },
+  
+  "analytics": {
+    "metrics": [
+      "Page views",
+      "Search queries",
+      "Edit submissions",
+      "User engagement"
+    ],
+    "tools": [
+      "Google Analytics",
+      "Search analytics",
+      "GitHub insights",
+      "Performance monitoring"
+    ]
+  },
+  
+  "dependencies": [],
+  "stakeholders": ["documentation-team", "training-team", "all-agents"],
+  "created_date": "2025-06-29",
+  "status": "draft"
+} 

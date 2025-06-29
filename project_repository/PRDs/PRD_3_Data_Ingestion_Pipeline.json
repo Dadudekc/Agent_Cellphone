@@ -1,0 +1,261 @@
+{
+  "prd_id": "PRD-003",
+  "project_name": "dreamos-log-ingest",
+  "title": "Data-Ingestion Pipeline for Agent Logs",
+  "objective": "Build an ETL pipeline that pulls agent devlogs from S3, parses them into structured JSON, and loads into a ClickHouse analytics DB",
+  "background": "To gain insights on agent performance and error rates, logs must be consolidated, normalized, and queried",
+  "priority": "medium",
+  "complexity": "high",
+  "estimated_duration": "4 weeks",
+  "team_size": 2,
+  
+  "key_features": [
+    {
+      "name": "S3 Ingestion",
+      "description": "Ingest: S3 \"logs/agent-*/\" every 5 min",
+      "priority": "critical"
+    },
+    {
+      "name": "Log Parsing",
+      "description": "Parse: JSON + text regex for timestamp, level, agent_id, message",
+      "priority": "critical"
+    },
+    {
+      "name": "Data Transformation",
+      "description": "Transform: Add metadata (PRD id, branch, commit)",
+      "priority": "high"
+    },
+    {
+      "name": "Database Loading",
+      "description": "Load: Batch inserts into ClickHouse",
+      "priority": "high"
+    },
+    {
+      "name": "Monitoring",
+      "description": "Monitoring: DataDog alerts on failures >3 consecutive runs",
+      "priority": "medium"
+    }
+  ],
+  
+  "deliverables": [
+    "Airflow DAG + Python operators",
+    "Parser module + unit tests",
+    "ClickHouse schema + migration scripts",
+    "Dashboard in Superset / Metabase"
+  ],
+  
+  "success_metrics": [
+    {
+      "metric": "latency",
+      "target": "End-to-end latency <2 min from S3 to DB",
+      "measurement": "minutes"
+    },
+    {
+      "metric": "completeness",
+      "target": "100% log completeness (no gaps)",
+      "measurement": "percentage"
+    },
+    {
+      "metric": "parse_accuracy",
+      "target": "<0.1% parse errors",
+      "measurement": "percentage"
+    },
+    {
+      "metric": "dashboard_refresh",
+      "target": "Dashboard refresh every 5 min",
+      "measurement": "minutes"
+    }
+  ],
+  
+  "technical_requirements": {
+    "data_sources": {
+      "s3_bucket": "dreamos-agent-logs",
+      "s3_prefix": "logs/agent-*/",
+      "file_pattern": "*.log",
+      "polling_interval": "5 minutes"
+    },
+    "data_models": {
+      "raw_log": {
+        "timestamp": "datetime",
+        "level": "string",
+        "agent_id": "string",
+        "message": "string",
+        "raw_data": "string"
+      },
+      "parsed_log": {
+        "timestamp": "datetime",
+        "level": "string",
+        "agent_id": "string",
+        "message": "string",
+        "prd_id": "string",
+        "branch": "string",
+        "commit": "string",
+        "file_path": "string",
+        "line_number": "integer"
+      }
+    },
+    "technology_stack": {
+      "orchestration": "Apache Airflow",
+      "storage": "AWS S3",
+      "database": "ClickHouse",
+      "monitoring": "DataDog",
+      "visualization": "Superset/Metabase"
+    }
+  },
+  
+  "development_phases": [
+    {
+      "phase": 1,
+      "name": "Infrastructure Setup",
+      "duration": "1 week",
+      "tasks": [
+        "ClickHouse cluster setup",
+        "Airflow environment configuration",
+        "S3 bucket and permissions",
+        "DataDog integration"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Parser Development",
+      "duration": "1 week",
+      "tasks": [
+        "Log parser implementation",
+        "Regex pattern development",
+        "Unit tests for parser",
+        "Error handling logic"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "ETL Pipeline",
+      "duration": "1 week",
+      "tasks": [
+        "Airflow DAG creation",
+        "S3 to ClickHouse pipeline",
+        "Data transformation logic",
+        "Batch processing optimization"
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "Monitoring & Dashboard",
+      "duration": "1 week",
+      "tasks": [
+        "DataDog alerting setup",
+        "Superset dashboard creation",
+        "Performance monitoring",
+        "Documentation and testing"
+      ]
+    }
+  ],
+  
+  "data_architecture": {
+    "ingestion_layer": {
+      "source": "S3 bucket",
+      "format": "JSON/Text logs",
+      "frequency": "Every 5 minutes",
+      "batch_size": "1000 records"
+    },
+    "processing_layer": {
+      "engine": "Apache Airflow",
+      "parsers": [
+        "JSON log parser",
+        "Text log parser",
+        "Error log parser"
+      ],
+      "transformers": [
+        "Timestamp normalization",
+        "Metadata enrichment",
+        "Data validation"
+      ]
+    },
+    "storage_layer": {
+      "database": "ClickHouse",
+      "partitioning": "By date and agent_id",
+      "retention": "90 days",
+      "compression": "LZ4"
+    }
+  },
+  
+  "risk_mitigation": [
+    {
+      "risk": "Data Loss",
+      "mitigation": [
+        "S3 versioning enabled",
+        "Backup ClickHouse data",
+        "Dead letter queue for failed records"
+      ]
+    },
+    {
+      "risk": "Performance Issues",
+      "mitigation": [
+        "ClickHouse partitioning strategy",
+        "Batch processing optimization",
+        "Resource monitoring and scaling"
+      ]
+    },
+    {
+      "risk": "Parser Failures",
+      "mitigation": [
+        "Robust error handling",
+        "Fallback parsing strategies",
+        "Manual review process for failed logs"
+      ]
+    }
+  ],
+  
+  "testing_strategy": {
+    "unit_tests": [
+      "Parser logic testing",
+      "Data transformation testing",
+      "Error handling testing"
+    ],
+    "integration_tests": [
+      "End-to-end pipeline testing",
+      "S3 to ClickHouse flow",
+      "Airflow DAG validation"
+    ],
+    "performance_tests": [
+      "Load testing with large datasets",
+      "Latency benchmarking",
+      "Resource utilization testing"
+    ]
+  },
+  
+  "monitoring": {
+    "key_metrics": [
+      "Pipeline execution time",
+      "Records processed per run",
+      "Parse error rate",
+      "Data freshness"
+    ],
+    "alerts": [
+      "Pipeline failure >3 consecutive runs",
+      "Parse error rate >0.1%",
+      "Data latency >2 minutes",
+      "ClickHouse disk usage >80%"
+    ]
+  },
+  
+  "dashboard_requirements": {
+    "visualizations": [
+      "Agent performance trends",
+      "Error rate by agent",
+      "Log volume over time",
+      "Parse success rate"
+    ],
+    "filters": [
+      "Date range",
+      "Agent ID",
+      "Log level",
+      "PRD ID"
+    ],
+    "refresh_rate": "5 minutes"
+  },
+  
+  "dependencies": [],
+  "stakeholders": ["data-engineering-team", "analytics-team", "agent-coordinator"],
+  "created_date": "2025-06-29",
+  "status": "draft"
+} 

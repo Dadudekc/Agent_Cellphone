@@ -1,0 +1,23 @@
+{
+  "system": {
+    "name": "Dream.OS Cell Phone",
+    "version": "2.0.0",
+    "max_agents": 8,
+    "default_layout": "4-agent",
+    "communication": {
+      "protocol": "PyAutoGUI",
+      "timeout": 30,
+      "retry_attempts": 3
+    },
+    "logging": {
+      "level": "INFO",
+      "file": "logs/system.log",
+      "max_size": "10MB"
+    },
+    "performance": {
+      "max_concurrent_tasks": 4,
+      "task_timeout": 300,
+      "memory_limit": "512MB"
+    }
+  }
+} 

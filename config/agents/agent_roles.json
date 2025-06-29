@@ -1,0 +1,52 @@
+{
+  "roles": {
+    "Agent-1": {
+      "primary": "System Coordinator",
+      "secondary": "Task Manager",
+      "backup": "Communication Specialist",
+      "capabilities": ["leadership", "coordination", "communication"]
+    },
+    "Agent-2": {
+      "primary": "Task Manager",
+      "secondary": "Data Processor",
+      "backup": "Quality Assurance",
+      "capabilities": ["project_management", "resource_allocation", "tracking"]
+    },
+    "Agent-3": {
+      "primary": "Data Processor",
+      "secondary": "Innovation Specialist",
+      "backup": "Backup Coordinator",
+      "capabilities": ["analytics", "data_processing", "research"]
+    },
+    "Agent-4": {
+      "primary": "Communication Specialist",
+      "secondary": "Security Monitor",
+      "backup": "System Coordinator",
+      "capabilities": ["networking", "protocols", "security"]
+    },
+    "Agent-5": {
+      "primary": "Quality Assurance",
+      "secondary": "Data Processor",
+      "backup": "Task Manager",
+      "capabilities": ["testing", "validation", "quality_control"]
+    },
+    "Agent-6": {
+      "primary": "Security Monitor",
+      "secondary": "Communication Specialist",
+      "backup": "Quality Assurance",
+      "capabilities": ["security", "monitoring", "incident_response"]
+    },
+    "Agent-7": {
+      "primary": "Backup Coordinator",
+      "secondary": "Quality Assurance",
+      "backup": "Security Monitor",
+      "capabilities": ["recovery", "resilience", "backup_management"]
+    },
+    "Agent-8": {
+      "primary": "Innovation Specialist",
+      "secondary": "Data Processor",
+      "backup": "Communication Specialist",
+      "capabilities": ["innovation", "research", "strategy"]
+    }
+  }
+} 

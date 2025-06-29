@@ -1,0 +1,256 @@
+{
+  "prd_id": "PRD-002",
+  "project_name": "dreamos-tasker",
+  "title": "Mobile Task-Tracker App (Flutter)",
+  "objective": "Ship a cross-platform mobile app for agents (and humans) to view, claim, and close tasks assigned by the orchestrator",
+  "background": "Agents need visual confirmations for manual-override tasks; a lightweight mobile UI will surface tasks and statuses",
+  "priority": "high",
+  "complexity": "medium",
+  "estimated_duration": "6 weeks",
+  "team_size": 2,
+  
+  "key_features": [
+    {
+      "name": "User Authentication",
+      "description": "User login via OAuth2 (Auth0)",
+      "priority": "critical"
+    },
+    {
+      "name": "Task Management",
+      "description": "Task list synced from /api/tasks/assigned",
+      "priority": "critical"
+    },
+    {
+      "name": "Task Actions",
+      "description": "Tap → \"Claim\" / \"Complete\" actions call /api/tasks/{id}/action",
+      "priority": "high"
+    },
+    {
+      "name": "Push Notifications",
+      "description": "Push notifications for new high-priority tasks",
+      "priority": "high"
+    },
+    {
+      "name": "Offline Support",
+      "description": "Offline caching + sync on reconnect",
+      "priority": "medium"
+    }
+  ],
+  
+  "deliverables": [
+    "Flutter codebase (iOS & Android)",
+    "UI mockups in Figma",
+    "End-to-end tests (integration_driver)",
+    "AppStore + PlayStore deployment scripts"
+  ],
+  
+  "success_metrics": [
+    {
+      "metric": "feature_parity",
+      "target": "100% feature parity with web task dashboard",
+      "measurement": "percentage"
+    },
+    {
+      "metric": "push_delivery",
+      "target": "Push delivery ≥95% success",
+      "measurement": "percentage"
+    },
+    {
+      "metric": "crash_free_sessions",
+      "target": "Crash-free sessions ≥99%",
+      "measurement": "percentage"
+    },
+    {
+      "metric": "user_satisfaction",
+      "target": "User acceptance survey ≥4.5/5",
+      "measurement": "rating"
+    }
+  ],
+  
+  "technical_requirements": {
+    "platforms": ["iOS", "Android"],
+    "framework": "Flutter",
+    "authentication": "OAuth2 (Auth0)",
+    "api_integration": [
+      "GET /api/tasks/assigned",
+      "POST /api/tasks/{id}/claim",
+      "POST /api/tasks/{id}/complete",
+      "GET /api/tasks/{id}/status"
+    ],
+    "data_models": {
+      "task": {
+        "id": "string",
+        "title": "string",
+        "description": "string",
+        "priority": "string",
+        "status": "string",
+        "assigned_to": "string",
+        "created_at": "datetime",
+        "due_date": "datetime"
+      },
+      "user": {
+        "id": "string",
+        "name": "string",
+        "email": "string",
+        "role": "string"
+      }
+    },
+    "technology_stack": {
+      "frontend": "Flutter",
+      "state_management": "Provider/Riverpod",
+      "networking": "Dio/HTTP",
+      "local_storage": "SQLite/Hive",
+      "push_notifications": "Firebase Cloud Messaging"
+    }
+  },
+  
+  "development_phases": [
+    {
+      "phase": 1,
+      "name": "Core Setup",
+      "duration": "1 week",
+      "tasks": [
+        "Flutter project setup",
+        "Authentication integration",
+        "Basic UI structure",
+        "API client setup"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Task Management",
+      "duration": "2 weeks",
+      "tasks": [
+        "Task list UI",
+        "Task detail view",
+        "Claim/Complete actions",
+        "API integration"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Advanced Features",
+      "duration": "2 weeks",
+      "tasks": [
+        "Push notifications",
+        "Offline caching",
+        "Sync mechanism",
+        "Error handling"
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "Testing & Deployment",
+      "duration": "1 week",
+      "tasks": [
+        "End-to-end testing",
+        "App store preparation",
+        "Deployment scripts",
+        "Documentation"
+      ]
+    }
+  ],
+  
+  "ui_requirements": {
+    "screens": [
+      "Login/Authentication",
+      "Task List",
+      "Task Detail",
+      "Profile/Settings",
+      "Notifications"
+    ],
+    "design_system": {
+      "theme": "Material Design 3",
+      "colors": "Dream.OS brand colors",
+      "typography": "Roboto font family",
+      "icons": "Material Icons"
+    },
+    "responsive_design": {
+      "phone": "320dp - 480dp",
+      "tablet": "481dp - 1024dp"
+    }
+  },
+  
+  "risk_mitigation": [
+    {
+      "risk": "Platform Compatibility",
+      "mitigation": [
+        "Extensive testing on both platforms",
+        "Platform-specific code when needed",
+        "Regular Flutter updates"
+      ]
+    },
+    {
+      "risk": "API Integration",
+      "mitigation": [
+        "Robust error handling",
+        "Retry mechanisms",
+        "Offline fallback"
+      ]
+    },
+    {
+      "risk": "Push Notifications",
+      "mitigation": [
+        "Multiple notification channels",
+        "Fallback to in-app notifications",
+        "User preference settings"
+      ]
+    }
+  ],
+  
+  "testing_strategy": {
+    "unit_tests": [
+      "Widget testing",
+      "Business logic testing",
+      "API client testing"
+    ],
+    "integration_tests": [
+      "End-to-end user flows",
+      "API integration testing",
+      "Cross-platform compatibility"
+    ],
+    "manual_tests": [
+      "UI/UX testing",
+      "Performance testing",
+      "Accessibility testing"
+    ]
+  },
+  
+  "deployment": {
+    "ios": {
+      "store": "App Store",
+      "requirements": [
+        "Apple Developer Account",
+        "App Store Connect setup",
+        "Code signing certificates"
+      ]
+    },
+    "android": {
+      "store": "Google Play Store",
+      "requirements": [
+        "Google Play Console account",
+        "APK signing",
+        "Store listing preparation"
+      ]
+    }
+  },
+  
+  "monitoring": {
+    "key_metrics": [
+      "App crash rate",
+      "User engagement",
+      "Task completion rate",
+      "Push notification delivery"
+    ],
+    "analytics": [
+      "Firebase Analytics",
+      "Crashlytics",
+      "Performance monitoring"
+    ]
+  },
+  
+  "dependencies": ["PRD-001"],
+  "stakeholders": ["mobile-team", "ui-ux-team", "agent-coordinator"],
+  "created_date": "2025-06-29",
+  "status": "draft"
+} 
