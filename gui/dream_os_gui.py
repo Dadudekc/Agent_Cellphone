@@ -8,12 +8,13 @@ import sys
 import threading
 import time
 from datetime import datetime
+import os  # EDIT START: Added for path handling
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
                             QHBoxLayout, QGridLayout, QLabel, QPushButton, 
                             QComboBox, QTextEdit, QLineEdit, QGroupBox, 
                             QTabWidget, QSplitter, QFrame, QScrollArea)
 from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QThread
-from PyQt5.QtGui import QFont, QIcon, QPalette, QColor
+from PyQt5.QtGui import QFont, QIcon, QPalette, QColor, QPixmap  # EDIT END: Added QPixmap import
 
 # Import our agent cell phone system
 from agent_cell_phone import AgentCellPhone, MsgTag
@@ -55,6 +56,11 @@ class DreamOSCellPhoneGUI(QMainWindow):
     def init_ui(self):
         """Initialize the user interface."""
         self.setWindowTitle("Dream.OS Cell Phone")
+        # EDIT START: Set application window icon using logo.png if available
+        logo_path = os.path.join(os.path.dirname(__file__), "logo.png")
+        if os.path.exists(logo_path):
+            self.setWindowIcon(QIcon(logo_path))
+        # EDIT END
         self.setGeometry(100, 100, 1000, 700)
         
         # Set modern styling
@@ -182,6 +188,16 @@ class DreamOSCellPhoneGUI(QMainWindow):
         header_frame = QFrame()
         header_layout = QHBoxLayout(header_frame)
         
+        # EDIT START: Display logo image if available then title
+        logo_path = os.path.join(os.path.dirname(__file__), "logo.png")
+        if os.path.exists(logo_path):
+            logo_pix = QPixmap(logo_path)
+            if not logo_pix.isNull():
+                logo_pix = logo_pix.scaledToHeight(40, Qt.SmoothTransformation)
+                logo_label = QLabel()
+                logo_label.setPixmap(logo_pix)
+                header_layout.addWidget(logo_label)
+
         # Logo and title
         title_label = QLabel("📱 Dream.OS Cell Phone")
         title_font = QFont()
@@ -302,7 +318,6 @@ class DreamOSCellPhoneGUI(QMainWindow):
         self.command_combo.addItems(["ping", "status", "resume", "sync", "verify", "task", "captain"])
         self.command_layout.addWidget(self.command_combo)
         self.command_layout.addStretch()
-        self.command_layout.setVisible(False)
         message_layout.addLayout(self.command_layout)
         
         # Message input
