@@ -45,9 +45,16 @@ class StatusThread(QThread):
 class DreamOSCellPhoneGUI(QMainWindow):
     """Modern PyQt GUI for Dream.OS Cell Phone."""
     
-    def __init__(self):
+    def __init__(self, layout_mode="8-agent"):
+        """Initialize the GUI.
+        Parameters
+        ----------
+        layout_mode : str, optional
+            The agent layout mode (e.g., "4-agent", "6-agent", "8-agent"). Default is "8-agent".
+        """
         super().__init__()
-        self.acp = AgentCellPhone(layout_mode="8-agent")
+        self.layout_mode = layout_mode
+        self.acp = AgentCellPhone(layout_mode=layout_mode)
         self.agents = self.acp.get_available_agents()
         
         self.init_ui()
