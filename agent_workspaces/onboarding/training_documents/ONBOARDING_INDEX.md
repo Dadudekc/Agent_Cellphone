@@ -106,6 +106,21 @@ Training materials and guides:
 - **Material Updates**: Keep materials current
 - **Technology Integration**: Integrate new technologies
 
+## Key Documents
+
+- [UPDATE_STATUS_GUIDE.md](../UPDATE_STATUS_GUIDE.md): **Status reporting protocol (MANDATORY)**
+- [ONBOARDING_CHECKLIST.md](../ONBOARDING_CHECKLIST.md): Step-by-step onboarding requirements
+- [AGENT_TRAINING_GUIDE.md](../AGENT_TRAINING_GUIDE.md): Status reporting, message discipline, and agent best practices
+- [ONBOARDING_SUMMARY.md](../ONBOARDING_SUMMARY.md): Workflow overview and agent responsibilities
+
+## Core Requirements
+
+- All agents must update `status.json` after every action, state change, or message
+- Agents must use the `message` field to communicate with the user
+- Workspace hygiene and compliance are required
+
+(Review each document above for details and implementation examples.)
+
 ---
 
 **Onboarding Index Version**: 1.0  

@@ -1,0 +1,31 @@
+{
+    "status": "online",
+    "last_update": "2025-06-29 18:00:00",
+    "current_task": "idle",
+    "agent_id": "agent-1",
+    "capabilities": [
+        "task_execution",
+        "status_reporting",
+        "message_handling",
+        "performance_monitoring"
+    ],
+    "performance_metrics": {
+        "tasks_completed": 0,
+        "uptime_hours": 0.0,
+        "last_response_time": "2025-06-29 18:00:00",
+        "error_count": 0,
+        "success_rate": 100.0
+    },
+    "message_history": [
+        {
+            "timestamp": "2025-06-29 18:00:00",
+            "type": "initialization",
+            "content": "Agent initialized",
+            "response": "Agent ready for operations",
+            "status_before": "offline",
+            "status_after": "online"
+        }
+    ],
+    "debug_mode": false,
+    "debug_log": []
+} 

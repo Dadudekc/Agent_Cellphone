@@ -269,3 +269,37 @@ Skills Assessment → Performance Evaluation → Feedback → Certification
 **Onboarding System Version**: 1.0  
 **Last Updated**: 2025-06-29  
 **Status**: ✅ Active and Ready for Use 
+
+## Workflow Overview
+
+1. **Workspace Setup**
+   - Each agent has a dedicated workspace: `agent_workspaces/Agent-X/`
+   - Initialize with a valid `status.json` (see guide)
+
+2. **Status Reporting**
+   - Agents MUST update `status.json` after every action, state change, or message
+   - Use the `update_status` helper function
+   - Always set a clear `message` for the user
+
+3. **Message Discipline**
+   - Use the `message` field to communicate status, needs, or issues
+   - Keep messages short, clear, and user-focused
+
+4. **Workspace Hygiene**
+   - Keep workspace clean: remove old logs, temp files, and unused data
+
+5. **Testing & Compliance**
+   - Use the Dream.OS UI to verify your status is visible and updates in real time
+   - Run the compliance checker script to ensure your `status.json` is up to date
+
+6. **Restart & Onboarding**
+   - To restart: stop agent, set `status` to `offline`, then restart and set to `ready`
+   - To onboard: create workspace, initialize `status.json`, implement status updates, and test in UI
+
+---
+
+**Remember:**
+- Status reporting is not optional—it is the foundation of Dream.OS agent coordination and monitoring.
+- The UI, orchestrator, and other agents depend on your `status.json` being accurate and up to date.
+
+(See the onboarding checklist and training guide for details.) 
