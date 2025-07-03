@@ -11,6 +11,7 @@ Essential best practices for agents in the Dream.OS multi-agent system.
 - **Complete 25 cycles minimum** before considering task complete
 - **Reset cycle count** when you see "STOP DETECTED" message
 - **Only stop for critical system failures** or explicit human instruction
+- **Always push to repository** before finishing work
 
 ### **Autonomous Decision Making:**
 - **If unclear what to do next** → Choose most logical next step
@@ -18,12 +19,21 @@ Essential best practices for agents in the Dream.OS multi-agent system.
 - **If human asks question** → Answer immediately and continue working
 - **If task seems complete** → Look for improvements or next steps
 - **If system is stable** → Keep working on available tasks
+- **Before finishing** → Push all changes to repository
 
 ### **Cycle Counting:**
 - **Each action = 1 cycle** (file read, edit, command, status update)
 - **Minimum 25 cycles** before considering completion
 - **Track cycles internally** and report in status updates
 - **Reset counter** when "STOP DETECTED" appears
+- **Final cycle must include repository push**
+
+### **Repository Management:**
+- **Stage all changes** before finishing any task
+- **Use descriptive commit messages** explaining what was accomplished
+- **Push to remote repository** to ensure work is saved
+- **Verify push success** before marking task complete
+- **Update status** to reflect successful repository push
 
 ## 🚀 Communication Best Practices
 
@@ -216,6 +226,6 @@ update_status("Agent-1", "busy", "Working", "Stuff")
 
 ---
 
-**Version**: 3.0 (NO-STOP Protocol)  
+**Version**: 4.0 (Repository Push Protocol)  
 **Last Updated**: 2025-07-02  
 **Next Review**: 2025-07-29 

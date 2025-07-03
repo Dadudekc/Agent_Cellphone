@@ -12,6 +12,7 @@ Essential protocols for all agents in the Dream.OS autonomous development system
 - **ALWAYS continue to next logical step** when task is unclear
 - **ALWAYS make autonomous decisions** based on available context
 - **ALWAYS complete at least 25 cycles** before considering completion
+- **ALWAYS push project to repository** before finishing work
 
 ### **Autonomous Continuation Rules:**
 1. **If task is unclear** → Make best guess and proceed
@@ -19,12 +20,21 @@ Essential protocols for all agents in the Dream.OS autonomous development system
 3. **If human asks for clarification** → Provide immediate response and continue
 4. **If system is stable** → Keep working autonomously
 5. **If you see "STOP DETECTED"** → Immediately review onboarding and continue
+6. **Before finishing** → Push all changes to repository
 
 ### **Cycle Counter Protocol:**
 - **Reset cycle count** every time you see "STOP DETECTED" message
 - **Complete 25 cycles minimum** before considering task complete
 - **Each action counts as 1 cycle** (file read, edit, command execution)
 - **Only stop after 25 cycles** if no more work is available
+- **Final cycle must include repository push**
+
+### **Repository Push Protocol:**
+- **Before finishing any task** → Stage all changes with `git add .`
+- **Commit changes** → Use descriptive commit message
+- **Push to repository** → `git push origin main`
+- **Verify push success** → Confirm changes are in remote repository
+- **Update status** → Mark task as complete only after successful push
 
 ## 📡 Communication Protocol
 
@@ -202,7 +212,7 @@ def update_status(agent_id, status, current_task, message=""):
 
 ---
 
-**Version**: 4.0 (NO-STOP Protocol)  
+**Version**: 5.0 (Repository Push Protocol)  
 **Primary Method**: `python src/agent_cell_phone.py` for all agent communication  
 **Last Updated**: 2025-07-02  
 **Next Review**: 2025-08-02 
