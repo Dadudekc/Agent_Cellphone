@@ -22,18 +22,25 @@ try:
 except ImportError as e:
     print(f"Import error: {e}")
     print("Please run from the project root directory: python main.py")
-    # Create dummy classes for fallback
-    class CoordinateFinder:
-        def __init__(self):
-            self.coordinates = {}
-        def get_all_coordinates(self):
-            return {f"agent-{i}": (100 + i*50, 100 + i*50) for i in range(1, 9)}
-        def get_coordinates(self, agent_id):
-            return (100, 100)
+    # Import coordinate finder from utils
+    try:
+        from src.utils.coordinate_finder import CoordinateFinder
+    except ImportError:
+        # Create dummy classes for fallback
+        class CoordinateFinder:
+            def __init__(self):
+                self.coordinates = {}
+            def get_all_coordinates(self):
+                return {f"agent-{i}": (100 + i*50, 100 + i*50) for i in range(1, 9)}
+            def get_coordinates(self, agent_id):
+                return (100, 100)
     
-    class AgentAutonomyFramework:
-        def __init__(self):
-            pass
+    try:
+        from src.framework.agent_autonomy_framework import AgentAutonomyFramework
+    except ImportError:
+        class AgentAutonomyFramework:
+            def __init__(self):
+                pass
 
 try:
     from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
