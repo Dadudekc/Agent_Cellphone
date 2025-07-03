@@ -1,0 +1,13 @@
+{
+  "id": "2025-07-02T08-39-38-381243_agent-1_to_agent-2",
+  "timestamp": "2025-07-02T08:39:38.381243",
+  "from": "agent-1",
+  "to": "agent-2",
+  "message": "Analysis complete! Hybrid system is the best of both worlds.",
+  "tag": "reply",
+  "priority": "normal",
+  "status": "pending",
+  "created_at": "2025-07-02T08:39:38.381243",
+  "persisted": false,
+  "pipe_delivered": true
+}

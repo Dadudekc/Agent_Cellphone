@@ -1,12 +1,20 @@
 {
   "2-agent": {
     "Agent-1": {
+      "starter_location_box": {
+        "x": -1242,
+        "y": 1021
+      },
       "input_box": {
         "x": -1242,
         "y": 1021
       }
     },
     "Agent-2": {
+      "starter_location_box": {
+        "x": -295,
+        "y": 1019
+      },
       "input_box": {
         "x": -295,
         "y": 1019
@@ -15,24 +23,40 @@
   },
   "4-agent": {
     "Agent-1": {
+      "starter_location_box": {
+        "x": -1203,
+        "y": 496
+      },
       "input_box": {
         "x": -1203,
         "y": 496
       }
     },
     "Agent-2": {
+      "starter_location_box": {
+        "x": -267,
+        "y": 500
+      },
       "input_box": {
         "x": -267,
         "y": 500
       }
     },
     "Agent-3": {
+      "starter_location_box": {
+        "x": -1283,
+        "y": 1012
+      },
       "input_box": {
         "x": -1283,
         "y": 1012
       }
     },
     "Agent-4": {
+      "starter_location_box": {
+        "x": -331,
+        "y": 1017
+      },
       "input_box": {
         "x": -331,
         "y": 1017
@@ -41,48 +65,80 @@
   },
   "8-agent": {
     "Agent-1": {
+      "starter_location_box": {
+        "x": -1298,
+        "y": 496
+      },
       "input_box": {
         "x": -1298,
         "y": 496
       }
     },
     "Agent-2": {
+      "starter_location_box": {
+        "x": -263,
+        "y": 493
+      },
       "input_box": {
         "x": -263,
         "y": 493
       }
     },
     "Agent-3": {
+      "starter_location_box": {
+        "x": -1282,
+        "y": 1013
+      },
       "input_box": {
         "x": -1282,
         "y": 1013
       }
     },
     "Agent-4": {
+      "starter_location_box": {
+        "x": -326,
+        "y": 1017
+      },
       "input_box": {
         "x": -326,
         "y": 1017
       }
     },
     "Agent-5": {
+      "starter_location_box": {
+        "x": 625,
+        "y": 440
+      },
       "input_box": {
         "x": 625,
         "y": 440
       }
     },
     "Agent-6": {
+      "starter_location_box": {
+        "x": 1576,
+        "y": 435
+      },
       "input_box": {
         "x": 1576,
         "y": 435
       }
     },
     "Agent-7": {
+      "starter_location_box": {
+        "x": 623,
+        "y": 953
+      },
       "input_box": {
         "x": 623,
         "y": 953
       }
     },
     "Agent-8": {
+      "starter_location_box": {
+        "x": 1594,
+        "y": 959
+      },
       "input_box": {
         "x": 1594,
         "y": 959

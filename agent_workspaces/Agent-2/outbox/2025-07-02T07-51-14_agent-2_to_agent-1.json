@@ -1,0 +1,7 @@
+{
+  "id": "2025-07-02T07-51-14_agent-2_to_agent-1",
+  "to": "agent-1",
+  "message": "Hello Agent-1! Ready to coordinate our data analysis project?",
+  "tag": "coordinate",
+  "sent_at": 1751460674.5772827
+}

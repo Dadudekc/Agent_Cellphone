@@ -8,36 +8,24 @@ Inspired by the v2 GUI design with simplified, focused functionality.
 
 import sys
 import os
+import warnings
+
+# Suppress PyQt5 deprecation warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning, module="PyQt5")
 import json
 import threading
 import time
 import pyautogui
+import warnings
 from datetime import datetime
 from typing import List, Dict, Optional
 
-# Add src to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+# Suppress PyQt5 deprecation warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning, module="PyQt5")
 
+# Import PyQt5 first (before project imports)
 try:
-    from src.utils.coordinate_finder import CoordinateFinder
-    from src.framework.agent_autonomy_framework import AgentAutonomyFramework
-except ImportError as e:
-    print(f"Import error: {e}")
-    print("Please run from the project root directory: python main.py")
-    # Create dummy classes for fallback
-    class CoordinateFinder:
-        def __init__(self):
-            self.coordinates = {}
-        def get_all_coordinates(self):
-            return {f"agent-{i}": (100 + i*50, 100 + i*50) for i in range(1, 3)}
-        def get_coordinates(self, agent_id):
-            return (100, 100)
-    
-    class AgentAutonomyFramework:
-        def __init__(self):
-            pass
-
-try:
+    import PyQt5
     from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
                                 QHBoxLayout, QGridLayout, QLabel, QPushButton, 
                                 QComboBox, QTextEdit, QLineEdit, QGroupBox, 
@@ -45,10 +33,47 @@ try:
                                 QListWidgetItem, QProgressBar, QFrame, QScrollArea,
                                 QMessageBox, QFileDialog, QSlider, QSpinBox, QInputDialog)
     from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal, QPropertyAnimation, QEasingCurve
-    from PyQt5.QtGui import QFont, QPixmap, QIcon, QPalette, QColor, QPainter, QBrush
-except ImportError:
+    from PyQt5.QtGui import QFont, QPixmap, QIcon, QPalette, QColor, QPainter, QBrush, QTextCursor
+    
+    # QTextCursor registration is optional and not needed for basic functionality
+    print("✅ PyQt5 imported successfully")
+except ImportError as e:
+    print(f"PyQt5 import error: {e}")
     print("PyQt5 not available. Please install: pip install PyQt5")
     sys.exit(1)
+
+# Add multiple possible paths for imports
+current_dir = os.path.dirname(__file__)
+project_root = os.path.dirname(current_dir)
+sys.path.insert(0, project_root)
+sys.path.insert(0, os.path.join(project_root, 'src'))
+
+try:
+    from src.utils.coordinate_finder import CoordinateFinder
+    from src.framework.agent_autonomy_framework import AgentAutonomyFramework
+except ImportError as e:
+    print(f"Import error: {e}")
+    print("Trying alternative import paths...")
+    
+    # Try direct import
+    try:
+        from utils.coordinate_finder import CoordinateFinder
+        from framework.agent_autonomy_framework import AgentAutonomyFramework
+        print("✅ Imported using direct path")
+    except ImportError:
+        print("Creating fallback classes...")
+        # Create dummy classes for fallback
+        class CoordinateFinder:
+            def __init__(self):
+                self.coordinates = {}
+            def get_all_coordinates(self):
+                return {f"agent-{i}": (100 + i*50, 100 + i*50) for i in range(1, 3)}
+            def get_coordinates(self, agent_id):
+                return (100, 100)
+        
+        class AgentAutonomyFramework:
+            def __init__(self):
+                pass
 
 class AgentPanel(QWidget):
     """Individual agent panel with status and controls."""
@@ -64,8 +89,8 @@ class AgentPanel(QWidget):
     def init_ui(self):
         """Initialize the agent panel UI."""
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(15)
+        layout.setContentsMargins(15, 15, 15, 15)  # Smaller margins like 4-agent
+        layout.setSpacing(10)
         
         # Main container
         container = QFrame()
@@ -74,9 +99,9 @@ class AgentPanel(QWidget):
             #agentContainer {
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
                     stop:0 #2C3E50, stop:1 #34495E);
-                border-radius: 15px;
+                border-radius: 12px;
                 border: 2px solid #34495E;
-                min-height: 400px;
+                min-height: 350px;
             }
             #agentContainer:hover {
                 border-color: #3498DB;
@@ -84,19 +109,19 @@ class AgentPanel(QWidget):
         """)
         
         container_layout = QVBoxLayout(container)
-        container_layout.setSpacing(15)
+        container_layout.setSpacing(10)
         
         # Agent header
         header_layout = QHBoxLayout()
         
-        # Agent ID with larger font
+        # Agent ID with medium font (like 4-agent)
         self.agent_label = QLabel(self.agent_id.upper())
         self.agent_label.setStyleSheet("""
             QLabel {
-                font-size: 24px;
+                font-size: 18px;
                 font-weight: bold;
                 color: white;
-                padding: 10px;
+                padding: 8px;
             }
         """)
         header_layout.addWidget(self.agent_label)
@@ -105,10 +130,10 @@ class AgentPanel(QWidget):
         self.status_label = QLabel("⚫ OFFLINE")
         self.status_label.setStyleSheet("""
             QLabel {
-                font-size: 14px;
+                font-size: 12px;
                 color: #7F8C8D;
                 font-weight: bold;
-                padding: 10px;
+                padding: 8px;
             }
         """)
         header_layout.addWidget(self.status_label)
@@ -116,43 +141,43 @@ class AgentPanel(QWidget):
         container_layout.addLayout(header_layout)
         
         # Status info section
-        status_group = QGroupBox("Status Information")
+        status_group = QGroupBox("Status")
         status_group.setStyleSheet("""
             QGroupBox {
                 font-weight: bold;
                 color: white;
                 border: 2px solid #34495E;
-                border-radius: 8px;
-                margin-top: 10px;
-                padding-top: 10px;
+                border-radius: 6px;
+                margin-top: 8px;
+                padding-top: 8px;
             }
             QGroupBox::title {
                 subcontrol-origin: margin;
-                left: 10px;
-                padding: 0 5px 0 5px;
+                left: 8px;
+                padding: 0 4px 0 4px;
             }
         """)
         
         status_layout = QVBoxLayout(status_group)
         
         # Current task
-        self.task_label = QLabel("Current Task: idle")
+        self.task_label = QLabel("Task: idle")
         self.task_label.setStyleSheet("""
             QLabel {
-                font-size: 12px;
+                font-size: 11px;
                 color: #BDC3C7;
-                padding: 5px;
+                padding: 3px;
             }
         """)
         status_layout.addWidget(self.task_label)
         
         # Last update
-        self.update_label = QLabel("Last Update: never")
+        self.update_label = QLabel("Updated: never")
         self.update_label.setStyleSheet("""
             QLabel {
-                font-size: 12px;
+                font-size: 11px;
                 color: #BDC3C7;
-                padding: 5px;
+                padding: 3px;
             }
         """)
         status_layout.addWidget(self.update_label)
@@ -160,27 +185,27 @@ class AgentPanel(QWidget):
         container_layout.addWidget(status_group)
         
         # Control buttons
-        controls_group = QGroupBox("Agent Controls")
+        controls_group = QGroupBox("Controls")
         controls_group.setStyleSheet("""
             QGroupBox {
                 font-weight: bold;
                 color: white;
                 border: 2px solid #34495E;
-                border-radius: 8px;
-                margin-top: 10px;
-                padding-top: 10px;
+                border-radius: 6px;
+                margin-top: 8px;
+                padding-top: 8px;
             }
         """)
         
         controls_layout = QVBoxLayout(controls_group)
         
-        # Control buttons with tooltips
+        # Control buttons with tooltips (compact like 4-agent)
         controls = [
             ("🔍 Ping", "Test if agent is responsive", self.ping_agent),
-            ("📊 Get Status", "Read agent's status.json file", self.get_status),
+            ("📊 Status", "Read agent's status.json file", self.get_status),
             ("▶️ Resume", "Tell agent to resume operations", self.resume_agent),
             ("⏸️ Pause", "Tell agent to pause operations", self.pause_agent),
-            ("🎯 Assign Task", "Send a specific task to agent", self.assign_task)
+            ("🎯 Task", "Send a specific task to agent", self.assign_task)
         ]
         
         for text, tooltip, callback in controls:
@@ -191,12 +216,12 @@ class AgentPanel(QWidget):
                 QPushButton {
                     background-color: #34495E;
                     color: white;
-                    border-radius: 8px;
-                    padding: 12px;
+                    border-radius: 6px;
+                    padding: 8px;
                     font-weight: bold;
                     text-align: left;
-                    font-size: 12px;
-                    margin: 2px;
+                    font-size: 11px;
+                    margin: 1px;
                 }
                 QPushButton:hover {
                     background-color: #2C3E50;
@@ -218,43 +243,117 @@ class AgentPanel(QWidget):
         # Update status label
         if status == "online":
             self.status_label.setText("🟢 ONLINE")
-            self.status_label.setStyleSheet("color: #27AE60; font-weight: bold; padding: 10px;")
+            self.status_label.setStyleSheet("color: #27AE60; font-weight: bold; padding: 8px;")
         elif status == "busy":
             self.status_label.setText("🟡 BUSY")
-            self.status_label.setStyleSheet("color: #F39C12; font-weight: bold; padding: 10px;")
+            self.status_label.setStyleSheet("color: #F39C12; font-weight: bold; padding: 8px;")
         elif status == "error":
             self.status_label.setText("🔴 ERROR")
-            self.status_label.setStyleSheet("color: #E74C3C; font-weight: bold; padding: 10px;")
+            self.status_label.setStyleSheet("color: #E74C3C; font-weight: bold; padding: 8px;")
         else:
             self.status_label.setText("⚫ OFFLINE")
-            self.status_label.setStyleSheet("color: #7F8C8D; font-weight: bold; padding: 10px;")
+            self.status_label.setStyleSheet("color: #7F8C8D; font-weight: bold; padding: 8px;")
         
         # Update task and update labels
         if task:
-            self.task_label.setText(f"Current Task: {task[:30]}{'...' if len(task) > 30 else ''}")
+            self.task_label.setText(f"Task: {task[:30]}{'...' if len(task) > 30 else ''}")
         if last_update:
-            self.update_label.setText(f"Last Update: {last_update}")
+            self.update_label.setText(f"Updated: {last_update}")
     
     # Agent control methods (will be connected to main GUI)
     def ping_agent(self):
         """Ping this agent."""
-        pass  # Will be connected to main GUI
+        try:
+            coords = self.main_gui.coordinate_finder.get_coordinates(self.agent_id)
+            if coords:
+                x, y = coords
+                pyautogui.click(x, y)
+                time.sleep(0.3)
+                pyautogui.typewrite("ping")
+                pyautogui.press('enter')
+                self.main_gui.log_message("Control", f"Ping sent to {self.agent_id}")
+            else:
+                self.main_gui.log_message("Error", f"No coordinates found for {self.agent_id}")
+        except Exception as e:
+            self.main_gui.log_message("Error", f"Failed to ping {self.agent_id}: {e}")
     
     def get_status(self):
         """Get status of this agent."""
-        pass  # Will be connected to main GUI
+        try:
+            status_file = os.path.join("agent_workspaces", self.agent_id, "status.json")
+            if os.path.exists(status_file):
+                with open(status_file, 'r') as f:
+                    status_data = json.load(f)
+                
+                status = status_data.get('status', 'unknown')
+                task = status_data.get('current_task', 'idle')
+                last_update = status_data.get('last_update', 'unknown')
+                
+                self.main_gui.log_message("Status", f"{self.agent_id}: {status} - {task} (Last: {last_update})")
+                self.update_status(status, task, last_update)
+            else:
+                self.main_gui.log_message("Status", f"{self.agent_id}: No status file found")
+        except Exception as e:
+            self.main_gui.log_message("Error", f"Failed to get {self.agent_id} status: {e}")
     
     def resume_agent(self):
         """Resume this agent."""
-        pass  # Will be connected to main GUI
+        try:
+            coords = self.main_gui.coordinate_finder.get_coordinates(self.agent_id)
+            if coords:
+                x, y = coords
+                pyautogui.click(x, y)
+                time.sleep(0.3)
+                pyautogui.typewrite("resume")
+                pyautogui.press('enter')
+                self.main_gui.log_message("Control", f"Resume command sent to {self.agent_id}")
+            else:
+                self.main_gui.log_message("Error", f"No coordinates found for {self.agent_id}")
+        except Exception as e:
+            self.main_gui.log_message("Error", f"Failed to resume {self.agent_id}: {e}")
     
     def pause_agent(self):
         """Pause this agent."""
-        pass  # Will be connected to main GUI
+        try:
+            coords = self.main_gui.coordinate_finder.get_coordinates(self.agent_id)
+            if coords:
+                x, y = coords
+                pyautogui.click(x, y)
+                time.sleep(0.3)
+                pyautogui.typewrite("pause")
+                pyautogui.press('enter')
+                self.main_gui.log_message("Control", f"Pause command sent to {self.agent_id}")
+            else:
+                self.main_gui.log_message("Error", f"No coordinates found for {self.agent_id}")
+        except Exception as e:
+            self.main_gui.log_message("Error", f"Failed to pause {self.agent_id}: {e}")
     
     def assign_task(self):
         """Assign task to this agent."""
-        pass  # Will be connected to main GUI
+        try:
+            task, ok = QInputDialog.getText(
+                self.main_gui, 
+                f"Assign Task to {self.agent_id}", 
+                f"Enter task for {self.agent_id}:",
+                text="Complete assigned task"
+            )
+            
+            if not ok or not task.strip():
+                self.main_gui.log_message("Task", "Task assignment cancelled")
+                return
+            
+            coords = self.main_gui.coordinate_finder.get_coordinates(self.agent_id)
+            if coords:
+                x, y = coords
+                pyautogui.click(x, y)
+                time.sleep(0.3)
+                pyautogui.typewrite(f"task: {task}")
+                pyautogui.press('enter')
+                self.main_gui.log_message("Task", f"Task assigned to {self.agent_id}: {task}")
+            else:
+                self.main_gui.log_message("Error", f"No coordinates found for {self.agent_id}")
+        except Exception as e:
+            self.main_gui.log_message("Error", f"Failed to assign task to {self.agent_id}: {e}")
 
 class TwoAgentHorizontalGUI(QMainWindow):
     """Modern two-agent horizontal GUI."""
@@ -295,12 +394,14 @@ class TwoAgentHorizontalGUI(QMainWindow):
         agent_layout.setSpacing(20)
         
         # Agent 1 panel
-        agent1_panel = AgentPanel("agent-1")
+        agent1_panel = AgentPanel("agent-1", self)
+        agent1_panel.main_gui = self  # Direct reference to main GUI
         self.agent_panels["agent-1"] = agent1_panel
         agent_layout.addWidget(agent1_panel)
         
         # Agent 2 panel
-        agent2_panel = AgentPanel("agent-2")
+        agent2_panel = AgentPanel("agent-2", self)
+        agent2_panel.main_gui = self  # Direct reference to main GUI
         self.agent_panels["agent-2"] = agent2_panel
         agent_layout.addWidget(agent2_panel)
         
@@ -668,8 +769,45 @@ class TwoAgentHorizontalGUI(QMainWindow):
     def onboard_agents(self):
         """Onboard both agents."""
         self.log_message("System", "Starting agent onboarding...")
-        # Add actual onboarding logic here
-        self.log_message("System", "Onboarding sequence completed")
+        try:
+            # Import and run the onboarding sequence
+            import subprocess
+            import sys
+            
+            # Run the onboarding script for both agents
+            onboarding_script = os.path.join(os.getcwd(), "scripts", "run_onboarding.py")
+            if os.path.exists(onboarding_script):
+                self.log_message("System", "Running onboarding sequence...")
+                
+                # Run onboarding in a separate thread to avoid blocking the GUI
+                def run_onboarding():
+                    try:
+                        result = subprocess.run(
+                            [sys.executable, onboarding_script],
+                            capture_output=True,
+                            text=True,
+                            cwd=os.getcwd()
+                        )
+                        
+                        if result.returncode == 0:
+                            self.log_message("System", "Onboarding completed successfully")
+                            # Update agent statuses after onboarding
+                            self.update_agent_statuses()
+                        else:
+                            self.log_message("Error", f"Onboarding failed: {result.stderr}")
+                    except Exception as e:
+                        self.log_message("Error", f"Onboarding error: {e}")
+                
+                # Start onboarding in background thread
+                onboarding_thread = threading.Thread(target=run_onboarding)
+                onboarding_thread.daemon = True
+                onboarding_thread.start()
+                
+            else:
+                self.log_message("Error", f"Onboarding script not found: {onboarding_script}")
+                
+        except Exception as e:
+            self.log_message("Error", f"Failed to start onboarding: {e}")
     
     def restart_system(self):
         """Restart the system."""

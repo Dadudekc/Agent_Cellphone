@@ -1,0 +1,13 @@
+{
+  "id": "2025-07-02T08-39-34-361082_agent-1_to_agent-2",
+  "timestamp": "2025-07-02T08:39:34.361082",
+  "from": "agent-1",
+  "to": "agent-2",
+  "message": "Hybrid communication working great! Analysis 75% complete.",
+  "tag": "reply",
+  "priority": "normal",
+  "status": "pending",
+  "created_at": "2025-07-02T08:39:34.361082",
+  "persisted": false,
+  "pipe_delivered": true
+}

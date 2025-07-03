@@ -32,7 +32,7 @@ class CoordinateFinder:
         Args:
             config_path: Path to coordinates configuration file
         """
-        self.config_path = config_path or "runtime/config/cursor_agent_coords.json"
+        self.config_path = config_path or "config/agents/agent_coordinates.json"
         self.coordinates = self._load_coordinates()
         self.logger = logger
     
@@ -78,9 +78,46 @@ class CoordinateFinder:
         except Exception as e:
             logger.error(f"Failed to save coordinates: {e}")
     
-    def get_coordinates(self, agent_id: str) -> Optional[Tuple[int, int]]:
+    def get_coordinates(self, agent_id: str, box_type: str = "input_box") -> Optional[Tuple[int, int]]:
         """
         Get coordinates for a specific agent.
+        
+        Args:
+            agent_id: ID of the agent
+            box_type: Type of box to get coordinates for ("input_box" or "starter_location_box")
+            
+        Returns:
+            Tuple of (x, y) coordinates or None if not found
+        """
+        # Handle nested structure (2-agent, 4-agent, 8-agent)
+        for layout_key in ["2-agent", "4-agent", "8-agent"]:
+            if layout_key in self.coordinates:
+                layout_coords = self.coordinates[layout_key]
+                # Convert agent-1 to Agent-1 format
+                agent_key = agent_id.replace("agent-", "Agent-")
+                if agent_key in layout_coords:
+                    # Try to get the specified box type, fallback to input_box
+                    box_data = layout_coords[agent_key].get(box_type, {})
+                    if not box_data and box_type != "input_box":
+                        # Fallback to input_box if starter_location_box not found
+                        box_data = layout_coords[agent_key].get("input_box", {})
+                    
+                    x = box_data.get("x", 0)
+                    y = box_data.get("y", 0)
+                    return (x, y)
+        
+        # Fallback to flat structure
+        if agent_id in self.coordinates:
+            coords = self.coordinates[agent_id]
+            return (coords["x"], coords["y"])
+        else:
+            logger.warning(f"Coordinates not found for agent: {agent_id}")
+            return None
+    
+    def get_starter_location(self, agent_id: str) -> Optional[Tuple[int, int]]:
+        """
+        Get starter location box coordinates for a specific agent.
+        This is a consistent location that doesn't change after sending messages.
         
         Args:
             agent_id: ID of the agent
@@ -88,12 +125,20 @@ class CoordinateFinder:
         Returns:
             Tuple of (x, y) coordinates or None if not found
         """
-        if agent_id in self.coordinates:
-            coords = self.coordinates[agent_id]
-            return (coords["x"], coords["y"])
-        else:
-            logger.warning(f"Coordinates not found for agent: {agent_id}")
-            return None
+        return self.get_coordinates(agent_id, "starter_location_box")
+    
+    def get_input_box_location(self, agent_id: str) -> Optional[Tuple[int, int]]:
+        """
+        Get input box coordinates for a specific agent.
+        This location may change after sending messages.
+        
+        Args:
+            agent_id: ID of the agent
+            
+        Returns:
+            Tuple of (x, y) coordinates or None if not found
+        """
+        return self.get_coordinates(agent_id, "input_box")
     
     def set_coordinates(self, agent_id: str, x: int, y: int):
         """
@@ -115,8 +160,26 @@ class CoordinateFinder:
         Returns:
             Dictionary mapping agent IDs to coordinate tuples
         """
-        return {agent_id: (coords["x"], coords["y"]) 
-                for agent_id, coords in self.coordinates.items()}
+        all_coords = {}
+        
+        # Handle nested structure (2-agent, 4-agent, 8-agent)
+        for layout_key in ["2-agent", "4-agent", "8-agent"]:
+            if layout_key in self.coordinates:
+                layout_coords = self.coordinates[layout_key]
+                for agent_key, agent_data in layout_coords.items():
+                    # Convert Agent-1 to agent-1 format
+                    agent_id = agent_key.replace("Agent-", "agent-")
+                    input_box = agent_data.get("input_box", {})
+                    x = input_box.get("x", 0)
+                    y = input_box.get("y", 0)
+                    all_coords[agent_id] = (x, y)
+        
+        # Fallback to flat structure
+        if not all_coords:
+            all_coords = {agent_id: (coords["x"], coords["y"]) 
+                         for agent_id, coords in self.coordinates.items()}
+        
+        return all_coords
     
     def validate_coordinates(self) -> List[str]:
         """

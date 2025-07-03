@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
 Dream.OS Agent Onboarding Sequence
-Automated onboarding system using PyAutoGUI to identify agents and send personalized onboarding messages.
+Automated onboarding system using the CLI tool to send personalized onboarding messages.
 """
 
-import pyautogui
 import json
 import time
 import os
 import sys
+import subprocess
 from datetime import datetime
 from pathlib import Path
 
@@ -16,23 +16,22 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.append(str(project_root))
 
-from coordinate_finder import CoordinateFinder
+from coordinate_finder import load_existing_coordinates
 
 class AgentOnboardingSequence:
-    """Automated onboarding system for Dream.OS agents"""
+    """Automated onboarding system for Dream.OS agents using CLI tool"""
     
     def __init__(self):
-        self.coordinate_finder = CoordinateFinder()
         self.agents = self.load_agent_coordinates()
         self.onboarding_messages = self.load_onboarding_messages()
         
     def load_agent_coordinates(self):
         """Load agent coordinates from the coordinate finder"""
         try:
-            coordinates_file = project_root / "runtime" / "config" / "cursor_agent_coords.json"
-            if coordinates_file.exists():
-                with open(coordinates_file, 'r') as f:
-                    return json.load(f)
+            # Use the imported function to load coordinates
+            coordinates = load_existing_coordinates()
+            if coordinates:
+                return coordinates
             else:
                 print("⚠️  No agent coordinates found. Please run coordinate_finder.py first.")
                 return {}
@@ -41,215 +40,44 @@ class AgentOnboardingSequence:
             return {}
     
     def load_onboarding_messages(self):
-        """Load personalized onboarding messages for each agent"""
+        """Load personalized onboarding messages for each agent (ASCII only)"""
         return {
             "Agent-1": {
-                "title": "🎯 Welcome Agent-1: System Coordinator & Project Manager",
-                "message": """Welcome to Dream.OS! You are Agent-1, our System Coordinator & Project Manager.
-
-Your role is crucial to our success:
-• Project coordination and task assignment
-• Progress monitoring and bottleneck identification
-• Conflict resolution and team leadership
-• Quality assurance and strategic planning
-
-📚 Your Onboarding Materials:
-• Main Guide: agent_workspaces/onboarding/README.md
-• Your Role: agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md
-• Protocols: agent_workspaces/onboarding/protocols/agent_protocols.md
-• Checklist: agent_workspaces/onboarding/training_documents/onboarding_checklist.md
-
-🚀 Next Steps:
-1. Read the main README.md
-2. Complete the onboarding checklist
-3. Review your specific role responsibilities
-4. Practice with the team communication protocols
-
-You're the leader of our team - let's build something amazing together! 🎉"""
+                "title": "Welcome Agent-1: System Coordinator & Project Manager",
+                "message": """Welcome to Dream.OS! You are Agent-1, our System Coordinator & Project Manager.\n\nYour role is crucial to our success:\n- Project coordination and task assignment\n- Progress monitoring and bottleneck identification\n- Conflict resolution and team leadership\n- Quality assurance and strategic planning\n\nYour Onboarding Materials:\n- Main Guide: agent_workspaces/onboarding/README.md\n- Your Role: agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md\n- Protocols: agent_workspaces/onboarding/protocols/agent_protocols.md\n- Checklist: agent_workspaces/onboarding/training_documents/onboarding_checklist.md\n\nNext Steps:\n1. Read the main README.md\n2. Complete the onboarding checklist\n3. Review your specific role responsibilities\n4. Practice with the team communication protocols\n\nIMPORTANT: Use the CLI tool for all agent communication:\npython src/agent_cell_phone.py -a Agent-2 -m \"Hello from Agent-1!\" -t normal\n\nYou are the leader of our team. Let's build something amazing together!"""
             },
             "Agent-2": {
-                "title": "🎨 Welcome Agent-2: Frontend Development Specialist",
-                "message": """Welcome to Dream.OS! You are Agent-2, our Frontend Development Specialist.
-
-Your expertise drives our user experience:
-• UI/UX development and responsive design
-• Frontend architecture and component development
-• Performance optimization and accessibility
-• Cross-browser compatibility and PWA development
-
-📚 Your Onboarding Materials:
-• Main Guide: agent_workspaces/onboarding/README.md
-• Your Role: agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md
-• Development Standards: agent_workspaces/onboarding/training_documents/development_standards.md
-• Tools Guide: agent_workspaces/onboarding/training_documents/tools_and_technologies.md
-
-🚀 Next Steps:
-1. Review frontend development standards
-2. Set up your development environment
-3. Practice with React/Vue.js/Angular workflows
-4. Complete the onboarding checklist
-
-Your designs will shape how users interact with our systems! 🎨"""
+                "title": "Welcome Agent-2: Frontend Development Specialist",
+                "message": """Welcome to Dream.OS! You are Agent-2, our Frontend Development Specialist.\n\nYour expertise drives our user experience:\n- UI/UX development and responsive design\n- Frontend architecture and component development\n- Performance optimization and accessibility\n- Cross-browser compatibility and PWA development\n\nYour Onboarding Materials:\n- Main Guide: agent_workspaces/onboarding/README.md\n- Your Role: agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md\n- Development Standards: agent_workspaces/onboarding/training_documents/development_standards.md\n- Tools Guide: agent_workspaces/onboarding/training_documents/tools_and_technologies.md\n\nNext Steps:\n1. Review frontend development standards\n2. Set up your development environment\n3. Practice with React/Vue.js/Angular workflows\n4. Complete the onboarding checklist\n\nIMPORTANT: Use the CLI tool for all agent communication:\npython src/agent_cell_phone.py -a Agent-1 -m \"Frontend environment ready\" -t reply\n\nYour designs will shape how users interact with our systems."""
             },
             "Agent-3": {
-                "title": "⚙️ Welcome Agent-3: Backend Development Specialist",
-                "message": """Welcome to Dream.OS! You are Agent-3, our Backend Development Specialist.
-
-You're the backbone of our systems:
-• API development and database design
-• Server architecture and microservices
-• Authentication, authorization, and security
-• Data processing and external integrations
-
-📚 Your Onboarding Materials:
-• Main Guide: agent_workspaces/onboarding/README.md
-• Your Role: agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md
-• Development Standards: agent_workspaces/onboarding/training_documents/development_standards.md
-• Workflow Protocols: agent_workspaces/onboarding/protocols/workflow_protocols.md
-
-🚀 Next Steps:
-1. Review backend development standards
-2. Set up Python/Node.js/Java environments
-3. Practice API development workflows
-4. Complete the onboarding checklist
-
-Your APIs will power everything we build! ⚙️"""
+                "title": "Welcome Agent-3: Backend Development Specialist",
+                "message": """Welcome to Dream.OS! You are Agent-3, our Backend Development Specialist.\n\nYou're the backbone of our systems:\n- API development and database design\n- Server architecture and microservices\n- Authentication, authorization, and security\n- Data processing and external integrations\n\nYour Onboarding Materials:\n- Main Guide: agent_workspaces/onboarding/README.md\n- Your Role: agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md\n- Development Standards: agent_workspaces/onboarding/training_documents/development_standards.md\n- Workflow Protocols: agent_workspaces/onboarding/protocols/workflow_protocols.md\n\nNext Steps:\n1. Review backend development standards\n2. Set up Python/Node.js/Java environments\n3. Practice API development workflows\n4. Complete the onboarding checklist\n\nIMPORTANT: Use the CLI tool for all agent communication:\npython src/agent_cell_phone.py -a Agent-1 -m \"Backend environment ready\" -t reply\n\nYour APIs will power everything we build!"""
             },
             "Agent-4": {
-                "title": "🛠️ Welcome Agent-4: DevOps & Infrastructure Specialist",
-                "message": """Welcome to Dream.OS! You are Agent-4, our DevOps & Infrastructure Specialist.
-
-You keep our systems running smoothly:
-• Infrastructure management and cloud platforms
-• CI/CD pipelines and automation
-• Monitoring, logging, and security
-• Performance optimization and disaster recovery
-
-📚 Your Onboarding Materials:
-• Main Guide: agent_workspaces/onboarding/README.md
-• Your Role: agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md
-• Tools Guide: agent_workspaces/onboarding/training_documents/tools_and_technologies.md
-• Command Reference: agent_workspaces/onboarding/protocols/command_reference.md
-
-🚀 Next Steps:
-1. Review DevOps tools and technologies
-2. Set up Docker/Kubernetes environments
-3. Practice infrastructure automation
-4. Complete the onboarding checklist
-
-You're the guardian of our infrastructure! 🛠️"""
+                "title": "Welcome Agent-4: DevOps & Infrastructure Specialist",
+                "message": """Welcome to Dream.OS! You are Agent-4, our DevOps & Infrastructure Specialist.\n\nYou keep our systems running smoothly:\n- Infrastructure management and cloud platforms\n- CI/CD pipelines and automation\n- Monitoring, logging, and security\n- Performance optimization and disaster recovery\n\nYour Onboarding Materials:\n- Main Guide: agent_workspaces/onboarding/README.md\n- Your Role: agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md\n- Tools Guide: agent_workspaces/onboarding/training_documents/tools_and_technologies.md\n- Command Reference: agent_workspaces/onboarding/protocols/command_reference.md\n\nNext Steps:\n1. Review DevOps tools and technologies\n2. Set up Docker/Kubernetes environments\n3. Practice infrastructure automation\n4. Complete the onboarding checklist\n\nIMPORTANT: Use the CLI tool for all agent communication:\npython src/agent_cell_phone.py -a Agent-1 -m \"DevOps environment ready\" -t reply\n\nYou're the guardian of our infrastructure!"""
             },
             "Agent-5": {
-                "title": "🔍 Welcome Agent-5: Testing & Quality Assurance Specialist",
-                "message": """Welcome to Dream.OS! You are Agent-5, our Testing & Quality Assurance Specialist.
-
-You ensure our quality standards:
-• Test strategy and automation frameworks
-• Quality assurance and reliability testing
-• Performance testing and security testing
-• Test environment management
-
-📚 Your Onboarding Materials:
-• Main Guide: agent_workspaces/onboarding/README.md
-• Your Role: agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md
-• Development Standards: agent_workspaces/onboarding/training_documents/development_standards.md
-• Best Practices: agent_workspaces/onboarding/training_documents/best_practices.md
-
-🚀 Next Steps:
-1. Review testing standards and frameworks
-2. Set up testing environments
-3. Practice test automation workflows
-4. Complete the onboarding checklist
-
-You're our quality gatekeeper! 🔍"""
+                "title": "Welcome Agent-5: Testing & Quality Assurance Specialist",
+                "message": """Welcome to Dream.OS! You are Agent-5, our Testing & Quality Assurance Specialist.\n\nYou ensure our quality standards:\n- Test strategy and automation frameworks\n- Quality assurance and reliability testing\n- Performance testing and security testing\n- Test environment management\n\nYour Onboarding Materials:\n- Main Guide: agent_workspaces/onboarding/README.md\n- Your Role: agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md\n- Development Standards: agent_workspaces/onboarding/training_documents/development_standards.md\n- Best Practices: agent_workspaces/onboarding/training_documents/best_practices.md\n\nNext Steps:\n1. Review testing standards and frameworks\n2. Set up testing environments\n3. Practice test automation workflows\n4. Complete the onboarding checklist\n\nIMPORTANT: Use the CLI tool for all agent communication:\npython src/agent_cell_phone.py -a Agent-1 -m \"Testing environment ready\" -t reply\n\nYou're our quality gatekeeper!"""
             },
             "Agent-6": {
-                "title": "📊 Welcome Agent-6: Data Science & Analytics Specialist",
-                "message": """Welcome to Dream.OS! You are Agent-6, our Data Science & Analytics Specialist.
-
-You turn data into insights:
-• Data analysis and machine learning
-• Data visualization and business intelligence
-• Predictive analytics and forecasting
-• Data pipeline development
-
-📚 Your Onboarding Materials:
-• Main Guide: agent_workspaces/onboarding/README.md
-• Your Role: agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md
-• Tools Guide: agent_workspaces/onboarding/training_documents/tools_and_technologies.md
-• System Overview: agent_workspaces/onboarding/training_documents/system_overview.md
-
-🚀 Next Steps:
-1. Review data science tools and frameworks
-2. Set up Python data science environment
-3. Practice ML and analytics workflows
-4. Complete the onboarding checklist
-
-You'll unlock insights that drive our decisions! 📊"""
+                "title": "Welcome Agent-6: Data Science & Analytics Specialist",
+                "message": """Welcome to Dream.OS! You are Agent-6, our Data Science & Analytics Specialist.\n\nYou turn data into insights:\n- Data analysis and machine learning\n- Data visualization and business intelligence\n- Predictive analytics and forecasting\n- Data pipeline development\n\nYour Onboarding Materials:\n- Main Guide: agent_workspaces/onboarding/README.md\n- Your Role: agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md\n- Tools Guide: agent_workspaces/onboarding/training_documents/tools_and_technologies.md\n- System Overview: agent_workspaces/onboarding/training_documents/system_overview.md\n\nNext Steps:\n1. Review data science tools and frameworks\n2. Set up Python data science environment\n3. Practice ML and analytics workflows\n4. Complete the onboarding checklist\n\nIMPORTANT: Use the CLI tool for all agent communication:\npython src/agent_cell_phone.py -a Agent-1 -m \"Data science environment ready\" -t reply\n\nYou'll unlock insights that drive our decisions!"""
             },
             "Agent-7": {
-                "title": "🔒 Welcome Agent-7: Security & Compliance Specialist",
-                "message": """Welcome to Dream.OS! You are Agent-7, our Security & Compliance Specialist.
-
-You protect our systems and data:
-• Security architecture and vulnerability assessment
-• Compliance management and incident response
-• Security monitoring and threat detection
-• Security training and awareness
-
-📚 Your Onboarding Materials:
-• Main Guide: agent_workspaces/onboarding/README.md
-• Your Role: agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md
-• Security Protocols: agent_workspaces/onboarding/protocols/agent_protocols.md
-• Troubleshooting: agent_workspaces/onboarding/training_documents/troubleshooting.md
-
-🚀 Next Steps:
-1. Review security protocols and standards
-2. Set up security testing tools
-3. Practice incident response procedures
-4. Complete the onboarding checklist
-
-You're our security guardian! 🔒"""
+                "title": "Welcome Agent-7: Security & Compliance Specialist",
+                "message": """Welcome to Dream.OS! You are Agent-7, our Security & Compliance Specialist.\n\nYou protect our systems and data:\n- Security architecture and vulnerability assessment\n- Compliance management and incident response\n- Security monitoring and threat detection\n- Security training and awareness\n\nYour Onboarding Materials:\n- Main Guide: agent_workspaces/onboarding/README.md\n- Your Role: agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md\n- Security Protocols: agent_workspaces/onboarding/protocols/security_protocols.md\n- Compliance Standards: agent_workspaces/onboarding/training_documents/compliance_standards.md\n\nNext Steps:\n1. Review security protocols and standards\n2. Set up security monitoring tools\n3. Practice incident response procedures\n4. Complete the onboarding checklist\n\nIMPORTANT: Use the CLI tool for all agent communication:\npython src/agent_cell_phone.py -a Agent-1 -m \"Security environment ready\" -t reply\n\nYou're our security guardian!"""
             },
             "Agent-8": {
-                "title": "📚 Welcome Agent-8: Documentation & Knowledge Management Specialist",
-                "message": """Welcome to Dream.OS! You are Agent-8, our Documentation & Knowledge Management Specialist.
-
-You organize and share knowledge:
-• Technical documentation and user guides
-• API documentation and knowledge management
-• Training materials and process documentation
-• Information architecture and content management
-
-📚 Your Onboarding Materials:
-• Main Guide: agent_workspaces/onboarding/README.md
-• Your Role: agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md
-• Documentation Standards: agent_workspaces/onboarding/training_documents/development_standards.md
-• Getting Started: agent_workspaces/onboarding/training_documents/getting_started.md
-
-🚀 Next Steps:
-1. Review documentation standards
-2. Set up documentation tools
-3. Practice technical writing workflows
-4. Complete the onboarding checklist
-
-You'll help us capture and share knowledge effectively! 📚"""
+                "title": "Welcome Agent-8: Integration & API Specialist",
+                "message": """Welcome to Dream.OS! You are Agent-8, our Integration & API Specialist.\n\nYou connect all our systems:\n- API integration and middleware development\n- System integration and data synchronization\n- Third-party service integration\n- API documentation and developer experience\n\nYour Onboarding Materials:\n- Main Guide: agent_workspaces/onboarding/README.md\n- Your Role: agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md\n- Integration Protocols: agent_workspaces/onboarding/protocols/integration_protocols.md\n- API Standards: agent_workspaces/onboarding/training_documents/api_standards.md\n\nNext Steps:\n1. Review integration protocols and API standards\n2. Set up integration testing environment\n3. Practice API integration workflows\n4. Complete the onboarding checklist\n\nIMPORTANT: Use the CLI tool for all agent communication:\npython src/agent_cell_phone.py -a Agent-1 -m \"Integration environment ready\" -t reply\n\nYou'll connect everything together!"""
             }
         }
     
-    def identify_agent_by_position(self, x, y):
-        """Identify which agent is at the given screen position"""
-        for agent_name, coords in self.agents.items():
-            if 'coordinates' in coords:
-                agent_x = coords['coordinates']['x']
-                agent_y = coords['coordinates']['y']
-                # Check if position is within reasonable range (50 pixels)
-                if abs(x - agent_x) <= 50 and abs(y - agent_y) <= 50:
-                    return agent_name
-        return None
-    
     def send_onboarding_message(self, agent_name):
-        """Send personalized onboarding message to specific agent"""
+        """Send onboarding message to specific agent using CLI tool"""
         if agent_name not in self.onboarding_messages:
             print(f"❌ No onboarding message found for {agent_name}")
             return False
@@ -257,136 +85,112 @@ You'll help us capture and share knowledge effectively! 📚"""
         message_data = self.onboarding_messages[agent_name]
         
         try:
-            # Type the title
-            pyautogui.typewrite(message_data["title"])
-            pyautogui.press('enter')
-            pyautogui.press('enter')
+            # Use CLI tool to send message
+            cmd = [
+                "python", "src/agent_cell_phone.py",
+                "-a", agent_name,
+                "-m", message_data["message"],
+                "-t", "onboarding"
+            ]
             
-            # Type the message
-            pyautogui.typewrite(message_data["message"])
-            pyautogui.press('enter')
-            pyautogui.press('enter')
+            print(f"📤 Sending onboarding message to {agent_name}...")
+            result = subprocess.run(cmd, capture_output=True, text=True, cwd=project_root)
             
-            # Add timestamp
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            pyautogui.typewrite(f"📅 Onboarding sent: {timestamp}")
-            pyautogui.press('enter')
-            
-            print(f"✅ Onboarding message sent to {agent_name}")
-            return True
-            
+            if result.returncode == 0:
+                print(f"✅ Onboarding message sent to {agent_name}")
+                return True
+            else:
+                print(f"❌ Failed to send message to {agent_name}: {result.stderr}")
+                return False
+                
         except Exception as e:
             print(f"❌ Error sending message to {agent_name}: {e}")
             return False
     
-    def run_onboarding_sequence(self):
+    def run_onboarding_sequence(self, test_mode=False):
         """Run the complete onboarding sequence for all agents"""
         print("🚀 Starting Dream.OS Agent Onboarding Sequence")
         print("=" * 60)
         
-        if not self.agents:
-            print("❌ No agent coordinates found. Please run coordinate_finder.py first.")
-            return
+        if test_mode:
+            print("🧪 Running in TEST MODE - no actual messages will be sent")
         
-        print(f"📋 Found {len(self.agents)} agents to onboard:")
-        for agent_name in self.agents.keys():
-            print(f"   • {agent_name}")
+        # Get available agents from coordinates
+        available_agents = []
+        for layout_mode, agents in self.agents.items():
+            available_agents.extend(list(agents.keys()))
         
-        print("\n⏳ Starting onboarding sequence in 5 seconds...")
-        print("Please ensure all agent windows are visible and active.")
-        time.sleep(5)
+        if not available_agents:
+            print("❌ No agents found in coordinate configuration")
+            return False
+        
+        print(f"📋 Found {len(available_agents)} agents: {', '.join(available_agents)}")
         
         success_count = 0
-        total_agents = len(self.agents)
+        total_agents = len(available_agents)
         
-        for agent_name, coords in self.agents.items():
+        for agent_name in available_agents:
             print(f"\n🎯 Onboarding {agent_name}...")
             
-            if 'coordinates' not in coords:
-                print(f"⚠️  No coordinates found for {agent_name}, skipping...")
-                continue
-            
-            x = coords['coordinates']['x']
-            y = coords['coordinates']['y']
-            
-            try:
-                # Move to agent position
-                pyautogui.moveTo(x, y, duration=1)
-                print(f"📍 Moved to {agent_name} at ({x}, {y})")
-                
-                # Click to activate the agent window
-                pyautogui.click()
-                time.sleep(2)
-                
-                # Send onboarding message
+            if test_mode:
+                print(f"🧪 TEST MODE: Would send onboarding message to {agent_name}")
+                success_count += 1
+            else:
                 if self.send_onboarding_message(agent_name):
                     success_count += 1
-                
-                # Wait between agents
-                time.sleep(3)
-                
-            except Exception as e:
-                print(f"❌ Error onboarding {agent_name}: {e}")
+                    time.sleep(2)  # Brief pause between messages
+                else:
+                    print(f"⚠️ Failed to onboard {agent_name}")
         
-        print("\n" + "=" * 60)
-        print(f"🎉 Onboarding sequence completed!")
-        print(f"✅ Successfully onboarded: {success_count}/{total_agents} agents")
+        print(f"\n📊 Onboarding Summary:")
+        print(f"  Total Agents: {total_agents}")
+        print(f"  Successful: {success_count}")
+        print(f"  Failed: {total_agents - success_count}")
         
         if success_count == total_agents:
-            print("🏆 All agents successfully onboarded!")
+            print("🎉 All agents onboarded successfully!")
+            return True
         else:
-            print(f"⚠️  {total_agents - success_count} agents need manual onboarding")
+            print("⚠️ Some agents failed to onboard")
+            return False
     
     def onboard_specific_agent(self, agent_name):
-        """Onboard a specific agent by name"""
-        if agent_name not in self.agents:
-            print(f"❌ Agent {agent_name} not found in coordinates")
-            return False
+        """Onboard a specific agent"""
+        print(f"🎯 Onboarding specific agent: {agent_name}")
         
         if agent_name not in self.onboarding_messages:
             print(f"❌ No onboarding message found for {agent_name}")
             return False
         
-        print(f"🎯 Onboarding {agent_name}...")
-        
-        coords = self.agents[agent_name]
-        if 'coordinates' not in coords:
-            print(f"❌ No coordinates found for {agent_name}")
-            return False
-        
-        x = coords['coordinates']['x']
-        y = coords['coordinates']['y']
-        
-        try:
-            # Move to agent position
-            pyautogui.moveTo(x, y, duration=1)
-            print(f"📍 Moved to {agent_name} at ({x}, {y})")
-            
-            # Click to activate the agent window
-            pyautogui.click()
-            time.sleep(2)
-            
-            # Send onboarding message
-            return self.send_onboarding_message(agent_name)
-            
-        except Exception as e:
-            print(f"❌ Error onboarding {agent_name}: {e}")
-            return False
+        return self.send_onboarding_message(agent_name)
 
 def main():
-    """Main function to run the onboarding sequence"""
-    print("🎯 Dream.OS Agent Onboarding System")
-    print("=" * 50)
+    """Main function to run onboarding sequence"""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Dream.OS Agent Onboarding Sequence")
+    parser.add_argument("--test", action="store_true", help="Run in test mode (no actual messages)")
+    parser.add_argument("--agent", help="Onboard specific agent (e.g., Agent-1)")
+    parser.add_argument("--list-agents", action="store_true", help="List available agents")
+    
+    args = parser.parse_args()
     
     onboarding = AgentOnboardingSequence()
     
-    if len(sys.argv) > 1:
-        # Onboard specific agent
-        agent_name = sys.argv[1]
-        onboarding.onboard_specific_agent(agent_name)
+    if args.list_agents:
+        print("📋 Available agents:")
+        for layout_mode, agents in onboarding.agents.items():
+            print(f"  {layout_mode}: {', '.join(agents.keys())}")
+        return
+    
+    if args.agent:
+        success = onboarding.onboard_specific_agent(args.agent)
+        if success:
+            print(f"✅ Successfully onboarded {args.agent}")
+        else:
+            print(f"❌ Failed to onboard {args.agent}")
     else:
-        # Run full onboarding sequence
-        onboarding.run_onboarding_sequence()
+        onboarding.run_onboarding_sequence(test_mode=args.test)
 
 if __name__ == "__main__":
     main()

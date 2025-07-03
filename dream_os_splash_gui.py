@@ -7,10 +7,22 @@ Splash screen with logo that leads to agent mode selection.
 
 import sys
 import os
+import warnings
+
+# Suppress PyQt5 deprecation warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning, module="PyQt5")
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 import time
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QProgressBar, QFrame, QMessageBox, QDialog
-from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QPixmap, QFont, QPainter
+try:
+    from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QProgressBar, QFrame, QMessageBox, QDialog
+    from PyQt5.QtCore import Qt, QTimer
+    from PyQt5.QtGui import QPixmap, QFont, QPainter
+    print("✅ PyQt5 imported successfully in splash screen")
+except ImportError as e:
+    print(f"PyQt5 import error in splash screen: {e}")
+    print("PyQt5 not available. Please install: pip install PyQt5")
+    sys.exit(1)
 
 # Import removed - two_agent_mode module deleted
 
@@ -211,15 +223,24 @@ class ModeSelectionScreen(QWidget):
     def launch_gui(self, num_agents):
         """Launch the appropriate GUI based on agent count."""
         try:
-            # Launch the v2 GUI for all modes
             import subprocess
             import sys
             
             # Close the splash screen
             self.close()
             
-            # Launch the v2 GUI
-            gui_path = os.path.join(os.getcwd(), "gui", "dream_os_gui_v2.py")
+            # Determine which GUI to launch based on agent count
+            if num_agents == 2:
+                gui_path = os.path.join(os.getcwd(), "gui", "two_agent_horizontal_gui.py")
+            elif num_agents == 4:
+                gui_path = os.path.join(os.getcwd(), "gui", "four_agent_horizontal_gui.py")
+            elif num_agents == 6:
+                gui_path = os.path.join(os.getcwd(), "gui", "dream_os_gui_v2.py")
+            elif num_agents == 8:
+                gui_path = os.path.join(os.getcwd(), "gui", "dream_os_gui_v2.py")
+            else:
+                gui_path = os.path.join(os.getcwd(), "gui", "dream_os_gui_v2.py")
+            
             if os.path.exists(gui_path):
                 subprocess.Popen([sys.executable, gui_path])
             else:

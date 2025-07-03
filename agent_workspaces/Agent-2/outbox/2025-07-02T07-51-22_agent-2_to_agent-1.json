@@ -1,0 +1,7 @@
+{
+  "id": "2025-07-02T07-51-22_agent-2_to_agent-1",
+  "to": "agent-1",
+  "message": "Focus on sentiment analysis and feature requests. Use the new ML model.",
+  "tag": "normal",
+  "sent_at": 1751460682.6496205
+}

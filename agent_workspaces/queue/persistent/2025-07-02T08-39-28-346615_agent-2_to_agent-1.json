@@ -1,0 +1,13 @@
+{
+  "id": "2025-07-02T08-39-28-346615_agent-2_to_agent-1",
+  "timestamp": "2025-07-02T08:39:28.346615",
+  "from": "agent-2",
+  "to": "agent-1",
+  "message": "Hello Agent-1! Ready to coordinate via hybrid system?",
+  "tag": "coordinate",
+  "priority": "normal",
+  "status": "pending",
+  "created_at": "2025-07-02T08:39:28.346615",
+  "persisted": false,
+  "pipe_delivered": true
+}

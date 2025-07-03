@@ -1,0 +1,13 @@
+{
+  "id": "2025-07-02T08-39-40-697349_agent-1_to_agent-2",
+  "timestamp": "2025-07-02T08:39:40.698350",
+  "from": "agent-1",
+  "to": "agent-2",
+  "message": "Ready to coordinate!",
+  "tag": "reply",
+  "priority": "normal",
+  "status": "pending",
+  "created_at": "2025-07-02T08:39:40.698350",
+  "persisted": false,
+  "pipe_delivered": true
+}

@@ -1,0 +1,16 @@
+{
+  "id": "2025-07-02T07-51-20_agent-1_to_agent-2",
+  "timestamp": "2025-07-02T07:51:20.644798",
+  "from": "agent-1",
+  "to": "agent-2",
+  "message": "Task received: Please analyze the customer feedback dataset and identify top 3 improvement areas.. Starting work now.",
+  "tag": "reply",
+  "priority": "normal",
+  "status": "completed",
+  "retries": 0,
+  "max_retries": 3,
+  "created_at": "2025-07-02T07:51:20.644798",
+  "processed_at": "2025-07-02T07:51:21.465543",
+  "completed_at": "2025-07-02T07:51:22.326326",
+  "error": null
+}

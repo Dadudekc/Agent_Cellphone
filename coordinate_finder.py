@@ -20,7 +20,10 @@ def find_coordinates():
     print("🎯 Cursor Agent Coordinate Finder")
     print("=" * 40)
     print("This utility helps you find screen coordinates for your cursor agent input boxes.")
-    print("Move your mouse to the input box location and press Ctrl+C to capture.")
+    print("IMPORTANT: We need TWO coordinates per agent:")
+    print("1. Starter Location Box - A consistent location that doesn't change")
+    print("2. Input Box - The actual input field (may change after sending messages)")
+    print("Move your mouse to each location and press Ctrl+C to capture.")
     print("Press Ctrl+C to exit.\n")
     
     # Select mode
@@ -53,21 +56,48 @@ def find_coordinates():
         for agent_num in range(1, agent_count + 1):
             agent_id = f"Agent-{agent_num}"
             
-            print(f"\nPosition mouse over {agent_id} input box...")
-            print("Press Ctrl+C to capture coordinates...")
+            print(f"\n🎯 Setting up coordinates for {agent_id}")
+            print("-" * 30)
+            
+            # Capture starter location box
+            print(f"1. Position mouse over {agent_id} STARTER LOCATION BOX...")
+            print("   (This should be a consistent location that doesn't change)")
+            print("   Press Ctrl+C to capture coordinates...")
             
             # Wait for user to position mouse
             time.sleep(3)
             
-            # Get current mouse position
+            # Get current mouse position for starter location
             x, y = pyautogui.position()
-            coordinates[agent_id] = {"input_box": {"x": x, "y": y}}
+            starter_coords = {"x": x, "y": y}
             
-            print(f"✅ Captured {agent_id}: ({x}, {y})")
+            print(f"   ✅ Captured starter location: ({x}, {y})")
+            
+            # Capture input box
+            print(f"2. Position mouse over {agent_id} INPUT BOX...")
+            print("   (This is where you type messages)")
+            print("   Press Ctrl+C to capture coordinates...")
+            
+            # Wait for user to position mouse
+            time.sleep(3)
+            
+            # Get current mouse position for input box
+            x, y = pyautogui.position()
+            input_coords = {"x": x, "y": y}
+            
+            print(f"   ✅ Captured input box: ({x}, {y})")
+            
+            # Store both coordinates
+            coordinates[agent_id] = {
+                "starter_location_box": starter_coords,
+                "input_box": input_coords
+            }
+            
+            print(f"✅ Completed {agent_id} setup")
             
             # Ask if user wants to continue (except for last agent)
             if agent_num < agent_count:
-                print("Continue to next agent?")
+                print("\nContinue to next agent?")
                 print("1. Yes")
                 print("2. No")
                 while True:
@@ -84,8 +114,11 @@ def find_coordinates():
     if coordinates:
         print(f"\n📊 Captured coordinates for {len(coordinates)} agents in {mode_name} mode:")
         for agent_id, coord_data in coordinates.items():
-            x, y = coord_data["input_box"]["x"], coord_data["input_box"]["y"]
-            print(f"  {agent_id}: ({x}, {y})")
+            starter_x, starter_y = coord_data["starter_location_box"]["x"], coord_data["starter_location_box"]["y"]
+            input_x, input_y = coord_data["input_box"]["x"], coord_data["input_box"]["y"]
+            print(f"  {agent_id}:")
+            print(f"    Starter: ({starter_x}, {starter_y})")
+            print(f"    Input:   ({input_x}, {input_y})")
         
         # Save to file
         save_coordinates(coordinates, mode_name)
@@ -135,8 +168,11 @@ def load_existing_coordinates():
             for mode_name, coordinates in all_coordinates.items():
                 print(f"\n{mode_name.upper()} MODE:")
                 for agent_id, coord_data in coordinates.items():
-                    x, y = coord_data["input_box"]["x"], coord_data["input_box"]["y"]
-                    print(f"  {agent_id}: ({x}, {y})")
+                    starter_x, starter_y = coord_data["starter_location_box"]["x"], coord_data["starter_location_box"]["y"]
+                    input_x, input_y = coord_data["input_box"]["x"], coord_data["input_box"]["y"]
+                    print(f"  {agent_id}:")
+                    print(f"    Starter: ({starter_x}, {starter_y})")
+                    print(f"    Input:   ({input_x}, {input_y})")
             return all_coordinates
         else:
             print("❌ No existing coordinates found.")

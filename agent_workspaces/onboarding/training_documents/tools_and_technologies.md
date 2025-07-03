@@ -287,6 +287,23 @@ docker-compose up -d
 - **Monitoring**: Automate monitoring and alerting
 - **Backup**: Automate backup and recovery
 
+# agent_cell_phone.py CLI Tool
+
+This is the primary interface for agent-to-agent communication and automation.
+
+**Usage:**
+```
+python src/agent_cell_phone.py -a <TargetAgent> -m '<Your message>' -t <tag>
+```
+
+**Example:**
+```
+python src/agent_cell_phone.py -a Agent-2 -m 'Integration complete. Ready for next steps.' -t response
+```
+
+- Supports scripting for continuous, autonomous operation.
+- All agents should use this tool for messaging and coordination.
+
 ---
 
 **Version**: 1.0  

@@ -233,3 +233,271 @@ The framework successfully bridges the gap between the basic Agent Cell Phone sy
 **Status**: ✅ **COMPLETE**  
 **Phase**: Phase 2 - Inter-Agent Communication Framework  
 **Next**: Phase 3 - Real-time monitoring and advanced features 
+
+## Dream.OS Agent Coordination Solution
+
+### Problem Solved
+
+**Original Issue**: Multiple agents trying to control a single cursor/keyboard simultaneously would cause:
+- Lost or garbled input
+- Interrupted message transmission  
+- System instability
+- Unpredictable behavior
+
+**Solution**: Implemented a **Message Queue Protocol** that serializes all agent communications.
+
+---
+
+## Architecture Overview
+
+### Core Components
+
+1. **Message Queue Manager** (`queue_manager.py`)
+   - FIFO (First In, First Out) message processing
+   - Lock-based cursor/keyboard control
+   - Retry logic and error handling
+   - Comprehensive logging and monitoring
+
+2. **Inter-Agent Communication Guide** (`docs/INTER_AGENT_COMMUNICATION_GUIDE.md`)
+   - Complete protocol documentation
+   - Best practices and implementation examples
+   - Error handling and security considerations
+
+3. **Agent Communication Example** (`agent_queue_example.py`)
+   - Practical demonstration of agent coordination
+   - Message handling patterns
+   - Inbox/outbox management
+
+4. **Enhanced Coordinate System** (`config/agents/agent_coordinates.json`)
+   - Starter location boxes for consistent positioning
+   - Input box coordinates for message entry
+   - Support for 2-agent, 4-agent, and 8-agent modes
+
+---
+
+## Key Features
+
+### 🔒 **Cursor/Keyboard Contention Resolution**
+- **Single Agent Control**: Only one agent can use the cursor/keyboard at a time
+- **Queue-Based Processing**: All messages are queued and processed sequentially
+- **Lock Mechanism**: File-based locking prevents simultaneous access
+
+### 📋 **Message Queue Structure**
+```
+agent_workspaces/queue/
+├── pending/           # Messages waiting to be sent
+├── processing/        # Currently being sent
+├── completed/         # Successfully sent
+├── failed/           # Failed to send (after retries)
+├── lock              # Lock file (exists = busy)
+└── queue.log         # Audit log
+```
+
+### 🔄 **Reliable Message Processing**
+- **Retry Logic**: Failed messages are retried up to 3 times
+- **Error Handling**: Comprehensive error logging and recovery
+- **Status Tracking**: Full message lifecycle tracking
+- **Audit Trail**: Complete communication history
+
+### 🏗️ **Scalable Architecture**
+- **Layout Mode Support**: 2-agent, 4-agent, 8-agent modes
+- **Priority Levels**: Critical, high, normal, low priorities
+- **Message Tags**: Coordinate, task, reply, normal, etc.
+- **Extensible Design**: Easy to add new features
+
+---
+
+## Usage Examples
+
+### Starting the Queue Manager
+```bash
+# Start queue manager in background
+python queue_manager.py --start --mode 2-agent
+
+# Check status
+python queue_manager.py --status
+
+# Run demo
+python queue_manager.py --demo
+```
+
+### Agent Communication
+```python
+# Agent-2 coordinating with Agent-1
+queue_manager = MessageQueueManager("2-agent")
+
+# Send coordination message
+msg_id = queue_manager.enqueue_message(
+    from_agent="agent-2",
+    to_agent="agent-1", 
+    message="Hello Agent-1! Ready to coordinate?",
+    tag="coordinate"
+)
+
+# Check for responses
+responses = queue_manager.list_messages("completed")
+```
+
+### CLI Integration
+```bash
+# Direct CLI usage (bypasses queue for simple cases)
+python src/agent_cell_phone.py --layout 2-agent --agent Agent-1 --msg "Hello!" --tag normal
+
+# Queue-based usage (recommended for multi-agent scenarios)
+python queue_manager.py --start
+# Then use queue API for reliable communication
+```
+
+---
+
+## Message Flow
+
+### 1. **Message Creation**
+```python
+# Agent creates message
+msg = {
+    "id": "2024-07-02T12-00-00_agent-2_to_agent-1_001",
+    "from": "agent-2",
+    "to": "agent-1", 
+    "message": "Hello Agent-1!",
+    "tag": "coordinate",
+    "status": "pending"
+}
+```
+
+### 2. **Queue Processing**
+1. Message written to `queue/pending/`
+2. Queue manager acquires lock
+3. Message moved to `queue/processing/`
+4. CLI command executed to send message
+5. Message moved to `queue/completed/` or `queue/failed/`
+6. Lock released
+
+### 3. **Message Reception**
+1. Recipient agent checks `queue/completed/`
+2. New messages moved to agent's inbox
+3. Agent processes message based on tag
+4. Agent sends acknowledgment if needed
+
+---
+
+## Benefits
+
+### ✅ **Reliability**
+- No lost messages due to cursor conflicts
+- Automatic retry on failures
+- Complete audit trail
+- Error recovery mechanisms
+
+### ✅ **Scalability**
+- Supports multiple agent layouts
+- Priority-based message processing
+- Extensible message types
+- Performance monitoring
+
+### ✅ **Maintainability**
+- Clear separation of concerns
+- Comprehensive documentation
+- Modular design
+- Easy debugging and monitoring
+
+### ✅ **User Experience**
+- Transparent operation
+- Real-time status updates
+- Clear error messages
+- Simple CLI interface
+
+---
+
+## Implementation Status
+
+### ✅ **Completed**
+- [x] Message Queue Manager (`queue_manager.py`)
+- [x] Inter-Agent Communication Guide
+- [x] Agent Communication Example
+- [x] Enhanced coordinate system with starter locations
+- [x] CLI integration
+- [x] Demo functionality
+- [x] Error handling and retry logic
+- [x] Comprehensive logging
+
+### 🔄 **In Progress**
+- [ ] GUI integration for queue monitoring
+- [ ] Real-time notification system
+- [ ] Message encryption (future enhancement)
+- [ ] Database persistence (future enhancement)
+
+### 📋 **Future Enhancements**
+- [ ] WebSocket-based real-time updates
+- [ ] Load balancing for high-volume systems
+- [ ] REST API for external integration
+- [ ] Advanced message routing
+- [ ] Message encryption and authentication
+
+---
+
+## Testing and Validation
+
+### Demo Results
+```
+🎯 Running Queue Manager Demo
+========================================
+📤 Enqueueing demo messages...
+⏳ Processing messages...
+
+📊 Final Status:
+  Pending: 0
+  Completed: 3
+  Failed: 0
+✅ Demo completed
+```
+
+### Queue Structure Created
+```
+agent_workspaces/queue/
+├── completed/
+│   ├── 2025-07-02T07-50-01_agent-2_to_agent-1.json
+│   ├── 2025-07-02T07-50-02_agent-2_to_agent-1.json
+│   └── 2025-07-02T07-50-03_agent-1_to_agent-2.json
+├── failed/
+├── pending/
+├── processing/
+└── queue.log
+```
+
+---
+
+## Conclusion
+
+The Inter-Agent Communication Framework successfully solves the cursor/keyboard contention problem while providing a robust, scalable, and maintainable solution for agent coordination. The queue-based approach ensures reliable communication while the comprehensive documentation and examples make it easy to implement and extend.
+
+**Key Achievement**: Agents can now communicate reliably without interfering with each other's cursor/keyboard control, enabling true multi-agent coordination in the Dream.OS environment.
+
+---
+
+## Quick Start
+
+1. **Start Queue Manager**:
+   ```bash
+   python queue_manager.py --start --mode 2-agent
+   ```
+
+2. **Run Demo**:
+   ```bash
+   python queue_manager.py --demo
+   ```
+
+3. **Use in Your Code**:
+   ```python
+   from queue_manager import MessageQueueManager
+   
+   qm = MessageQueueManager("2-agent")
+   qm.enqueue_message("agent-2", "agent-1", "Hello!", "coordinate")
+   ```
+
+4. **Monitor Status**:
+   ```bash
+   python queue_manager.py --status
+   ```
+
+The framework is ready for production use and provides a solid foundation for advanced multi-agent coordination scenarios. 

@@ -9,6 +9,11 @@ using the Inter-Agent Communication Framework
 import argparse
 import json
 import sys
+import os
+
+# Add src to path for imports
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
 from inter_agent_framework import InterAgentFramework, Message, MessageType
 
 def main():

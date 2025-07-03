@@ -1,0 +1,16 @@
+{
+  "id": "2025-07-02T07-51-16_agent-1_to_agent-2",
+  "timestamp": "2025-07-02T07:51:16.587109",
+  "from": "agent-1",
+  "to": "agent-2",
+  "message": "Task received: Please analyze the dataset. Starting work now.",
+  "tag": "reply",
+  "priority": "normal",
+  "status": "completed",
+  "retries": 0,
+  "max_retries": 3,
+  "created_at": "2025-07-02T07:51:16.587109",
+  "processed_at": "2025-07-02T07:51:17.158628",
+  "completed_at": "2025-07-02T07:51:18.244615",
+  "error": null
+}

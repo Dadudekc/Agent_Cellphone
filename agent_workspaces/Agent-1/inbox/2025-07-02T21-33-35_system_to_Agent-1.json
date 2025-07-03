@@ -1,0 +1,16 @@
+{
+  "id": "2025-07-02T21-33-35_system_to_Agent-1",
+  "timestamp": "2025-07-02T21:33:35.125334",
+  "from": "system",
+  "to": "Agent-1",
+  "message": "Your Onboarding Materials:\n- Main Guide: agent_workspaces/onboarding/README.md\n- Your Role: agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md\n- Protocols: agent_workspaces/onboarding/protocols/agent_protocols.md\n- Checklist: agent_workspaces/onboarding/training_documents/onboarding_checklist.md",
+  "tag": "onboarding",
+  "priority": "normal",
+  "status": "pending",
+  "retries": 0,
+  "max_retries": 3,
+  "created_at": "2025-07-02T21:33:35.125334",
+  "processed_at": null,
+  "completed_at": null,
+  "error": null
+}

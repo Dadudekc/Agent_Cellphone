@@ -1,0 +1,7 @@
+{
+  "id": "2025-07-02T07-51-18_agent-2_to_agent-1",
+  "to": "agent-1",
+  "message": "Please analyze the customer feedback dataset and identify top 3 improvement areas.",
+  "tag": "task",
+  "sent_at": 1751460678.5939333
+}

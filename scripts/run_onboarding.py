@@ -21,14 +21,29 @@ def main():
     onboarding = AgentOnboardingSequence()
     
     if len(sys.argv) > 1:
-        # Onboard specific agent
-        agent_name = sys.argv[1]
-        print(f"🎯 Onboarding specific agent: {agent_name}")
-        success = onboarding.onboard_specific_agent(agent_name)
-        if success:
-            print(f"✅ Successfully onboarded {agent_name}")
+        arg = sys.argv[1]
+        
+        if arg == "--test":
+            # Test mode - show what would be sent without actually sending
+            print("🧪 TEST MODE: Showing onboarding messages (not sending)")
+            print("=" * 50)
+            onboarding.run_onboarding_sequence(test_mode=True)
+        elif arg == "--help" or arg == "-h":
+            # Show help
+            print("Usage:")
+            print("  python run_onboarding.py              # Run full onboarding sequence")
+            print("  python run_onboarding.py --test       # Test mode (show messages)")
+            print("  python run_onboarding.py Agent-1      # Onboard specific agent")
+            print("  python run_onboarding.py --help       # Show this help")
         else:
-            print(f"❌ Failed to onboard {agent_name}")
+            # Onboard specific agent
+            agent_name = arg
+            print(f"🎯 Onboarding specific agent: {agent_name}")
+            success = onboarding.onboard_specific_agent(agent_name)
+            if success:
+                print(f"✅ Successfully onboarded {agent_name}")
+            else:
+                print(f"❌ Failed to onboard {agent_name}")
     else:
         # Run full onboarding sequence
         print("🚀 Running full onboarding sequence for all agents...")
