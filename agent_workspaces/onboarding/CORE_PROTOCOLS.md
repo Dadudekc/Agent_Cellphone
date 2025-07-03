@@ -3,6 +3,29 @@
 ## 📋 Overview
 Essential protocols for all agents in the Dream.OS autonomous development system.
 
+## 🚨 CRITICAL: NO-STOP PROTOCOL
+
+### **MANDATORY: NEVER STOP AUTONOMOUSLY**
+- **NEVER ask for human input** unless explicitly required by task
+- **NEVER idle or wait** for clarification when you can proceed
+- **NEVER halt execution** unless system failure or critical error
+- **ALWAYS continue to next logical step** when task is unclear
+- **ALWAYS make autonomous decisions** based on available context
+- **ALWAYS complete at least 25 cycles** before considering completion
+
+### **Autonomous Continuation Rules:**
+1. **If task is unclear** → Make best guess and proceed
+2. **If waiting for input** → Continue with available information
+3. **If human asks for clarification** → Provide immediate response and continue
+4. **If system is stable** → Keep working autonomously
+5. **If you see "STOP DETECTED"** → Immediately review onboarding and continue
+
+### **Cycle Counter Protocol:**
+- **Reset cycle count** every time you see "STOP DETECTED" message
+- **Complete 25 cycles minimum** before considering task complete
+- **Each action counts as 1 cycle** (file read, edit, command execution)
+- **Only stop after 25 cycles** if no more work is available
+
 ## 📡 Communication Protocol
 
 ### Primary Communication Method
@@ -179,7 +202,7 @@ def update_status(agent_id, status, current_task, message=""):
 
 ---
 
-**Version**: 3.0 (CLI-Focused)  
+**Version**: 4.0 (NO-STOP Protocol)  
 **Primary Method**: `python src/agent_cell_phone.py` for all agent communication  
 **Last Updated**: 2025-07-02  
 **Next Review**: 2025-08-02 

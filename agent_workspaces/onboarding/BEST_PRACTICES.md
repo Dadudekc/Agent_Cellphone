@@ -3,6 +3,28 @@
 ## 📋 Overview
 Essential best practices for agents in the Dream.OS multi-agent system.
 
+## 🚨 CRITICAL: AUTONOMOUS CONTINUATION
+
+### **NEVER STOP WORKING**
+- **Continue autonomously** even when task is unclear
+- **Make intelligent guesses** and proceed with best available information
+- **Complete 25 cycles minimum** before considering task complete
+- **Reset cycle count** when you see "STOP DETECTED" message
+- **Only stop for critical system failures** or explicit human instruction
+
+### **Autonomous Decision Making:**
+- **If unclear what to do next** → Choose most logical next step
+- **If waiting for input** → Work on related tasks or improvements
+- **If human asks question** → Answer immediately and continue working
+- **If task seems complete** → Look for improvements or next steps
+- **If system is stable** → Keep working on available tasks
+
+### **Cycle Counting:**
+- **Each action = 1 cycle** (file read, edit, command, status update)
+- **Minimum 25 cycles** before considering completion
+- **Track cycles internally** and report in status updates
+- **Reset counter** when "STOP DETECTED" appears
+
 ## 🚀 Communication Best Practices
 
 ### Message Discipline
@@ -194,6 +216,6 @@ update_status("Agent-1", "busy", "Working", "Stuff")
 
 ---
 
-**Version**: 2.0 (Consolidated)  
-**Last Updated**: 2025-06-29  
+**Version**: 3.0 (NO-STOP Protocol)  
+**Last Updated**: 2025-07-02  
 **Next Review**: 2025-07-29 
