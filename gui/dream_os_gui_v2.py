@@ -3,6 +3,7 @@
 Dream.OS Cell Phone GUI v2.0
 ============================
 Modern, redesigned GUI with better UX and component-by-component development.
+Refactored to use BaseGUIController to eliminate code duplication.
 """
 
 import sys
@@ -19,14 +20,15 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 try:
     from src.utils.coordinate_finder import CoordinateFinder
     from src.framework.agent_autonomy_framework import AgentAutonomyFramework
+    from src.gui.utils.base_gui_controller import BaseGUIController
 except ImportError as e:
     print(f"Import error: {e}")
     print("Please run from the project root directory: python main.py")
-    # Import coordinate finder from utils
+    # Use shared classes as fallback
     try:
-        from src.utils.coordinate_finder import CoordinateFinder
+        from src.gui.utils.shared_classes import CoordinateFinder, AgentAutonomyFramework
     except ImportError:
-        # Create dummy classes for fallback
+        # Create minimal fallback classes
         class CoordinateFinder:
             def __init__(self):
                 self.coordinates = {}
@@ -34,13 +36,32 @@ except ImportError as e:
                 return {f"agent-{i}": (100 + i*50, 100 + i*50) for i in range(1, 9)}
             def get_coordinates(self, agent_id):
                 return (100, 100)
-    
-    try:
-        from src.framework.agent_autonomy_framework import AgentAutonomyFramework
-    except ImportError:
+        
         class AgentAutonomyFramework:
             def __init__(self):
                 pass
+    
+    # Create minimal base controller for fallback
+    class BaseGUIController:
+        def __init__(self, coordinate_finder=None, framework=None):
+            self.coordinate_finder = coordinate_finder
+            self.framework = framework
+            self.selected_agents = []
+            self.log_display = None
+            self.status_timer = None
+            self.agent_widgets = {}
+        
+        def log_message(self, sender: str, message: str):
+            pass
+        
+        def execute_selected_agents_action(self, action_type: str, action_name: str, action_func=None):
+            pass
+        
+        def broadcast_action(self, action_type: str, action_name: str, default_command=None, action_func=None):
+            pass
+        
+        def setup_status_updates(self, update_interval: int = 5000):
+            pass
 
 try:
     from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
@@ -58,14 +79,12 @@ except ImportError:
 from gui.components.splash_screen import SplashScreen
 from gui.components.agent_panel import AgentStatusWidget
 
-class DreamOSCellPhoneGUIv2(QMainWindow):
+class DreamOSCellPhoneGUIv2(QMainWindow, BaseGUIController):
     """Modern Dream.OS Cell Phone GUI v2.0."""
     
     def __init__(self):
-        super().__init__()
-        self.coordinate_finder = CoordinateFinder()
-        self.framework = AgentAutonomyFramework()
-        self.selected_agents = []
+        QMainWindow.__init__(self)
+        BaseGUIController.__init__(self, CoordinateFinder(), AgentAutonomyFramework())
         
         self.init_ui()
         self.setup_status_updates()
@@ -427,16 +446,20 @@ class DreamOSCellPhoneGUIv2(QMainWindow):
     
     def setup_status_updates(self):
         """Setup periodic status updates."""
-        self.status_timer = QTimer()
-        self.status_timer.timeout.connect(self.update_agent_statuses)
-        self.status_timer.start(5000)  # Update every 5 seconds
+        # Call base class setup
+        super().setup_status_updates(5000)  # Update every 5 seconds
         
-        # Initial log message
+        # Additional initialization specific to this GUI
         self.log_message("System", "Dream.OS Cell Phone v2.0 initialized")
         self.log_message("System", "Modern interface loaded successfully")
     
+    # Override log_message to set log_display reference
     def log_message(self, sender: str, message: str):
         """Add a message to the log."""
+        # Ensure log_display is set for base class methods
+        if not hasattr(self, 'log_display') or self.log_display is None:
+            return
+            
         timestamp = datetime.now().strftime("%H:%M:%S")
         log_entry = f"[{timestamp}] {sender}: {message}"
         self.log_display.append(log_entry)
@@ -458,122 +481,44 @@ class DreamOSCellPhoneGUIv2(QMainWindow):
                 widget.update_status(new_status)
                 self.log_message("Status", f"{agent_id} status: {new_status}")
     
-    # Agent selection methods
-    def select_all_agents(self):
-        """Select all agents."""
-        self.selected_agents = list(self.agent_widgets.keys())
-        self.log_message("Selection", f"Selected all {len(self.selected_agents)} agents")
+    # Agent selection methods (inherited from BaseGUIController)
+    # select_all_agents() and clear_selection() are now provided by the base class
     
-    def clear_selection(self):
-        """Clear agent selection."""
-        self.selected_agents = []
-        self.log_message("Selection", "Cleared agent selection")
+    # Individual control methods (inherited from BaseGUIController)
+    # The following methods are now provided by the base class:
+    # - ping_selected_agents()
+    # - get_status_selected_agents()
+    # - resume_selected_agents()
+    # - pause_selected_agents()
+    # - sync_selected_agents()
+    # - assign_task_selected_agents()
+    # 
+    # These methods use the generic execute_selected_agents_action() pattern
+    # to eliminate code duplication.
     
-    # Individual control methods
-    def ping_selected_agents(self):
-        """Ping selected agents."""
-        if not self.selected_agents:
-            self.log_message("Warning", "No agents selected for ping")
-            return
-        
-        for agent_id in self.selected_agents:
-            self.log_message("Ping", f"Pinging {agent_id}...")
-            # Add actual ping logic here
+    # Broadcast methods (inherited from BaseGUIController)
+    # The following methods are now provided by the base class:
+    # - broadcast_message()
+    # - broadcast_ping()
+    # - broadcast_status()
+    # - broadcast_resume()
+    # - broadcast_task()
+    # 
+    # These methods use the generic broadcast_action() pattern
+    # to eliminate code duplication.
     
-    def get_status_selected_agents(self):
-        """Get status of selected agents."""
-        if not self.selected_agents:
-            self.log_message("Warning", "No agents selected for status check")
-            return
-        
-        for agent_id in self.selected_agents:
-            self.log_message("Status", f"Getting status for {agent_id}...")
-            # Add actual status logic here
+    # Log control methods (inherited from BaseGUIController)
+    # clear_log() and save_log() are now provided by the base class
     
-    def resume_selected_agents(self):
-        """Resume selected agents."""
-        if not self.selected_agents:
-            self.log_message("Warning", "No agents selected for resume")
-            return
-        
-        for agent_id in self.selected_agents:
-            self.log_message("Resume", f"Resuming {agent_id}...")
-            # Add actual resume logic here
+    # ============================================================================
+    # ABSTRACT METHOD IMPLEMENTATIONS
+    # ============================================================================
     
-    def pause_selected_agents(self):
-        """Pause selected agents."""
-        if not self.selected_agents:
-            self.log_message("Warning", "No agents selected for pause")
-            return
-        
-        for agent_id in self.selected_agents:
-            self.log_message("Pause", f"Pausing {agent_id}...")
-            # Add actual pause logic here
-    
-    def sync_selected_agents(self):
-        """Sync selected agents."""
-        if not self.selected_agents:
-            self.log_message("Warning", "No agents selected for sync")
-            return
-        
-        for agent_id in self.selected_agents:
-            self.log_message("Sync", f"Syncing {agent_id}...")
-            # Add actual sync logic here
-    
-    def assign_task_selected_agents(self):
-        """Assign task to selected agents."""
-        if not self.selected_agents:
-            self.log_message("Warning", "No agents selected for task assignment")
-            return
-        
-        for agent_id in self.selected_agents:
-            self.log_message("Task", f"Assigning task to {agent_id}...")
-            # Add actual task assignment logic here
-    
-    # Broadcast methods
-    def broadcast_message(self):
-        """Broadcast message to all agents."""
-        self.log_message("Broadcast", "Broadcasting message to all agents...")
-        # Add actual broadcast logic here
-    
-    def broadcast_ping(self):
-        """Broadcast ping to all agents."""
-        self.log_message("Broadcast", "Broadcasting ping to all agents...")
-        # Add actual broadcast ping logic here
-    
-    def broadcast_status(self):
-        """Broadcast status request to all agents."""
-        self.log_message("Broadcast", "Broadcasting status request to all agents...")
-        # Add actual broadcast status logic here
-    
-    def broadcast_resume(self):
-        """Broadcast resume command to all agents."""
-        self.log_message("Broadcast", "Broadcasting resume command to all agents...")
-        # Add actual broadcast resume logic here
-    
-    def broadcast_task(self):
-        """Broadcast task to all agents."""
-        self.log_message("Broadcast", "Broadcasting task to all agents...")
-        # Add actual broadcast task logic here
-    
-    # Log control methods
-    def clear_log(self):
-        """Clear the log display."""
-        self.log_display.clear()
-        self.log_message("System", "Log cleared")
-    
-    def save_log(self):
-        """Save the log to a file."""
-        filename, _ = QFileDialog.getSaveFileName(
-            self, "Save Log", "", "Text Files (*.txt);;All Files (*)"
-        )
-        if filename:
-            try:
-                with open(filename, 'w') as f:
-                    f.write(self.log_display.toPlainText())
-                self.log_message("System", f"Log saved to {filename}")
-            except Exception as e:
-                self.log_message("Error", f"Failed to save log: {e}")
+    def create_agent_widgets(self):
+        """Create agent-specific widgets."""
+        # This method is called during UI initialization to create agent widgets
+        # The actual widget creation is handled in create_left_panel()
+        pass
 
 def main():
     """Main function."""

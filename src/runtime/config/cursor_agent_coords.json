@@ -1,15 +1,23 @@
 {
   "2-agent": {
     "Agent-1": {
+      "starter_position": {
+        "x": -1283,
+        "y": 176
+      },
       "input_box": {
         "x": -1283,
         "y": 1012
       }
     },
     "Agent-2": {
+      "starter_position": {
+        "x": -332,
+        "y": 173
+      },
       "input_box": {
-        "x": -331,
-        "y": 1017
+        "x": -370,
+        "y": 981
       }
     }
   },

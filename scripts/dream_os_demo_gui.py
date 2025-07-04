@@ -447,30 +447,298 @@ class DreamOSDemo:
         self.log("  • Performance tuning and optimization", "INFO")
 
     def show_coordinate_mapping(self):
-        """Show coordinate mapping for 2-agent mode"""
-        self.log("🗺️ COORDINATE MAPPING (2-Agent Mode)", "HEADER")
+        """Interactive coordinate mapping for 2-agent mode"""
+        self.log("🗺️ INTERACTIVE COORDINATE MAPPING (2-Agent Mode)", "HEADER")
+        
+        # Create coordinate mapping window
+        coord_window = tk.Toplevel(self.root)
+        coord_window.title("Dream.OS - Coordinate Mapper")
+        coord_window.geometry("600x500")
+        coord_window.configure(bg='#1a1a1a')
+        
+        # Title
+        title_label = tk.Label(coord_window, text="🗺️ COORDINATE MAPPER", 
+                              font=('Arial', 16, 'bold'), fg='#00ff00', bg='#1a1a1a')
+        title_label.pack(pady=10)
+        
+        subtitle_label = tk.Label(coord_window, text="Map starter and input locations for 2-agent mode", 
+                                 font=('Arial', 10), fg='#cccccc', bg='#1a1a1a')
+        subtitle_label.pack(pady=(0, 20))
+        
+        # Instructions
+        instructions = tk.Label(coord_window, 
+                               text="1. Click 'Get Current Position' to capture mouse coordinates\n"
+                                    "2. Set starter positions (where agents appear)\n"
+                                    "3. Set input positions (where agents type)\n"
+                                    "4. Click 'Save Coordinates' to update config",
+                               font=('Arial', 9), fg='#ffff00', bg='#1a1a1a', justify=tk.LEFT)
+        instructions.pack(pady=(0, 20))
+        
+        # Current position display
+        pos_frame = tk.Frame(coord_window, bg='#1a1a1a')
+        pos_frame.pack(pady=10)
+        
+        tk.Label(pos_frame, text="Current Mouse Position:", font=('Arial', 10, 'bold'), 
+                fg='#00ff00', bg='#1a1a1a').pack()
+        
+        self.pos_label = tk.Label(pos_frame, text="x: 0, y: 0", font=('Arial', 12), 
+                                 fg='#ffffff', bg='#1a1a1a')
+        self.pos_label.pack()
+        
+        get_pos_btn = tk.Button(pos_frame, text="📍 Get Current Position", 
+                               command=self.get_current_position, 
+                               bg='#333333', fg='#ffffff', font=('Arial', 10))
+        get_pos_btn.pack(pady=10)
+        
+        # Coordinate inputs
+        coord_frame = tk.Frame(coord_window, bg='#1a1a1a')
+        coord_frame.pack(pady=20)
+        
+        # Agent-1 coordinates
+        agent1_frame = tk.LabelFrame(coord_frame, text="Agent-1", font=('Arial', 12, 'bold'),
+                                    fg='#00ff00', bg='#1a1a1a', bd=2, relief=tk.RIDGE)
+        agent1_frame.pack(side=tk.LEFT, padx=10, pady=10, fill=tk.BOTH, expand=True)
+        
+        tk.Label(agent1_frame, text="Starter Position:", font=('Arial', 10), 
+                fg='#cccccc', bg='#1a1a1a').pack(pady=5)
+        
+        agent1_starter_frame = tk.Frame(agent1_frame, bg='#1a1a1a')
+        agent1_starter_frame.pack()
+        
+        tk.Label(agent1_starter_frame, text="X:", fg='#cccccc', bg='#1a1a1a').pack(side=tk.LEFT)
+        self.agent1_starter_x = tk.Entry(agent1_starter_frame, width=8, bg='#333333', fg='#ffffff')
+        self.agent1_starter_x.pack(side=tk.LEFT, padx=5)
+        
+        tk.Label(agent1_starter_frame, text="Y:", fg='#cccccc', bg='#1a1a1a').pack(side=tk.LEFT)
+        self.agent1_starter_y = tk.Entry(agent1_starter_frame, width=8, bg='#333333', fg='#ffffff')
+        self.agent1_starter_y.pack(side=tk.LEFT, padx=5)
+        
+        tk.Label(agent1_frame, text="Input Position:", font=('Arial', 10), 
+                fg='#cccccc', bg='#1a1a1a').pack(pady=5)
+        
+        agent1_input_frame = tk.Frame(agent1_frame, bg='#1a1a1a')
+        agent1_input_frame.pack()
+        
+        tk.Label(agent1_input_frame, text="X:", fg='#cccccc', bg='#1a1a1a').pack(side=tk.LEFT)
+        self.agent1_input_x = tk.Entry(agent1_input_frame, width=8, bg='#333333', fg='#ffffff')
+        self.agent1_input_x.pack(side=tk.LEFT, padx=5)
+        
+        tk.Label(agent1_input_frame, text="Y:", fg='#cccccc', bg='#1a1a1a').pack(side=tk.LEFT)
+        self.agent1_input_y = tk.Entry(agent1_input_frame, width=8, bg='#333333', fg='#ffffff')
+        self.agent1_input_y.pack(side=tk.LEFT, padx=5)
+        
+        # Agent-2 coordinates
+        agent2_frame = tk.LabelFrame(coord_frame, text="Agent-2", font=('Arial', 12, 'bold'),
+                                    fg='#00ff00', bg='#1a1a1a', bd=2, relief=tk.RIDGE)
+        agent2_frame.pack(side=tk.LEFT, padx=10, pady=10, fill=tk.BOTH, expand=True)
+        
+        tk.Label(agent2_frame, text="Starter Position:", font=('Arial', 10), 
+                fg='#cccccc', bg='#1a1a1a').pack(pady=5)
+        
+        agent2_starter_frame = tk.Frame(agent2_frame, bg='#1a1a1a')
+        agent2_starter_frame.pack()
+        
+        tk.Label(agent2_starter_frame, text="X:", fg='#cccccc', bg='#1a1a1a').pack(side=tk.LEFT)
+        self.agent2_starter_x = tk.Entry(agent2_starter_frame, width=8, bg='#333333', fg='#ffffff')
+        self.agent2_starter_x.pack(side=tk.LEFT, padx=5)
+        
+        tk.Label(agent2_starter_frame, text="Y:", fg='#cccccc', bg='#1a1a1a').pack(side=tk.LEFT)
+        self.agent2_starter_y = tk.Entry(agent2_starter_frame, width=8, bg='#333333', fg='#ffffff')
+        self.agent2_starter_y.pack(side=tk.LEFT, padx=5)
+        
+        tk.Label(agent2_frame, text="Input Position:", font=('Arial', 10), 
+                fg='#cccccc', bg='#1a1a1a').pack(pady=5)
+        
+        agent2_input_frame = tk.Frame(agent2_frame, bg='#1a1a1a')
+        agent2_input_frame.pack()
+        
+        tk.Label(agent2_input_frame, text="X:", fg='#cccccc', bg='#1a1a1a').pack(side=tk.LEFT)
+        self.agent2_input_x = tk.Entry(agent2_input_frame, width=8, bg='#333333', fg='#ffffff')
+        self.agent2_input_x.pack(side=tk.LEFT, padx=5)
+        
+        tk.Label(agent2_input_frame, text="Y:", fg='#cccccc', bg='#1a1a1a').pack(side=tk.LEFT)
+        self.agent2_input_y = tk.Entry(agent2_input_frame, width=8, bg='#333333', fg='#ffffff')
+        self.agent2_input_y.pack(side=tk.LEFT, padx=5)
+        
+        # Action buttons
+        button_frame = tk.Frame(coord_window, bg='#1a1a1a')
+        button_frame.pack(pady=20)
+        
+        load_btn = tk.Button(button_frame, text="📂 Load Current", 
+                            command=self.load_current_coordinates, 
+                            bg='#333333', fg='#ffffff', font=('Arial', 10))
+        load_btn.pack(side=tk.LEFT, padx=5)
+        
+        save_btn = tk.Button(button_frame, text="💾 Save Coordinates", 
+                            command=self.save_coordinates, 
+                            bg='#333333', fg='#ffffff', font=('Arial', 10))
+        save_btn.pack(side=tk.LEFT, padx=5)
+        
+        test_btn = tk.Button(button_frame, text="🧪 Test Positions", 
+                            command=self.test_coordinates, 
+                            bg='#333333', fg='#ffffff', font=('Arial', 10))
+        test_btn.pack(side=tk.LEFT, padx=5)
+        
+        # Load current coordinates
+        self.load_current_coordinates()
+        
+        # Start position tracking
+        self.update_position()
+
+    def get_current_position(self):
+        """Get current mouse position and update display"""
         try:
-            # Try to load coordinates from the config file
+            import pyautogui
+            x, y = pyautogui.position()
+            self.pos_label.config(text=f"x: {x}, y: {y}")
+            self.log(f"📍 Current position captured: x={x}, y={y}", "INFO")
+        except ImportError:
+            self.log("❌ pyautogui not installed. Install with: pip install pyautogui", "ERROR")
+        except Exception as e:
+            self.log(f"❌ Error getting position: {e}", "ERROR")
+
+    def update_position(self):
+        """Update position display every 100ms"""
+        try:
+            import pyautogui
+            x, y = pyautogui.position()
+            self.pos_label.config(text=f"x: {x}, y: {y}")
+        except:
+            pass
+        self.root.after(100, self.update_position)
+
+    def load_current_coordinates(self):
+        """Load current coordinates from config file"""
+        try:
             coord_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),
                                       "src", "runtime", "config", "cursor_agent_coords.json")
             if os.path.exists(coord_path):
                 with open(coord_path, 'r', encoding='utf-8') as f:
                     coords = json.load(f)
-                # Show only Agent-1 and Agent-2 from 2-agent layout
+                
                 if "2-agent" in coords:
                     agents_2 = coords["2-agent"]
-                    for agent in ["Agent-1", "Agent-2"]:
-                        if agent in agents_2:
-                            c = agents_2[agent]["input_box"]
-                            self.log(f"{agent} (2-agent layout): x={c['x']}, y={c['y']}", "INFO")
-                        else:
-                            self.log(f"{agent}: No coordinates found in 2-agent layout", "WARNING")
+                    
+                    # Load Agent-1 coordinates
+                    if "Agent-1" in agents_2:
+                        agent1_coords = agents_2["Agent-1"]["input_box"]
+                        self.agent1_input_x.delete(0, tk.END)
+                        self.agent1_input_x.insert(0, str(agent1_coords["x"]))
+                        self.agent1_input_y.delete(0, tk.END)
+                        self.agent1_input_y.insert(0, str(agent1_coords["y"]))
+                        # Set starter position same as input for now
+                        self.agent1_starter_x.delete(0, tk.END)
+                        self.agent1_starter_x.insert(0, str(agent1_coords["x"]))
+                        self.agent1_starter_y.delete(0, tk.END)
+                        self.agent1_starter_y.insert(0, str(agent1_coords["y"]))
+                    
+                    # Load Agent-2 coordinates
+                    if "Agent-2" in agents_2:
+                        agent2_coords = agents_2["Agent-2"]["input_box"]
+                        self.agent2_input_x.delete(0, tk.END)
+                        self.agent2_input_x.insert(0, str(agent2_coords["x"]))
+                        self.agent2_input_y.delete(0, tk.END)
+                        self.agent2_input_y.insert(0, str(agent2_coords["y"]))
+                        # Set starter position same as input for now
+                        self.agent2_starter_x.delete(0, tk.END)
+                        self.agent2_starter_x.insert(0, str(agent2_coords["x"]))
+                        self.agent2_starter_y.delete(0, tk.END)
+                        self.agent2_starter_y.insert(0, str(agent2_coords["y"]))
+                    
+                    self.log("✅ Current coordinates loaded from config", "SUCCESS")
                 else:
-                    self.log("2-agent layout not found in config", "ERROR")
+                    self.log("❌ 2-agent layout not found in config", "ERROR")
             else:
-                self.log("Coordinate config file not found!", "ERROR")
+                self.log("❌ Coordinate config file not found", "ERROR")
         except Exception as e:
-            self.log(f"Error loading coordinates: {e}", "ERROR")
+            self.log(f"❌ Error loading coordinates: {e}", "ERROR")
+
+    def save_coordinates(self):
+        """Save coordinates to config file"""
+        try:
+            coord_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                      "src", "runtime", "config", "cursor_agent_coords.json")
+            
+            # Load existing config
+            if os.path.exists(coord_path):
+                with open(coord_path, 'r', encoding='utf-8') as f:
+                    coords = json.load(f)
+            else:
+                coords = {}
+            
+            # Update 2-agent coordinates
+            if "2-agent" not in coords:
+                coords["2-agent"] = {}
+            
+            # Save Agent-1 coordinates
+            coords["2-agent"]["Agent-1"] = {
+                "starter": {
+                    "x": int(self.agent1_starter_x.get()),
+                    "y": int(self.agent1_starter_y.get())
+                },
+                "input_box": {
+                    "x": int(self.agent1_input_x.get()),
+                    "y": int(self.agent1_input_y.get())
+                }
+            }
+            
+            # Save Agent-2 coordinates
+            coords["2-agent"]["Agent-2"] = {
+                "starter": {
+                    "x": int(self.agent2_starter_x.get()),
+                    "y": int(self.agent2_starter_y.get())
+                },
+                "input_box": {
+                    "x": int(self.agent2_input_x.get()),
+                    "y": int(self.agent2_input_y.get())
+                }
+            }
+            
+            # Save to file
+            with open(coord_path, 'w', encoding='utf-8') as f:
+                json.dump(coords, f, indent=2)
+            
+            self.log("✅ Coordinates saved successfully!", "SUCCESS")
+            self.log(f"Agent-1: Starter({self.agent1_starter_x.get()},{self.agent1_starter_y.get()}) "
+                     f"Input({self.agent1_input_x.get()},{self.agent1_input_y.get()})", "INFO")
+            self.log(f"Agent-2: Starter({self.agent2_starter_x.get()},{self.agent2_starter_y.get()}) "
+                     f"Input({self.agent2_input_x.get()},{self.agent2_input_y.get()})", "INFO")
+            
+        except Exception as e:
+            self.log(f"❌ Error saving coordinates: {e}", "ERROR")
+
+    def test_coordinates(self):
+        """Test the coordinates by moving mouse to each position"""
+        try:
+            import pyautogui
+            import time
+            
+            self.log("🧪 Testing coordinates...", "INFO")
+            
+            # Test Agent-1 positions
+            self.log("Moving to Agent-1 starter position...", "INFO")
+            pyautogui.moveTo(int(self.agent1_starter_x.get()), int(self.agent1_starter_y.get()))
+            time.sleep(1)
+            
+            self.log("Moving to Agent-1 input position...", "INFO")
+            pyautogui.moveTo(int(self.agent1_input_x.get()), int(self.agent1_input_y.get()))
+            time.sleep(1)
+            
+            # Test Agent-2 positions
+            self.log("Moving to Agent-2 starter position...", "INFO")
+            pyautogui.moveTo(int(self.agent2_starter_x.get()), int(self.agent2_starter_y.get()))
+            time.sleep(1)
+            
+            self.log("Moving to Agent-2 input position...", "INFO")
+            pyautogui.moveTo(int(self.agent2_input_x.get()), int(self.agent2_input_y.get()))
+            time.sleep(1)
+            
+            self.log("✅ Coordinate test completed!", "SUCCESS")
+            
+        except ImportError:
+            self.log("❌ pyautogui not installed. Install with: pip install pyautogui", "ERROR")
+        except Exception as e:
+            self.log(f"❌ Error testing coordinates: {e}", "ERROR")
 
 def main():
     """Main function to run the Dream.OS demo GUI"""
