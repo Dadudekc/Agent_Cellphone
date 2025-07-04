@@ -68,7 +68,11 @@ class DreamOSDemo:
         # Feature buttons
         self.coord_btn = ttk.Button(button_frame, text="🗺️ Coordinate Mapping", 
                                   command=self.show_coordinate_mapping, style='Demo.TButton')
-        self.coord_btn.pack(side=tk.LEFT, padx=(20, 0))
+        self.coord_btn.pack(side=tk.LEFT, padx=(20, 10))
+        
+        self.onboard_btn = ttk.Button(button_frame, text="🤖 Auto Onboard Agents", 
+                                    command=self.run_automated_onboarding, style='Demo.TButton')
+        self.onboard_btn.pack(side=tk.LEFT, padx=(0, 10))
         
         # Progress frame
         progress_frame = tk.Frame(main_frame, bg='#1a1a1a')
@@ -739,6 +743,44 @@ class DreamOSDemo:
             self.log("❌ pyautogui not installed. Install with: pip install pyautogui", "ERROR")
         except Exception as e:
             self.log(f"❌ Error testing coordinates: {e}", "ERROR")
+
+    def run_automated_onboarding(self):
+        """Run the automated onboarding process for both agents"""
+        try:
+            self.log("🤖 Starting automated agent onboarding...", "HEADER")
+            
+            # Import the automated onboarding script
+            import sys
+            import os
+            onboarding_script = os.path.join(os.path.dirname(__file__), "automated_onboarding.py")
+            
+            if not os.path.exists(onboarding_script):
+                self.log("❌ Automated onboarding script not found!", "ERROR")
+                return
+                
+            # Run the onboarding script
+            self.log("Running automated onboarding script...", "INFO")
+            result = subprocess.run([sys.executable, onboarding_script], 
+                                  capture_output=True, text=True, cwd=os.path.dirname(__file__))
+            
+            # Display output
+            if result.stdout:
+                for line in result.stdout.split('\n'):
+                    if line.strip():
+                        self.log(line.strip(), "INFO")
+                        
+            if result.stderr:
+                for line in result.stderr.split('\n'):
+                    if line.strip():
+                        self.log(f"ERROR: {line.strip()}", "ERROR")
+                        
+            if result.returncode == 0:
+                self.log("✅ Automated onboarding completed successfully!", "SUCCESS")
+            else:
+                self.log("❌ Automated onboarding failed!", "ERROR")
+                
+        except Exception as e:
+            self.log(f"❌ Error running automated onboarding: {e}", "ERROR")
 
 def main():
     """Main function to run the Dream.OS demo GUI"""
