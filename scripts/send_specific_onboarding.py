@@ -1,40 +1,53 @@
 #!/usr/bin/env python3
 """
-Send specific onboarding messages to all agents via broadcast
+REDIRECT: This script has been consolidated into consolidated_onboarding.py
+================================================================
+
+This file is a redirect to the new consolidated onboarding system.
+The original functionality is now available in: scripts/consolidated_onboarding.py
+
+Usage:
+    python consolidated_onboarding.py --agent
+
+For more information, run:
+    python consolidated_onboarding.py --help
 """
 
-from agent_cell_phone import AgentCellPhone, MsgTag
-import time
+import sys
+import subprocess
+from pathlib import Path
 
-def send_specific_onboarding():
-    """Send specific onboarding messages to all agents"""
-    print("📱 Sending specific onboarding messages via broadcast")
+def main():
+    print("🔄 REDIRECTING to consolidated onboarding system...")
+    print(f"📁 Original: send_specific_onboarding.py")
+    print(f"🎯 Target: consolidated_onboarding.py")
     print("=" * 50)
     
-    # Create agent cell phone instance
-    acp = AgentCellPhone(layout_mode="8-agent")
+    # Get the script directory
+    script_dir = Path(__file__).parent
+    target_path = script_dir / target_script
     
-    # Specific onboarding messages from user
-    specific_messages = [
-        "onboarding system_overview_1 You are part of the Agent Cell Phone system - Inter-agent communication and collaboration platform.",
-        "onboarding system_overview_2 System architecture: Multi-agent system with PyAutoGUI-based messaging enabling real-time agent communication."
-    ]
+    if not target_path.exists():
+        print(f"❌ Error: Target script consolidated_onboarding.py not found!")
+        return 1
     
-    # Send each message to all agents via broadcast
-    for i, message in enumerate(specific_messages, 1):
-        print(f"\n📋 Message {i}/{len(specific_messages)}")
-        print(f"   {message}")
-        print(f"   Broadcasting to all agents...")
-        
-        # Broadcast to all agents
-        acp.broadcast(message, MsgTag.ONBOARDING)
-        
-        # Wait between messages
-        time.sleep(2)
+    # Build command
+    cmd = [sys.executable, str(target_path)] + sys.argv[1:]
     
-    print("\n✅ SPECIFIC ONBOARDING MESSAGES SENT!")
-    print("📱 Method: Agent Cell Phone Broadcast")
-    print("🎯 Target: All agents in 8-agent layout")
+    # Add default arguments if specified
+    if "--agent":
+        cmd.extend("--agent".split())
+    
+    print("🚀 Running command...")
+    print()
+    
+    # Execute the target script
+    try:
+        result = subprocess.run(cmd, cwd=script_dir.parent)
+        return result.returncode
+    except Exception:
+        print("❌ Error executing target script")
+        return 1
 
 if __name__ == "__main__":
-    send_specific_onboarding() 
+    sys.exit(main())

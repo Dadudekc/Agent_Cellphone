@@ -2,6 +2,55 @@
   "agent_id": "Agent-2",
   "status": "onboarding",
   "current_task": "Initial setup",
-  "message": "Setting up workspace",
-  "last_updated": "2025-07-02T07:36:55Z"
+  "last_update": "2025-07-02T07:36:55Z",
+  "capabilities": [
+    "task_execution",
+    "status_reporting",
+    "message_handling",
+    "performance_monitoring",
+    "communication_enabled",
+    "file_operations"
+  ],
+  "performance_metrics": {
+    "tasks_completed": 2,
+    "uptime_hours": 2.1,
+    "last_response_time": "2025-07-02T07:36:55Z",
+    "error_count": 0,
+    "success_rate": 100.0,
+    "messages_sent": 8,
+    "messages_received": 12
+  },
+  "onboarding": {
+    "status": "in_progress",
+    "progress": 25,
+    "completed_steps": [
+      "quick_start"
+    ],
+    "current_step": "core_protocols",
+    "start_date": "2025-07-02T07:36:55Z",
+    "completion_date": null,
+    "verification_passed": false,
+    "checklist": {
+      "quick_start_completed": true,
+      "core_protocols_reviewed": false,
+      "status_reporting_implemented": false,
+      "first_communication_test": false,
+      "role_responsibilities_understood": false,
+      "development_standards_reviewed": false,
+      "tools_environment_setup": false,
+      "onboarding_verification_passed": false
+    }
+  },
+  "message_history": [
+    {
+      "timestamp": "2025-07-02T07:36:55Z",
+      "type": "status_update",
+      "content": "Setting up workspace and beginning onboarding process",
+      "response": "Workspace setup initiated",
+      "status_before": "offline",
+      "status_after": "onboarding"
+    }
+  ],
+  "debug_mode": false,
+  "debug_log": []
 }

@@ -25,8 +25,22 @@ class CustomMessageWidget:
         self.custom_message_text = scrolledtext.ScrolledText(frame, height=6, wrap=tk.WORD)
         self.custom_message_text.pack(fill=tk.BOTH, expand=True)
         
-        ttk.Button(frame, text="Send Custom Message", 
-                  command=self.send_custom_message).pack(fill=tk.X, pady=(5, 0))
+        # Send buttons - Enhanced with chunk and comprehensive options
+        send_buttons_frame = ttk.Frame(frame)
+        send_buttons_frame.pack(fill=tk.X, pady=(5, 0))
+        
+        self.send_chunk_btn = ttk.Button(send_buttons_frame, text="📤 Send Chunk", 
+                                       command=self.send_chunk_message)
+        self.send_chunk_btn.pack(side=tk.LEFT, padx=(0, 5))
+        
+        self.send_comprehensive_btn = ttk.Button(send_buttons_frame, text="📋 Send Comprehensive", 
+                                               command=self.send_comprehensive_message)
+        self.send_comprehensive_btn.pack(side=tk.LEFT)
+        
+        # Help text
+        help_label = ttk.Label(frame, text="💡 Chunk: Send in pieces | Comprehensive: Send complete message", 
+                              font=("TkDefaultFont", 8))
+        help_label.pack(pady=(5, 0))
     
     def set_message_content(self, content: str):
         """Set the message content"""
@@ -41,11 +55,20 @@ class CustomMessageWidget:
         """Clear the message content"""
         self.custom_message_text.delete(1.0, tk.END)
     
-    def send_custom_message(self):
-        """Send the custom message"""
+    def send_chunk_message(self):
+        """Send the custom message in chunks"""
         message = self.get_message_content()
         if message:
-            self.send_callback("custom", "all", message)
+            self.send_callback("chunk", "all", message)
+        else:
+            # Show warning for empty message
+            tk.messagebox.showwarning("Warning", "Please enter a message")
+    
+    def send_comprehensive_message(self):
+        """Send the custom message as comprehensive"""
+        message = self.get_message_content()
+        if message:
+            self.send_callback("comprehensive", "all", message)
         else:
             # Show warning for empty message
             tk.messagebox.showwarning("Warning", "Please enter a message")

@@ -1,5 +1,15 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFrame, QLabel, QPushButton, QGroupBox
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFrame, QLabel, QPushButton, QGroupBox, QProgressBar
+from PyQt5.QtCore import Qt, QTimer
+import json
+import os
+from pathlib import Path
+
+# Import onboarding integration
+try:
+    from gui.components.onboarding_integration import onboarding_integration
+except ImportError:
+    # Fallback if import fails
+    onboarding_integration = None
 
 class AgentStatusWidget(QWidget):
     """Individual agent status widget with modern design."""
@@ -119,7 +129,17 @@ class AgentPanel(QWidget):
         self.status = "offline"
         self.current_task = "idle"
         self.last_update = "never"
+        self.onboarding_progress = 0
+        self.onboarding_status = "not_started"
         self.init_ui()
+        
+        # Set up auto-refresh timer for onboarding status
+        self.refresh_timer = QTimer()
+        self.refresh_timer.timeout.connect(self.load_onboarding_status)
+        self.refresh_timer.start(5000)  # Refresh every 5 seconds
+        
+        # Load initial onboarding status
+        self.load_onboarding_status()
 
     def init_ui(self):
         layout = QVBoxLayout(self)
@@ -199,6 +219,71 @@ class AgentPanel(QWidget):
         """)
         status_layout.addWidget(self.update_label)
         container_layout.addWidget(status_group)
+        
+        # Add onboarding status section
+        onboarding_group = QGroupBox("Onboarding")
+        onboarding_group.setStyleSheet("""
+            QGroupBox {
+                font-weight: bold;
+                color: white;
+                border: 2px solid #34495E;
+                border-radius: 6px;
+                margin-top: 8px;
+                padding-top: 8px;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                left: 8px;
+                padding: 0 4px 0 4px;
+            }
+        """)
+        onboarding_layout = QVBoxLayout(onboarding_group)
+        
+        # Onboarding status label
+        self.onboarding_status_label = QLabel("Status: Not Started")
+        self.onboarding_status_label.setStyleSheet("""
+            QLabel {
+                font-size: 11px;
+                color: #BDC3C7;
+                padding: 3px;
+            }
+        """)
+        onboarding_layout.addWidget(self.onboarding_status_label)
+        
+        # Onboarding progress bar
+        self.onboarding_progress_bar = QProgressBar()
+        self.onboarding_progress_bar.setStyleSheet("""
+            QProgressBar {
+                border: 1px solid #34495E;
+                border-radius: 3px;
+                text-align: center;
+                background-color: #2C3E50;
+                color: white;
+                font-size: 10px;
+            }
+            QProgressBar::chunk {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #E74C3C, stop:0.5 #F39C12, stop:1 #27AE60);
+                border-radius: 2px;
+            }
+        """)
+        self.onboarding_progress_bar.setFixedHeight(15)
+        onboarding_layout.addWidget(self.onboarding_progress_bar)
+        
+        # Onboarding progress percentage
+        self.onboarding_progress_label = QLabel("0%")
+        self.onboarding_progress_label.setStyleSheet("""
+            QLabel {
+                font-size: 10px;
+                color: #BDC3C7;
+                padding: 2px;
+                text-align: center;
+            }
+        """)
+        onboarding_layout.addWidget(self.onboarding_progress_label)
+        
+        container_layout.addWidget(onboarding_group)
+        
         controls_group = QGroupBox("Controls")
         controls_group.setStyleSheet("""
             QGroupBox {
@@ -263,6 +348,72 @@ class AgentPanel(QWidget):
             self.task_label.setText(f"Task: {task[:30]}{'...' if len(task) > 30 else ''}")
         if last_update:
             self.update_label.setText(f"Updated: {last_update}")
+
+    def update_onboarding_status(self, status: str, progress: int):
+        """Update the onboarding status display."""
+        self.onboarding_status = status
+        self.onboarding_progress = progress
+        
+        # Update status label
+        status_text = f"Status: {status.replace('_', ' ').title()}"
+        self.onboarding_status_label.setText(status_text)
+        
+        # Update progress bar
+        self.onboarding_progress_bar.setValue(progress)
+        
+        # Update progress label
+        self.onboarding_progress_label.setText(f"{progress}%")
+        
+        # Update colors based on progress
+        if progress == 100:
+            self.onboarding_status_label.setStyleSheet("""
+                QLabel {
+                    font-size: 11px;
+                    color: #27AE60;
+                    padding: 3px;
+                    font-weight: bold;
+                }
+            """)
+        elif progress > 50:
+            self.onboarding_status_label.setStyleSheet("""
+                QLabel {
+                    font-size: 11px;
+                    color: #F39C12;
+                    padding: 3px;
+                }
+            """)
+        else:
+            self.onboarding_status_label.setStyleSheet("""
+                QLabel {
+                    font-size: 11px;
+                    color: #BDC3C7;
+                    padding: 3px;
+                }
+            """)
+
+    def load_onboarding_status(self):
+        """Load onboarding status from the agent's status.json file."""
+        if onboarding_integration:
+            # Use the onboarding integration
+            status = onboarding_integration.get_agent_onboarding_status(self.agent_id)
+            if "error" not in status:
+                self.update_onboarding_status(status["status"], status["progress"])
+        else:
+            # Fallback to direct file reading
+            try:
+                status_file = Path(f"agent_workspaces/{self.agent_id}/status.json")
+                if status_file.exists():
+                    with open(status_file, 'r') as f:
+                        status_data = json.load(f)
+                    
+                    onboarding = status_data.get("onboarding", {})
+                    status = onboarding.get("status", "not_started")
+                    progress = onboarding.get("progress", 0)
+                    
+                    self.update_onboarding_status(status, progress)
+            except Exception as e:
+                print(f"Error loading onboarding status for {self.agent_id}: {e}")
+
     # Agent control methods (to be connected in main GUI)
     def ping_agent(self):
         pass

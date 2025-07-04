@@ -1,31 +1,53 @@
 #!/usr/bin/env python3
 """
-Send a single specific onboarding message to all agents
+REDIRECT: This script has been consolidated into consolidated_onboarding.py
+================================================================
+
+This file is a redirect to the new consolidated onboarding system.
+The original functionality is now available in: scripts/consolidated_onboarding.py
+
+Usage:
+    python consolidated_onboarding.py --agent
+
+For more information, run:
+    python consolidated_onboarding.py --help
 """
 
-from agent_cell_phone import AgentCellPhone, MsgTag
-import time
+import sys
+import subprocess
+from pathlib import Path
 
-def send_single_onboarding():
-    """Send the specific onboarding message to all agents"""
-    print("📱 Sending single onboarding message via broadcast")
+def main():
+    print("🔄 REDIRECTING to consolidated onboarding system...")
+    print(f"📁 Original: send_single_onboarding.py")
+    print(f"🎯 Target: consolidated_onboarding.py")
     print("=" * 50)
     
-    # Create agent cell phone instance
-    acp = AgentCellPhone(layout_mode="8-agent")
+    # Get the script directory
+    script_dir = Path(__file__).parent
+    target_path = script_dir / target_script
     
-    # The specific onboarding message from user
-    message = "onboarding system_overview_1 You are part of the Agent Cell Phone system - Inter-agent communication and collaboration platform."
+    if not target_path.exists():
+        print(f"❌ Error: Target script consolidated_onboarding.py not found!")
+        return 1
     
-    print(f"📋 Message: {message}")
-    print(f"🎯 Broadcasting to all agents...")
+    # Build command
+    cmd = [sys.executable, str(target_path)] + sys.argv[1:]
     
-    # Broadcast to all agents
-    acp.broadcast(message, MsgTag.ONBOARDING)
+    # Add default arguments if specified
+    if "--agent":
+        cmd.extend("--agent".split())
     
-    print("\n✅ ONBOARDING MESSAGE SENT!")
-    print("📱 Method: Agent Cell Phone Broadcast")
-    print("🎯 Target: All agents in 8-agent layout")
+    print("🚀 Running command...")
+    print()
+    
+    # Execute the target script
+    try:
+        result = subprocess.run(cmd, cwd=script_dir.parent)
+        return result.returncode
+    except Exception:
+        print("❌ Error executing target script")
+        return 1
 
 if __name__ == "__main__":
-    send_single_onboarding() 
+    sys.exit(main())

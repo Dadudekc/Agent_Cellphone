@@ -1,20 +1,52 @@
 {
-    "status": "online",
-    "last_update": "2025-06-29 18:00:00",
-    "current_task": "idle",
-    "agent_id": "agent-1",
-    "capabilities": [
-        "task_execution",
-        "status_reporting",
-        "message_handling",
-        "performance_monitoring"
-    ],
-    "performance_metrics": {
+    "agent_id": "AGENT_ID",
+    "status": "offline",
+    "current_task": "none",
+    "message": "Agent initialized",
+    "last_updated": "TIMESTAMP",
+    "workspace_path": "WORKSPACE_PATH",
+    "repo_root": "REPO_ROOT",
+    "shared_tools": "SHARED_TOOLS_PATH",
+    "onboarding": {
+        "status": "pending",
+        "started_at": null,
+        "completed_at": null,
+        "progress": 0.0,
+        "checklist": {
+            "welcome_message": false,
+            "system_overview": false,
+            "communication_protocol": false,
+            "roles_and_responsibilities": false,
+            "best_practices": false,
+            "getting_started": false,
+            "troubleshooting": false,
+            "quick_start": false,
+            "status_update": false,
+            "repository_push": false
+        },
+        "documents_read": [],
+        "verification_passed": false,
+        "notes": ""
+    },
+    "capabilities": {
+        "autonomous_mode": false,
+        "communication_enabled": true,
+        "file_operations": true,
+        "task_execution": true,
+        "status_reporting": true
+    },
+    "performance": {
         "tasks_completed": 0,
+        "messages_sent": 0,
+        "messages_received": 0,
         "uptime_hours": 0.0,
-        "last_response_time": "2025-06-29 18:00:00",
-        "error_count": 0,
-        "success_rate": 100.0
+        "last_activity": null
+    },
+    "health": {
+        "status": "healthy",
+        "last_health_check": null,
+        "errors": [],
+        "warnings": []
     },
     "message_history": [
         {

@@ -22,6 +22,7 @@ try:
         OnboardingControlsWidget, OnboardingChecklistWidget, OnboardingManager
     )
     from src.gui.components.custom_message_widget import CustomMessageWidget
+    from src.gui.components.onboarding_dashboard import OnboardingDashboardWidget
 except ImportError as e:
     print(f"Warning: onboarding components not found: {e}")
 
@@ -37,8 +38,22 @@ class OnboardingTab(ttk.Frame):
     
     def setup_ui(self):
         """Setup the user interface using modular components"""
-        # Main container
-        main_frame = ttk.Frame(self)
+        # Create notebook for tabs
+        self.notebook = ttk.Notebook(self)
+        self.notebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        
+        # Tab 1: Onboarding Dashboard
+        dashboard_frame = ttk.Frame(self.notebook)
+        self.notebook.add(dashboard_frame, text="Dashboard")
+        
+        self.components['dashboard'] = OnboardingDashboardWidget(dashboard_frame)
+        
+        # Tab 2: Onboarding Controls
+        controls_frame = ttk.Frame(self.notebook)
+        self.notebook.add(controls_frame, text="Controls")
+        
+        # Main container for controls tab
+        main_frame = ttk.Frame(controls_frame)
         main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
         
         # Left panel - Onboarding controls and custom message

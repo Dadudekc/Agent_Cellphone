@@ -7,7 +7,7 @@ This file is a redirect to the new consolidated onboarding system.
 The original functionality is now available in: scripts/consolidated_onboarding.py
 
 Usage:
-    python consolidated_onboarding.py --all
+    python consolidated_onboarding.py --all --style simple
 
 For more information, run:
     python consolidated_onboarding.py --help
@@ -19,7 +19,7 @@ from pathlib import Path
 
 def main():
     print("🔄 REDIRECTING to consolidated onboarding system...")
-    print(f"📁 Original: send_onboarding.py")
+    print(f"📁 Original: comprehensive_onboarding_message_simple.py")
     print(f"🎯 Target: consolidated_onboarding.py")
     print("=" * 50)
     
@@ -35,8 +35,8 @@ def main():
     cmd = [sys.executable, str(target_path)] + sys.argv[1:]
     
     # Add default arguments if specified
-    if "--all":
-        cmd.extend("--all".split())
+    if "--all --style simple":
+        cmd.extend("--all --style simple".split())
     
     print("🚀 Running command...")
     print()

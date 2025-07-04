@@ -93,15 +93,33 @@ class AgentMessengerTab(ttk.Frame):
                            command=lambda cmd=command: self.send_quick_command(cmd))
             btn.grid(row=i//3, column=i%3, padx=2, pady=2, sticky="ew")
         
-        # Send button
-        send_frame = ttk.Frame(left_panel)
-        send_frame.pack(fill=tk.X)
+        # Send buttons - Enhanced with chunk and comprehensive options
+        send_frame = ttk.LabelFrame(left_panel, text="Send Options", padding=5)
+        send_frame.pack(fill=tk.X, pady=(0, 10))
         
-        self.send_button = ttk.Button(send_frame, text="Send Message", command=self.send_message)
-        self.send_button.pack(side=tk.LEFT, padx=(0, 5))
+        # Button row 1: Send options
+        send_buttons_frame = ttk.Frame(send_frame)
+        send_buttons_frame.pack(fill=tk.X, pady=(0, 5))
         
-        self.clear_button = ttk.Button(send_frame, text="Clear", command=self.clear_message)
+        self.send_chunk_button = ttk.Button(send_buttons_frame, text="📤 Send Chunk", 
+                                          command=self.send_chunk_message)
+        self.send_chunk_button.pack(side=tk.LEFT, padx=(0, 5))
+        
+        self.send_comprehensive_button = ttk.Button(send_buttons_frame, text="📋 Send Comprehensive", 
+                                                  command=self.send_comprehensive_message)
+        self.send_comprehensive_button.pack(side=tk.LEFT, padx=(0, 5))
+        
+        # Button row 2: Clear and other controls
+        control_buttons_frame = ttk.Frame(send_frame)
+        control_buttons_frame.pack(fill=tk.X)
+        
+        self.clear_button = ttk.Button(control_buttons_frame, text="Clear", command=self.clear_message)
         self.clear_button.pack(side=tk.LEFT)
+        
+        # Add help text
+        help_label = ttk.Label(send_frame, text="💡 Chunk: Send in pieces | Comprehensive: Send complete message", 
+                              font=("TkDefaultFont", 8))
+        help_label.pack(side=tk.RIGHT, pady=(5, 0))
         
         # Right panel - Status and logs
         right_panel = ttk.LabelFrame(main_frame, text="Status & Logs", padding=10)
@@ -158,8 +176,8 @@ class AgentMessengerTab(ttk.Frame):
             # Clear for regular message
             self.message_text.delete(1.0, tk.END)
     
-    def send_message(self):
-        """Send the composed message"""
+    def send_chunk_message(self):
+        """Send the message in chunks (original behavior)"""
         if not self.messaging_utils:
             messagebox.showerror("Error", "Messaging system not initialized")
             return
@@ -179,7 +197,7 @@ class AgentMessengerTab(ttk.Frame):
             messagebox.showerror("Error", error_msg)
             return
         
-        # Send message in background thread
+        # Send message in chunks (original behavior)
         def send_thread():
             try:
                 if message_type == "command":
@@ -188,21 +206,62 @@ class AgentMessengerTab(ttk.Frame):
                     success, result = self.messaging_utils.send_message(target, content, tag)
                 
                 # Update UI in main thread
-                self.after(0, lambda: self.handle_send_result(success, result))
+                self.after(0, lambda: self.handle_send_result(success, result, "Chunk"))
                 
             except Exception as e:
-                self.after(0, lambda: self.handle_send_result(False, f"Error: {e}"))
+                self.after(0, lambda: self.handle_send_result(False, f"Error: {e}", "Chunk"))
         
         threading.Thread(target=send_thread, daemon=True).start()
     
-    def handle_send_result(self, success: bool, result: str):
+    def send_comprehensive_message(self):
+        """Send the message as a comprehensive single message"""
+        if not self.messaging_utils:
+            messagebox.showerror("Error", "Messaging system not initialized")
+            return
+        
+        target = self.target_var.get()
+        message_type = self.type_var.get()
+        tag = self.tag_var.get()
+        content = self.message_text.get(1.0, tk.END).strip()
+        
+        if not content:
+            messagebox.showwarning("Warning", "Please enter a message")
+            return
+        
+        # Validate target
+        valid, error_msg = self.messaging_utils.validate_target(target)
+        if not valid:
+            messagebox.showerror("Error", error_msg)
+            return
+        
+        # Send comprehensive message (single message)
+        def send_thread():
+            try:
+                # For comprehensive messages, we send the entire content as one message
+                # This ensures no fragmentation and complete context
+                if message_type == "command":
+                    success, result = self.messaging_utils.send_command(target, content)
+                else:
+                    # Use a special tag for comprehensive messages
+                    comprehensive_tag = f"{tag}_comprehensive" if tag else "comprehensive"
+                    success, result = self.messaging_utils.send_message(target, content, comprehensive_tag)
+                
+                # Update UI in main thread
+                self.after(0, lambda: self.handle_send_result(success, result, "Comprehensive"))
+                
+            except Exception as e:
+                self.after(0, lambda: self.handle_send_result(False, f"Error: {e}", "Comprehensive"))
+        
+        threading.Thread(target=send_thread, daemon=True).start()
+    
+    def handle_send_result(self, success: bool, result: str, send_type: str = "Message"):
         """Handle the result of sending a message"""
         if success:
-            self.log_message(f"✓ {result}")
-            messagebox.showinfo("Success", result)
+            self.log_message(f"✓ [{send_type}] {result}")
+            messagebox.showinfo("Success", f"[{send_type}] {result}")
         else:
-            self.log_message(f"✗ {result}", error=True)
-            messagebox.showerror("Error", result)
+            self.log_message(f"✗ [{send_type}] {result}", error=True)
+            messagebox.showerror("Error", f"[{send_type}] {result}")
     
     def send_quick_command(self, command: str):
         """Send a quick command"""
