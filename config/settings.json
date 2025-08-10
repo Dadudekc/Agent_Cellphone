@@ -1,0 +1,15 @@
+{
+  "paths": {
+    "agent_workspaces": "agent_workspaces",
+    "gui_root": "gui",
+    "examples_root": "examples",
+    "runtime_config": "src/runtime/config"
+  },
+  "environment": {
+    "log_level": "INFO",
+    "default_agent_layout": "2-agent"
+  },
+  "services": {
+    "messenger_api": "https://api.example.com"
+  }
+}

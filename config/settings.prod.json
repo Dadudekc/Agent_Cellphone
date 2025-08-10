@@ -1,0 +1,8 @@
+{
+  "environment": {
+    "log_level": "WARNING"
+  },
+  "services": {
+    "messenger_api": "https://prod.example.com"
+  }
+}
