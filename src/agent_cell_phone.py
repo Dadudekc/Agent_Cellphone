@@ -18,8 +18,8 @@ import queue
 
 try:
     import pyautogui  # mechanical control
-except ImportError:
-    pyautogui = None                          # tolerates headless tests
+except Exception:  # pragma: no cover - depends on system display
+    pyautogui = None  # tolerate headless or missing dependencies
 
 # ──────────────────────────── config paths
 REPO_ROOT   = Path(__file__).resolve().parent    # Current directory
