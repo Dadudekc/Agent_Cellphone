@@ -8,7 +8,6 @@ Utility for finding and managing cursor coordinates for agent communication.
 import json
 import logging
 import os
-import sys
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional
 

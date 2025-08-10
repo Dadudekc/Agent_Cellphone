@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFrame, QLabel, QPushButton, QGroupBox, QProgressBar
 from PyQt5.QtCore import Qt, QTimer
 import json
-import os
 from pathlib import Path
 
 # Import onboarding integration
