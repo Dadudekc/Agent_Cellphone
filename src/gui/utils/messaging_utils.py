@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
-"""
-Messaging Utilities for Dream.OS GUI
-Provides messaging functionality extracted from agent_messenger.py
+"""Messaging utilities used by the GUI.
+
+This module previously talked directly to :mod:`agent_cell_phone` but has
+been refactored to use service abstractions.  A service instance is
+injected into :class:`MessagingUtils` allowing different implementations
+to be swapped (e.g. local in‑process or remote API backed).
 """
 
 import json
@@ -15,35 +18,30 @@ import sys
 project_root = Path(__file__).parent.parent.parent
 sys.path.append(str(project_root))
 
-try:
-    from agent_cell_phone import AgentCellPhone, MsgTag
-except ImportError:
-    print("Warning: agent_cell_phone module not found")
+from services.agent_service import AgentService, LocalAgentService
+
 
 class MessagingUtils:
-    """Utility class for agent messaging operations"""
-    
-    def __init__(self, layout_mode: str = "8-agent", test_mode: bool = True):
-        """Initialize messaging utilities"""
+    """Utility class for agent messaging operations."""
+
+    def __init__(
+        self,
+        service: Optional[AgentService] = None,
+        layout_mode: str = "8-agent",
+        test_mode: bool = True,
+    ) -> None:
+        """Initialize messaging utilities."""
+
         self.layout_mode = layout_mode
         self.test_mode = test_mode
-        self.acp = None
-        self.initialize_agent_cell_phone()
-    
-    def initialize_agent_cell_phone(self):
-        """Initialize the AgentCellPhone instance"""
-        try:
-            self.acp = AgentCellPhone(layout_mode=self.layout_mode, test=self.test_mode)
-            return True
-        except Exception as e:
-            print(f"Error initializing AgentCellPhone: {e}")
-            return False
+        # Allow dependency injection of a service implementation
+        self.service: AgentService = service or LocalAgentService(
+            layout_mode=layout_mode, test_mode=test_mode
+        )
     
     def get_available_agents(self) -> List[str]:
         """Get list of available agents"""
-        if self.acp:
-            return self.acp.get_available_agents()
-        return []
+        return self.service.get_available_agents()
     
     def get_available_commands(self) -> List[str]:
         """Get list of available commands"""
@@ -54,62 +52,43 @@ class MessagingUtils:
     
     def get_available_tags(self) -> List[str]:
         """Get list of available message tags"""
-        return [tag.name for tag in MsgTag]
+        return [
+            "NORMAL",
+            "RESUME",
+            "SYNC",
+            "VERIFY",
+            "REPAIR",
+            "BACKUP",
+            "RESTORE",
+            "CLEANUP",
+            "CAPTAIN",
+            "TASK",
+            "INTEGRATE",
+            "REPLY",
+            "COORDINATE",
+            "ONBOARDING",
+            "COMMAND",
+        ]
     
     def send_message(self, target: str, message: str, tag: str = "NORMAL") -> Tuple[bool, str]:
         """Send a message to a specific agent"""
         try:
-            if not self.acp:
-                return False, "AgentCellPhone not initialized"
-            
-            # Validate target
-            if target not in self.get_available_agents() and target != "all":
+            available = self.get_available_agents()
+            if target not in available and target != "all":
                 return False, f"Invalid target: {target}"
-            
-            # Get message tag
-            try:
-                msg_tag = MsgTag[tag.upper()]
-            except KeyError:
-                msg_tag = MsgTag.NORMAL
-            
-            # Send message
-            if target == "all":
-                self.acp.broadcast(message, msg_tag)
-                return True, f"Message broadcast to all agents"
-            else:
-                self.acp.send(target, message, msg_tag)
-                return True, f"Message sent to {target}"
-                
+            return self.service.send_message(target, message, tag)
         except Exception as e:
             return False, f"Error sending message: {e}"
     
     def send_command(self, target: str, command: str, args: List[str] = None) -> Tuple[bool, str]:
         """Send a command to a specific agent"""
         try:
-            if not self.acp:
-                return False, "AgentCellPhone not initialized"
-            
-            # Validate target
-            if target not in self.get_available_agents() and target != "all":
+            available = self.get_available_agents()
+            if target not in available and target != "all":
                 return False, f"Invalid target: {target}"
-            
-            # Validate command
             if command not in self.get_available_commands():
                 return False, f"Invalid command: {command}"
-            
-            # Format command message
-            command_text = command
-            if args:
-                command_text += " " + " ".join(args)
-            
-            # Send command
-            if target == "all":
-                self.acp.broadcast(command_text, MsgTag.COMMAND)
-                return True, f"Command '{command}' broadcast to all agents"
-            else:
-                self.acp.send(target, command_text, MsgTag.COMMAND)
-                return True, f"Command '{command}' sent to {target}"
-                
+            return self.service.send_command(target, command, args)
         except Exception as e:
             return False, f"Error sending command: {e}"
     
@@ -144,15 +123,8 @@ class MessagingUtils:
     def get_system_status(self) -> Dict:
         """Get overall system status"""
         try:
-            if not self.acp:
-                return {"error": "AgentCellPhone not initialized"}
-            
-            status = {
-                "layout_mode": self.acp.get_layout_mode(),
-                "available_agents": self.acp.get_available_agents(),
-                "available_layouts": self.acp.get_available_layouts(),
-                "timestamp": datetime.now().isoformat()
-            }
+            status = self.service.get_system_status()
+            status["timestamp"] = datetime.now().isoformat()
             return status
         except Exception as e:
             return {"error": f"Error getting system status: {e}"}
@@ -190,86 +162,16 @@ class MessagingUtils:
     def validate_target(self, target: str) -> Tuple[bool, str]:
         """Validate target agent"""
         available_agents = self.get_available_agents()
-        
+
         if target == "all":
             return True, "Valid target"
-        
+
         if target in available_agents:
             return True, "Valid target"
-        
+
         return False, f"Invalid target. Available: {', '.join(available_agents)}"
     
-    def get_agent_info(self, agent_name: str) -> Dict:
-        """Get information about a specific agent"""
-        try:
-            if not self.acp:
-                return {"error": "AgentCellPhone not initialized"}
-            
-            agents = self.get_available_agents()
-            if agent_name not in agents:
-                return {"error": f"Agent {agent_name} not found"}
-            
-            # Get agent coordinates
-            coords = self.acp._coords.get(agent_name, {})
-            
-            info = {
-                "name": agent_name,
-                "layout_mode": self.acp.get_layout_mode(),
-                "coordinates": coords,
-                "available": True,
-                "last_seen": datetime.now().isoformat()
-            }
-            
-            return info
-        except Exception as e:
-            return {"error": f"Error getting agent info: {e}"}
-    
-    def switch_layout_mode(self, new_layout: str) -> Tuple[bool, str]:
-        """Switch to a different layout mode"""
-        try:
-            available_layouts = self.acp.get_available_layouts() if self.acp else []
-            
-            if new_layout not in available_layouts:
-                return False, f"Invalid layout mode. Available: {', '.join(available_layouts)}"
-            
-            # Reinitialize with new layout
-            self.layout_mode = new_layout
-            success = self.initialize_agent_cell_phone()
-            
-            if success:
-                return True, f"Switched to {new_layout} layout"
-            else:
-                return False, "Failed to initialize new layout"
-                
-        except Exception as e:
-            return False, f"Error switching layout: {e}"
-    
-    def toggle_test_mode(self) -> Tuple[bool, str]:
-        """Toggle between test and live mode"""
-        try:
-            self.test_mode = not self.test_mode
-            success = self.initialize_agent_cell_phone()
-            
-            mode = "test" if self.test_mode else "live"
-            if success:
-                return True, f"Switched to {mode} mode"
-            else:
-                return False, f"Failed to initialize {mode} mode"
-                
-        except Exception as e:
-            return False, f"Error toggling mode: {e}"
-
-# Convenience functions for direct use
-def create_messaging_utils(layout_mode: str = "8-agent", test_mode: bool = True) -> MessagingUtils:
-    """Create a messaging utils instance"""
-    return MessagingUtils(layout_mode, test_mode)
-
-def send_quick_message(target: str, message: str, layout_mode: str = "8-agent") -> Tuple[bool, str]:
-    """Quick function to send a message"""
-    utils = MessagingUtils(layout_mode, test_mode=True)
-    return utils.send_message(target, message)
-
-def send_quick_command(target: str, command: str, layout_mode: str = "8-agent") -> Tuple[bool, str]:
-    """Quick function to send a command"""
-    utils = MessagingUtils(layout_mode, test_mode=True)
-    return utils.send_command(target, command) 
+    # Legacy helper functions that required direct access to AgentCellPhone
+    # have been removed to keep this utility focused on service-driven
+    # messaging.  Additional functionality can be implemented via the
+    # injected service as needed.
