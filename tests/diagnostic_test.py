@@ -5,7 +5,12 @@ Tests broadcast functionality with proper delays
 """
 
 import time
-from agent_cell_phone import AgentCellPhone, MsgTag
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
+
+from services.agent_cell_phone import AgentCellPhone, MsgTag
 
 def test_broadcast_with_delays():
     """Test broadcast with proper delays between messages."""
@@ -62,4 +67,4 @@ def test_broadcast_with_delays():
         print(f"❌ Test failed: {e}")
 
 if __name__ == "__main__":
-    test_broadcast_with_delays() 
+    test_broadcast_with_delays()

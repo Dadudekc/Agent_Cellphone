@@ -3,7 +3,12 @@
 Test script for broadcasting messages with special characters
 """
 
-from agent_cell_phone import AgentCellPhone
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
+
+from services.agent_cell_phone import AgentCellPhone
 
 def test_special_chars():
     """Test broadcasting messages with special characters"""
@@ -22,4 +27,4 @@ def test_special_chars():
     print("✅ Broadcast completed in test mode")
 
 if __name__ == "__main__":
-    test_special_chars() 
+    test_special_chars()

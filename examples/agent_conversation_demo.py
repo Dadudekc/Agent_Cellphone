@@ -7,7 +7,12 @@ to build an agent resume system and GUI
 
 import time
 import threading
-from agent_cell_phone import AgentCellPhone, MsgTag
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
+
+from services.agent_cell_phone import AgentCellPhone, MsgTag
 
 def agent_1_behavior(acp: AgentCellPhone):
     """Agent-1: Resume System Architect"""
@@ -157,4 +162,4 @@ def main():
         print(f"  {msg}")
 
 if __name__ == "__main__":
-    main() 
+    main()

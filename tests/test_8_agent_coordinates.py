@@ -5,7 +5,12 @@ Tests all 8 agent coordinates by sending individual and broadcast messages
 """
 
 import time
-from agent_cell_phone import AgentCellPhone, MsgTag
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
+
+from services.agent_cell_phone import AgentCellPhone, MsgTag
 
 def test_8_agent_coordinates():
     """Test all 8 agent coordinates with individual and broadcast messages."""
@@ -148,4 +153,4 @@ if __name__ == "__main__":
     if success:
         print("🎉 All tests passed - coordinate system is ready!")
     else:
-        print("⚠️  Some tests failed - check coordinate configuration") 
+        print("⚠️  Some tests failed - check coordinate configuration")

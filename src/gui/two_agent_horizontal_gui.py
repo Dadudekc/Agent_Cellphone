@@ -7,82 +7,33 @@ Inspired by the v2 GUI design with simplified, focused functionality.
 """
 
 import sys
-import os
 import warnings
-
-# Suppress PyQt5 deprecation warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning, module="PyQt5")
 import json
 import threading
 import time
 import pyautogui
-import warnings
 from datetime import datetime
 from typing import List, Dict, Optional
 
-# Suppress PyQt5 deprecation warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="PyQt5")
 
-# Import PyQt5 first (before project imports)
 try:
-    import PyQt5
-    from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
-                                QHBoxLayout, QGridLayout, QLabel, QPushButton, 
-                                QComboBox, QTextEdit, QLineEdit, QGroupBox, 
+    from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
+                                QHBoxLayout, QGridLayout, QLabel, QPushButton,
+                                QComboBox, QTextEdit, QLineEdit, QGroupBox,
                                 QSplitter, QTabWidget, QCheckBox, QListWidget,
                                 QListWidgetItem, QProgressBar, QFrame, QScrollArea,
                                 QMessageBox, QFileDialog, QSlider, QSpinBox, QInputDialog)
     from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal, QPropertyAnimation, QEasingCurve
     from PyQt5.QtGui import QFont, QPixmap, QIcon, QPalette, QColor, QPainter, QBrush, QTextCursor
-    
-    # QTextCursor registration is optional and not needed for basic functionality
-    print("✅ PyQt5 imported successfully")
 except ImportError as e:
     print(f"PyQt5 import error: {e}")
     print("PyQt5 not available. Please install: pip install PyQt5")
     sys.exit(1)
 
-# Add multiple possible paths for imports
-current_dir = os.path.dirname(__file__)
-project_root = os.path.dirname(current_dir)
-sys.path.insert(0, project_root)
-sys.path.insert(0, os.path.join(project_root, 'src'))
-
-try:
-    from src.utils.coordinate_finder import CoordinateFinder
-    from src.framework.agent_autonomy_framework import AgentAutonomyFramework
-except ImportError as e:
-    print(f"Import error: {e}")
-    print("Trying alternative import paths...")
-    
-    # Try direct import
-    try:
-        from utils.coordinate_finder import CoordinateFinder
-        from framework.agent_autonomy_framework import AgentAutonomyFramework
-        print("✅ Imported using direct path")
-    except ImportError:
-        print("Creating fallback classes...")
-        # Import coordinate finder from utils
-        try:
-            from src.utils.coordinate_finder import CoordinateFinder
-        except ImportError:
-            # Create dummy classes for fallback
-            class CoordinateFinder:
-                def __init__(self):
-                    self.coordinates = {}
-                def get_all_coordinates(self):
-                    return {f"agent-{i}": (100 + i*50, 100 + i*50) for i in range(1, 3)}
-                def get_coordinates(self, agent_id):
-                    return (100, 100)
-        
-        try:
-            from src.framework.agent_autonomy_framework import AgentAutonomyFramework
-        except ImportError:
-            class AgentAutonomyFramework:
-                def __init__(self):
-                    pass
-
-from gui.components.agent_panel import AgentPanel
+from core.utils.coordinate_finder import CoordinateFinder
+from core.framework.agent_autonomy_framework import AgentAutonomyFramework
+from .components.agent_panel import AgentPanel
 
 class TwoAgentHorizontalGUI(QMainWindow):
     """Modern two-agent horizontal GUI."""

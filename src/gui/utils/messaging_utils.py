@@ -9,16 +9,8 @@ import time
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
-import sys
 
-# Add project root to path
-project_root = Path(__file__).parent.parent.parent
-sys.path.append(str(project_root))
-
-try:
-    from agent_cell_phone import AgentCellPhone, MsgTag
-except ImportError:
-    print("Warning: agent_cell_phone module not found")
+from services.agent_cell_phone import AgentCellPhone, MsgTag
 
 class MessagingUtils:
     """Utility class for agent messaging operations"""

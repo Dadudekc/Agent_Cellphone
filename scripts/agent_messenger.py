@@ -14,7 +14,7 @@ import os
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-from inter_agent_framework import InterAgentFramework, Message, MessageType
+from services.inter_agent_framework import InterAgentFramework, Message, MessageType
 
 def main():
     parser = argparse.ArgumentParser(description="Agent Messenger - Send messages to Agent-1 through Agent-4")
@@ -180,4 +180,4 @@ def interactive_mode(framework):
             print(f"Error: {e}")
 
 if __name__ == "__main__":
-    main() 
+    main()

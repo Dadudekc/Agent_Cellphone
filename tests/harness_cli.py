@@ -10,10 +10,10 @@ import sys
 import time
 from pathlib import Path
 
-# Add current directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent))
+# Ensure src directory is on the import path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 
-from agent_cell_phone import AgentCellPhone, MsgTag
+from services.agent_cell_phone import AgentCellPhone, MsgTag
 
 
 def test_send_message(agent_id: str, target_agent: str, message: str, layout_mode: str = "2-agent", test_mode: bool = True):
@@ -286,4 +286,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main() 
+    main()

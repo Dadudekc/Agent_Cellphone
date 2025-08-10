@@ -8,6 +8,7 @@ Splash screen with logo that leads to agent mode selection.
 import sys
 import os
 import warnings
+from pathlib import Path
 
 # Suppress PyQt5 deprecation warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning, module="PyQt5")
@@ -35,8 +36,8 @@ class SplashScreen(QWidget):
         self.setFixedSize(900, 650)  # Redesigned splash screen
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
         # Load background pixmap once
-        bg_path = os.path.join(os.getcwd(), "gui", "logo.png")
-        self.bg_pixmap = QPixmap(bg_path) if os.path.exists(bg_path) else None
+        bg_path = Path(__file__).with_name("logo.png")
+        self.bg_pixmap = QPixmap(str(bg_path)) if bg_path.exists() else None
         if self.bg_pixmap and not self.bg_pixmap.isNull():
             self.setFixedSize(self.bg_pixmap.width(), self.bg_pixmap.height() + 20)  # slimmer footer
         self.setStyleSheet("background-color: #000000;")

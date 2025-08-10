@@ -8,7 +8,12 @@ using the advanced inter-agent communication framework
 
 import time
 import json
-from inter_agent_framework import InterAgentFramework, Message, MessageType
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
+
+from services.inter_agent_framework import InterAgentFramework, Message, MessageType
 
 def test_agent_communication():
     """Test communication between Agent-1 through Agent-4"""
@@ -236,4 +241,4 @@ def test_agent_responses():
 
 if __name__ == "__main__":
     test_agent_communication()
-    test_agent_responses() 
+    test_agent_responses()

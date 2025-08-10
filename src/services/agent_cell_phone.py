@@ -18,12 +18,12 @@ import queue
 
 try:
     import pyautogui  # mechanical control
-except ImportError:
+except Exception:
     pyautogui = None                          # tolerates headless tests
 
 # ──────────────────────────── config paths
-REPO_ROOT   = Path(__file__).resolve().parent    # Current directory
-CONFIG_DIR  = REPO_ROOT / "runtime" / "config"
+REPO_ROOT   = Path(__file__).resolve().parents[1]
+CONFIG_DIR  = REPO_ROOT / "core" / "runtime" / "config"
 COORD_FILE  = CONFIG_DIR / "cursor_agent_coords.json"
 MODE_FILE   = CONFIG_DIR / "templates" / "agent_modes.json"
 
