@@ -21,18 +21,45 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--agent", default="Agent-3")
     p.add_argument("--inbox")
     p.add_argument("--poll", type=float, default=0.2)
+    p.add_argument("--env-file", help="path to .env file with KEY=VALUE lines (e.g., DISCORD_WEBHOOK_URL)")
     p.add_argument("--devlog-webhook", default=os.environ.get("DISCORD_WEBHOOK_URL"), help="Discord webhook URL for devlog notifications (or set DISCORD_WEBHOOK_URL)")
     p.add_argument("--devlog-username", default=os.environ.get("DEVLOG_USERNAME", "Agent Devlog"))
     p.add_argument("--devlog-embed", action="store_true", help="Send embed payloads instead of plain content")
     return p.parse_args()
 
 
+def _load_env_file(path: str | None) -> None:
+    if not path:
+        # try default .env at repo root
+        cand = Path(__file__).resolve().parents[1] / ".env"
+        if not cand.exists():
+            return
+        path = str(cand)
+    try:
+        p = Path(path)
+        if not p.exists():
+            return
+        for raw in p.read_text(encoding="utf-8").splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#"):
+                continue
+            if "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            k = k.strip()
+            v = v.strip().strip('"').strip("'")
+            os.environ[k] = v
+    except Exception:
+        pass
+
+
 def main() -> int:
     args = parse_args()
+    _load_env_file(args.env_file)
     agent = args.agent
     inbox_dir = args.inbox or os.path.join("agent_workspaces", agent, "inbox")
-    devlog_webhook = args.devlog_webhook
-    devlog_username = args.devlog_username
+    devlog_webhook = args.devlog_webhook or os.environ.get("DISCORD_WEBHOOK_URL")
+    devlog_username = args.devlog_username or os.environ.get("DEVLOG_USERNAME", "Agent Devlog")
     devlog_use_embed = bool(args.devlog_embed)
 
     pipeline = MessagePipeline()

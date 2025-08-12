@@ -2,11 +2,13 @@
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 import time
 import uuid
+from urllib import request, error
 
 
 FSM_ROOT = Path("fsm_data")
@@ -135,6 +137,28 @@ def _write_inbox_message(to_agent: str, payload: Dict[str, Any]) -> Path:
     return path
 
 
+def _post_discord(title: str, description: str) -> None:
+    """Optional devlog to Discord via webhook in environment.
+    Set DISCORD_WEBHOOK_URL and optional DEVLOG_USERNAME in .env or env.
+    """
+    url = os.environ.get("DISCORD_WEBHOOK_URL")
+    if not url:
+        return
+    user = os.environ.get("DEVLOG_USERNAME", "Agent Devlog")
+    payload = {
+        "username": user,
+        "embeds": [{"title": title, "description": description, "color": 5814783}],
+    }
+    data = json.dumps(payload).encode("utf-8")
+    req = request.Request(url, data=data, headers={"Content-Type": "application/json"})
+    try:
+        with request.urlopen(req, timeout=8):
+            pass
+    except (error.HTTPError, error.URLError):
+        # Silent failure to avoid breaking FSM; listener may also post devlogs
+        pass
+
+
 def handle_fsm_request(payload: Dict[str, Any]) -> Dict[str, Any]:
     """Select next tasks and assign to agents. Payload may include:
     { 'type':'fsm_request', 'from':'Agent-3', 'to':'Agent-5', 'workflow':'default', 'agents':['Agent-1','Agent-2','Agent-4'] }
@@ -180,6 +204,15 @@ def handle_fsm_request(payload: Dict[str, Any]) -> Dict[str, Any]:
         _write_inbox_message(owner, assignment)
         assigned.append(assignment)
         i += 1
+
+    # Optional devlog summary
+    if assigned:
+        preview = []
+        for a in assigned[:5]:
+            preview.append(f"{a.get('task_id')} → {a.get('to')} ({a.get('repo')})")
+        extra = "; more…" if len(assigned) > 5 else ""
+        desc = f"workflow: {workflow_id} | count: {len(assigned)}\n" + "\n".join(preview) + extra
+        _post_discord("FSM assigned tasks", desc)
 
     return {"ok": True, "assigned": assigned, "count": len(assigned)}
 
@@ -236,6 +269,19 @@ def handle_fsm_update(payload: Dict[str, Any]) -> Dict[str, Any]:
         "summary": payload.get("summary", ""),
     }
     _write_inbox_message(captain, summary_msg)
+    # Optional devlog for update
+    try:
+        ev = payload.get("evidence")
+        if isinstance(ev, list):
+            ev_str = "; ".join([str(e) for e in ev])
+        else:
+            ev_str = str(ev) if ev else ""
+        desc = f"task_id: {tr.task_id} | state: {tr.state}\nsummary: {payload.get('summary','')}"
+        if ev_str:
+            desc += f"\nevidence: {ev_str}"
+        _post_discord(f"FSM_UPDATE {tr.task_id}", desc)
+    except Exception:
+        pass
     return {"ok": True, "task_id": tr.task_id, "state": tr.state}
 
 
