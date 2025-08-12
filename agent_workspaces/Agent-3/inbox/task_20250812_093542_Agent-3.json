@@ -1,0 +1,14 @@
+{
+  "intent": "Complete one contract to acceptance criteria; commit small, verifiable edits; attach evidence.",
+  "acceptance_criteria": "PR removes duplication, consolidates utilities, adds unit tests; CI green.",
+  "repo_path": "D:/repositories/GPT-AUTOMATION",
+  "workflow": "default",
+  "to": "Agent-3",
+  "evidence_required": "PR link(s) and CI results",
+  "task_id": "task-gpt-automation-001",
+  "timestamp": "2025-08-12T09:35:42",
+  "from": "Agent-5",
+  "comm_root_path": "D:/repositories/communications",
+  "type": "task",
+  "repo": "GPT-AUTOMATION"
+}

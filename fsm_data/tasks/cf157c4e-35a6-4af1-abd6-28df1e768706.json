@@ -1,0 +1,18 @@
+{
+  "id": "cf157c4e-35a6-4af1-abd6-28df1e768706",
+  "name": "Design FSM Structure",
+  "description": "Design the FSM structure for workflow management",
+  "priority": "TaskPriority.HIGH",
+  "status": "TaskStatus.IN_PROGRESS",
+  "project_id": "bc7a70be-b3bb-4600-9dca-f3148d8373f0",
+  "workflow_id": "50455980-ca0a-47fc-aa0d-4addf1c1ffee",
+  "assigned_agent": null,
+  "dependencies": [],
+  "estimated_duration": 120,
+  "actual_duration": null,
+  "created_at": "2025-08-04 16:45:20.911270",
+  "started_at": "2025-08-04 16:45:20.912270",
+  "completed_at": null,
+  "tags": [],
+  "metadata": {}
+}

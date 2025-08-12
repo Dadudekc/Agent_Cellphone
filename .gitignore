@@ -135,6 +135,21 @@ logs/
 temp/
 tmp/
 
+# Runtime/generated (added)
+agent_workspaces/
+data/memory/
+data/vision/
+*.pid
+*.err
+__pycache__/
+*.pyc
+
+# Overnight runner artifacts
+overnight_runner/__pycache__/
+communications/
+# workspace communications root can be external; ignore if present
+D:/repositories/communications/
+
 # IDE files
 .vscode/
 .idea/

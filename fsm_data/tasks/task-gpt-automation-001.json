@@ -1,0 +1,16 @@
+{
+  "intent": "Reduce duplication; consolidate utilities; add tests",
+  "priority": 1,
+  "state": "assigned",
+  "owner": "Agent-3",
+  "workflow": "default",
+  "task_id": "task-gpt-automation-001",
+  "labels": [
+    "refactor",
+    "tests"
+  ],
+  "repo": "GPT-AUTOMATION",
+  "assigned_at": "2025-08-12T09:35:42",
+  "acceptance_criteria": "PR removes duplication, consolidates utilities, adds unit tests; CI green.",
+  "evidence_required": "PR link(s) and CI results"
+}

@@ -1,8 +1,8 @@
 # 📱 Agent Cell Phone (ACP)
 
 **Project Codename:** `agent_cell_phone`  
-**Version:** 1.0.0  
-**Status:** Phase 1 Complete, Production Ready  
+**Version:** 2.0.0  
+**Status:** Autonomous Orchestration Enabled  
 **Purpose:** Enable fast, deterministic inter-agent messaging across Cursor instances via PyAutoGUI using pre-mapped input box coordinates, with a modern GUI interface for seamless agent management.
 
 ## 🎯 Overview
@@ -29,9 +29,24 @@ cd Agent_CellPhone
 pip install -r requirements.txt
 ```
 
-3. **Launch the system:**
-```bash
-python launch.py
+3. **Launch the system (autonomous 5‑agent mode):**
+```powershell
+$env:ACP_DEFAULT_NEW_CHAT=1; $env:ACP_AUTO_ONBOARD=1; $env:ACP_SINGLE_MESSAGE=1; `
+  $env:ACP_MESSAGE_VERBOSITY=extensive; $env:ACP_NEW_CHAT_INTERVAL_SEC=1800
+
+# Terminal A: start Agent-5 listener
+python overnight_runner/listener.py --agent Agent-5 | cat
+
+# Terminal B: start FSM cadence (contracts‑tailored)
+python overnight_runner/runner.py `
+  --layout 5-agent --captain Agent-5 --resume-agents Agent-1,Agent-2,Agent-3,Agent-4 `
+  --duration-min 60 --interval-sec 1200 --sender Agent-3 --plan contracts `
+  --fsm-enabled --fsm-agent Agent-5 --fsm-workflow default `
+  --contracts-file D:/repositories/communications/overnight_YYYYMMDD_/Agent-5/contracts.json `
+  --suppress-resume --skip-assignments --skip-captain-kickoff --skip-captain-fsm-feed `
+  --resume-cooldown-sec 3600 --active-grace-sec 1200 `
+  --initial-wait-sec 10 --phase-wait-sec 8 --stagger-ms 2500 --jitter-ms 800 `
+  --comm-root D:/repositories/communications/overnight_YYYYMMDD_ --create-comm-folders | cat
 ```
 
 ### Basic Usage
@@ -97,10 +112,15 @@ acp.broadcast("Status update: All systems operational")
 - Professional styling with color-coded buttons
 - Alternative launcher script for easy access
 
-### 5. Inbox Listener (Phase 2)
-- Passive file tail or OCR stream
-- Filters messages addressed to `@self`
-- Executes mapped commands or dispatches to internal handlers
+### 5. File Inbox + Listener (Active)
+- Silent channel under `agent_workspaces/Agent-X/inbox/*.json`.
+- Listener updates `agent_workspaces/Agent-X/state.json` and mirrors evidence into communications.
+- Recognized types: `task`, `sync`, `verify`, `fsm_request`, `fsm_update`.
+
+### 6. FSM Cadence Runner
+- Cycles RESUME/TASK/COORDINATE/SYNC/VERIFY with anti‑duplication and pacing.
+- Drops `fsm_request_YYYYMMDD_HHMMSS.json` into Agent‑5 inbox each cycle when `--fsm-enabled`.
+- Optional contracts tailoring via `--contracts-file`.
 
 ## 📁 Project Structure
 
@@ -281,6 +301,20 @@ python tests/coordinate_finder.py --mode track
 
 ## 🛠️ Configuration
 
+### Typing/Onboarding Behavior (Environment)
+- `ACP_DEFAULT_NEW_CHAT`: 1 to enable Ctrl+T flow by default (first contact).
+- `ACP_NEW_CHAT_INTERVAL_SEC`: throttle Ctrl+T per agent (e.g., 1800 = 30 minutes).
+- `ACP_AUTO_ONBOARD`: 1 to prepend onboarding pointer to the first message in new chat.
+- `ACP_SINGLE_MESSAGE`: 1 to compose a single message (Shift+Enter for line breaks; one Enter at end).
+- `ACP_MESSAGE_VERBOSITY`: `extensive` or `simple` onboarding pointer content.
+
+### Runner Pacing/Noise Flags
+- `--suppress-resume`: never send RESUME prompts.
+- `--resume-cooldown-sec`: minimum seconds between RESUME per agent.
+- `--active-grace-sec`: skip messaging agents updated within the last N seconds.
+- `--skip-assignments`, `--skip-captain-kickoff`, `--skip-captain-fsm-feed`: silence early chatter.
+- `--contracts-file`: path to `contracts.json` for per‑agent tailored prompts.
+
 ### Coordinate Management
 The system uses a unified coordinate file at `runtime/config/cursor_agent_coords.json`:
 
@@ -406,7 +440,7 @@ The system uses a unified coordinate file at `runtime/config/cursor_agent_coords
 
 ---
 
-**Project Version:** 1.0.0  
-**Last Updated:** 2025-06-28  
-**Status:** Phase 1 Complete, Production Ready  
-**Next Phase:** Phase 2 - Listener Loop 
+**Project Version:** 2.0.0  
+**Last Updated:** 2025-08-12  
+**Status:** Autonomous Orchestration Enabled  
+**Next Phase:** Robust pacing defaults + CI hooks for verify gates

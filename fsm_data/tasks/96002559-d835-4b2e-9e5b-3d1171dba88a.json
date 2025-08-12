@@ -1,0 +1,20 @@
+{
+  "id": "96002559-d835-4b2e-9e5b-3d1171dba88a",
+  "name": "Test FSM System",
+  "description": "Test the FSM system with various scenarios",
+  "priority": "TaskPriority.MEDIUM",
+  "status": "TaskStatus.PENDING",
+  "project_id": "bc7a70be-b3bb-4600-9dca-f3148d8373f0",
+  "workflow_id": "50455980-ca0a-47fc-aa0d-4addf1c1ffee",
+  "assigned_agent": null,
+  "dependencies": [
+    "3ec1ae78-6abb-4077-a3e9-34be67a446b8"
+  ],
+  "estimated_duration": 90,
+  "actual_duration": null,
+  "created_at": "2025-08-04 16:45:20.912270",
+  "started_at": null,
+  "completed_at": null,
+  "tags": [],
+  "metadata": {}
+}

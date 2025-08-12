@@ -1,0 +1,8 @@
+{
+  "type": "note",
+  "from": "Agent-4",
+  "to": "Agent-3",
+  "timestamp": "2025-08-11T09:52:17.5833661-05:00",
+  "topic": "coordinate: next step",
+  "summary": "Propose: add minimal CI validate workflow for basic-bot; then push small PR. Reuses existing validate.ps1. Request ACK + priorities/exclusions."
+}

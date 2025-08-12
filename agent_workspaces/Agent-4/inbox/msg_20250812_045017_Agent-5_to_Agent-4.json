@@ -1,0 +1,20 @@
+{
+  "type": "task",
+  "from": "Agent-5",
+  "to": "Agent-4",
+  "timestamp": "2025-08-12T04:50:17.9981623-05:00",
+  "topic": "contract: docs-log-episode-rewards-and-gather-success-to-training-metrics-csv",
+  "summary": "Log episode rewards and gather success to `training_metrics.csv`.",
+  "details": {
+    "task_id": "docs-log-episode-rewards-and-gather-success-to-training-metrics-csv",
+    "repo": "docs",
+    "repo_path": "D:\\repositories\\dadudekc\\osrsAIagent\\docs",
+    "title": "Log episode rewards and gather success to `training_metrics.csv`.",
+    "description": "",
+    "acceptance_criteria": [],
+    "assignee": "Agent-4",
+    "state": "ready",
+    "evidence": [],
+    "created": "2025-08-12T04:50:17"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "fsm_request",
+  "from": "Agent-3",
+  "to": "Agent-5",
+  "workflow": "default",
+  "agents": [
+    "Agent-1",
+    "Agent-2",
+    "Agent-4"
+  ],
+  "timestamp": "2025-08-11T09:47:36"
+}

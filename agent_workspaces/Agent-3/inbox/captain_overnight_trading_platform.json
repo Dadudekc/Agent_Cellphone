@@ -1,0 +1,20 @@
+{
+  "from": "Controller",
+  "to": "Agent-3",
+  "message": "Appointment: You are captain overnight for trading-platform. Coordinate agents, message them as needed, keep commits small, and post hourly summaries including blockers.",
+  "command": "resume",
+  "args": {
+    "role": "captain",
+    "project": "trading-platform",
+    "reporting": "hourly",
+    "objectives": [
+      "reduce duplication",
+      "consolidate utilities",
+      "add tests",
+      "small verifiable commits"
+    ]
+  }
+}
+
+
+

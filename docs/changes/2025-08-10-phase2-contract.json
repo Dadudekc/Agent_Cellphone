@@ -1,0 +1,37 @@
+{
+  "id": "CC-0001",
+  "title": "Phase 2 scaffolds: inbox listener, command router, message pipeline",
+  "rationale": "Introduce minimal, test-driven scaffolds for Phase 2 without duplicating existing modules.",
+  "change_type": "feature",
+  "affected_files": [
+    { "path": "config/templates/change_contract.schema.json", "op": "add" },
+    { "path": "docs/changes/2025-08-10-phase2-contract.json", "op": "add" },
+    { "path": "docs/AGENT_README.md", "op": "add" },
+    { "path": "src/core/inbox_listener.py", "op": "add" },
+    { "path": "src/core/command_router.py", "op": "add" },
+    { "path": "src/core/message_pipeline.py", "op": "add" },
+    { "path": "tests/test_phase2_scaffolds.py", "op": "add" },
+    { "path": "scripts/validate_change.py", "op": "add" },
+    { "path": ".git/hooks/pre-commit", "op": "add" }
+  ],
+  "acceptance_criteria": [
+    "Validator passes against this contract",
+    "New modules import and expose minimal typed APIs",
+    "Tests discover and run (even if trivial)",
+    "No duplicate files or parallel versions created"
+  ],
+  "tests_required": [
+    "tests/test_phase2_scaffolds.py::test_imports",
+    "tests/test_phase2_scaffolds.py::test_minimal_interfaces",
+    "tests/test_phase2_scaffolds.py::test_file_tail_and_pipeline",
+    "tests/test_phase2_scaffolds.py::test_default_command_handlers"
+  ],
+  "risk_level": "low",
+  "rollback_plan": "Remove added files and pre-commit hook; no existing modules modified.",
+  "dependencies": [],
+  "owner": "automation",
+  "reviewers": ["maintainer"],
+  "fsm_state": "Proposed"
+}
+
+

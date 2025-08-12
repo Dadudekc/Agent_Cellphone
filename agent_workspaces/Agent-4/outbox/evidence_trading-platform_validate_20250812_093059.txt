@@ -1,0 +1,6 @@
+==> trading-platform validation start
+==> running pytest
+.....                                                                    [100%]
+5 passed in 1.32s
+
+Validation succeeded.

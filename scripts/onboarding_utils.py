@@ -271,13 +271,20 @@ YOUR KEY RESPONSIBILITIES:
     
     if style == "full":
         message += f"""
-🏗️ SYSTEM OVERVIEW:
+ 🏗️ SYSTEM OVERVIEW:
 Dream.OS is an autonomous multi-agent system where agents work together to:
 {bullet}Coordinate tasks and projects autonomously
 {bullet}Communicate through structured messaging protocols
 {bullet}Maintain individual workspaces and status tracking
 {bullet}Collaborate on complex technical projects
 {bullet}Self-manage and validate their work
+
+ 🌐 ENVIRONMENT MODEL (Cursor + shared repo/files):
+ {bullet}Agents are Cursor-based. ACP types messages directly into each agent’s Cursor input box using calibrated coordinates.
+ {bullet}All agents work on the same repositories/files on disk (e.g., D:\\repositories\\...). Use repo-relative paths in prompts.
+ {bullet}Coordinate using each repo’s TASK_LIST.md and status.json; avoid duplication; prefer reuse/refactor; commit small, verifiable edits.
+ {bullet}Messaging channels: (1) Visible UI typing via ACP, (2) Silent JSON file inbox at agent_workspaces/Agent-N/inbox/.
+ {bullet}Run tools from D:\\Agent_Cellphone so paths resolve correctly.
 
 📚 YOUR ONBOARDING MATERIALS (READ THESE IN ORDER):
 1. MAIN GUIDE: agent_workspaces/onboarding/README.md
@@ -346,13 +353,20 @@ agent_workspaces/{agent_name}/
 🎉 Welcome to the Dream.OS team - let's build something amazing together!"""
     else:
         message += f"""
-SYSTEM OVERVIEW:
+ SYSTEM OVERVIEW:
 Dream.OS is an autonomous multi-agent system where agents work together to:
 {bullet}Coordinate tasks and projects autonomously
 {bullet}Communicate through structured messaging protocols
 {bullet}Maintain individual workspaces and status tracking
 {bullet}Collaborate on complex technical projects
 {bullet}Self-manage and validate their work
+
+ ENVIRONMENT MODEL (Cursor + shared repo/files):
+ {bullet}Agents are Cursor-based. ACP types messages directly into each agent’s Cursor input box using calibrated coordinates.
+ {bullet}All agents work on the same repositories/files on disk (e.g., D:\\repositories\\...). Use repo-relative paths in prompts.
+ {bullet}Coordinate using each repo’s TASK_LIST.md and status.json; avoid duplication; prefer reuse/refactor; commit small, verifiable edits.
+ {bullet}Messaging channels: (1) Visible UI typing via ACP, (2) Silent JSON file inbox at agent_workspaces/Agent-N/inbox/.
+ {bullet}Run tools from D:\\Agent_Cellphone so paths resolve correctly.
 
 YOUR ONBOARDING MATERIALS (READ THESE IN ORDER):
 1. MAIN GUIDE: agent_workspaces/onboarding/README.md

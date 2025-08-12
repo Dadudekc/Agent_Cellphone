@@ -86,6 +86,11 @@ python run_onboarding.py Agent-1
 2. **PyAutoGUI**: Ensure PyAutoGUI is installed (`pip install pyautogui`)
 3. **Agent Windows**: Make sure all agent windows are visible and active
 
+### Environment model (important)
+- Agents are Cursor-based; onboarding messages are typed into Cursor windows using ACP.
+- Agents share the same repositories/files on disk. Keep changes small and verifiable to reduce conflicts.
+- Prefer comprehensive single-message onboarding; include repo-relative paths that are valid for all agents.
+
 ### Step 1: Set Up Agent Positions
 ```bash
 # Run the coordinate finder to set up agent positions
