@@ -1,0 +1,20 @@
+{
+  "type": "task",
+  "from": "Agent-5",
+  "to": "Agent-3",
+  "timestamp": "2025-08-12T04:50:17.9652931-05:00",
+  "topic": "contract: docs-implement-gathering-actions-with-success-rates-tied-to-skill-level-and-cooldowns",
+  "summary": "Implement gathering actions with success rates tied to skill level and cooldowns.",
+  "details": {
+    "task_id": "docs-implement-gathering-actions-with-success-rates-tied-to-skill-level-and-cooldowns",
+    "repo": "docs",
+    "repo_path": "D:\\repositories\\dadudekc\\osrsAIagent\\docs",
+    "title": "Implement gathering actions with success rates tied to skill level and cooldowns.",
+    "description": "",
+    "acceptance_criteria": [],
+    "assignee": "Agent-3",
+    "state": "ready",
+    "evidence": [],
+    "created": "2025-08-12T04:50:17"
+  }
+}

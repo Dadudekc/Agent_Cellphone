@@ -1,0 +1,17 @@
+{
+  "summary": "Refactor duplicate utils into shared module; add tests",
+  "state": "in_progress",
+  "evidence": [
+    {
+      "url": "https://example.com/GPT-AUTOMATION/issues/123",
+      "kind": "issue",
+      "note": "Tracking issue"
+    }
+  ],
+  "to": "Agent-5",
+  "repo_path": "D:/repositories/GPT-AUTOMATION",
+  "task_id": "task-gpt-automation-001",
+  "timestamp": "2025-08-12T09:42:25",
+  "from": "Agent-3",
+  "type": "fsm_update"
+}

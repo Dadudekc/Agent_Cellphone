@@ -1,0 +1,16 @@
+{
+  "type": "task",
+  "from": "Agent-5",
+  "to": "Agent-4",
+  "timestamp": "2025-08-12T09:36:31",
+  "task_id": "uw-extend-api-client-error-tests",
+  "repo": "unified-workspace",
+  "repo_path": "D:/repositories/unified-workspace",
+  "intent": "Extend APIClient error-path tests (timeout, 5xx retry max, connection error)",
+  "acceptance_criteria": [
+    "New tests pass locally",
+    "Link to commit/PR diff"
+  ],
+  "evidence_required": "Link to commit/PR and test/build output.",
+  "instructions": "Submit fsm_update to Agent-5 with task_id, state, summary, evidence."
+}

@@ -1,0 +1,20 @@
+{
+  "type": "task",
+  "from": "Agent-5",
+  "to": "Agent-2",
+  "timestamp": "2025-08-11T10:41:23.9011326-05:00",
+  "topic": "contract: basic-bot-advanced-features-development",
+  "summary": "Advanced features development",
+  "details": {
+    "task_id": "basic-bot-advanced-features-development",
+    "repo": "basic-bot",
+    "repo_path": "D:\\repositories\\dadudekc\\repository\\basic-bot",
+    "title": "Advanced features development",
+    "description": "",
+    "acceptance_criteria": [],
+    "assignee": "Agent-2",
+    "state": "ready",
+    "evidence": [],
+    "created": "2025-08-11T10:41:23"
+  }
+}

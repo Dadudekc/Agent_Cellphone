@@ -496,47 +496,33 @@ class TwoAgentHorizontalGUI(QMainWindow):
     
     # Shared control methods
     def onboard_agents(self):
-        """Onboard both agents."""
-        self.log_message("System", "Starting agent onboarding...")
+        """Onboard agents via ACP new-chat prompts (5-agent layout)."""
+        self.log_message("System", "Starting ACP new-chat onboarding...")
         try:
-            # Import and run the onboarding sequence
-            import subprocess
-            import sys
-            
-            # Run the onboarding script for both agents
-            onboarding_script = os.path.join(os.getcwd(), "scripts", "run_onboarding.py")
-            if os.path.exists(onboarding_script):
-                self.log_message("System", "Running onboarding sequence...")
-                
-                # Run onboarding in a separate thread to avoid blocking the GUI
-                def run_onboarding():
-                    try:
-                        result = subprocess.run(
-                            [sys.executable, onboarding_script],
-                            capture_output=True,
-                            text=True,
-                            cwd=os.getcwd()
-                        )
-                        
-                        if result.returncode == 0:
-                            self.log_message("System", "Onboarding completed successfully")
-                            # Update agent statuses after onboarding
-                            self.update_agent_statuses()
-                        else:
-                            self.log_message("Error", f"Onboarding failed: {result.stderr}")
-                    except Exception as e:
-                        self.log_message("Error", f"Onboarding error: {e}")
-                
-                # Start onboarding in background thread
-                onboarding_thread = threading.Thread(target=run_onboarding)
-                onboarding_thread.daemon = True
-                onboarding_thread.start()
-                
-            else:
-                self.log_message("Error", f"Onboarding script not found: {onboarding_script}")
-                
+            import subprocess, sys
+            tool = os.path.join(os.getcwd(), "overnight_runner", "tools", "onboard_via_acp.py")
+            if not os.path.exists(tool):
+                self.log_message("Error", f"Onboarding tool not found: {tool}")
+                return
+            def run_tool():
+                try:
+                    result = subprocess.run(
+                        [sys.executable, tool, "--layout", "5-agent"],
+                        capture_output=True,
+                        text=True,
+                        cwd=os.getcwd()
+                    )
+                    if result.returncode == 0:
+                        self.log_message("System", "ACP onboarding prompts sent.")
+                    else:
+                        self.log_message("Error", f"ACP onboarding failed: {result.stderr}")
+                except Exception as e:
+                    self.log_message("Error", f"ACP onboarding error: {e}")
+            t = threading.Thread(target=run_tool)
+            t.daemon = True
+            t.start()
         except Exception as e:
-            self.log_message("Error", f"Failed to start onboarding: {e}")
+            self.log_message("Error", f"Failed to start ACP onboarding: {e}")
     
     def restart_system(self):
         """Restart the system."""

@@ -9,7 +9,7 @@ Agent Cell Phone – inter-agent messaging layer for Dream.OS Cursor instances
 """
 
 from __future__ import annotations
-import argparse, json, logging, sys, time, threading
+import argparse, json, logging, sys, time, threading, os
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
@@ -77,6 +77,22 @@ class AgentCellPhone:
         self._coords = self._all_coords.get(layout_mode, {})
         self._modes  = self._load_json(MODE_FILE,  "mode templates")["modes"]
         self._cursor = _TestCursor() if test or pyautogui is None else _Cursor()
+        # Default send behavior: enable Ctrl+T new-chat flow when env var is set
+        self._default_new_chat = os.environ.get("ACP_DEFAULT_NEW_CHAT", "0").strip() not in ("0", "", "false", "False")
+        # Throttle new-chat openings (Ctrl+T) per agent to reduce system load
+        # Set via env var ACP_NEW_CHAT_INTERVAL_SEC (e.g., 1800 for 30 minutes). 0 disables throttling.
+        try:
+            self._new_chat_interval_sec = int(os.environ.get("ACP_NEW_CHAT_INTERVAL_SEC", "0") or 0)
+        except Exception:
+            self._new_chat_interval_sec = 0
+        self._last_new_chat_ts: Dict[str, float] = {}
+        # Auto-onboard pointer to be included in the same message (no chunking)
+        self._auto_onboard_enabled = os.environ.get("ACP_AUTO_ONBOARD", "1").strip() not in ("0", "", "false", "False")
+        self._onboard_style = os.environ.get("ACP_ONBOARD_STYLE", "simple").strip().lower()
+        # Message verbosity for the single-message onboarding prefix: 'extensive' | 'simple'
+        self._msg_verbosity = os.environ.get("ACP_MESSAGE_VERBOSITY", "extensive").strip().lower()
+        self._single_message = os.environ.get("ACP_SINGLE_MESSAGE", "1").strip() not in ("0", "", "false", "False")
+        self._onboarded_agents: set[str] = set()
         
         # Communication system
         self._message_queue = queue.Queue()
@@ -92,8 +108,12 @@ class AgentCellPhone:
             
         log.debug("AgentCellPhone ready for %s (test=%s, layout=%s)", self._agent_id, test, layout_mode)
 
-    def send(self, agent: str, message: str, tag: MsgTag = MsgTag.NORMAL) -> None:
-        """Send a single line to a specific agent."""
+    def send(self, agent: str, message: str, tag: MsgTag = MsgTag.NORMAL, new_chat: bool = False) -> None:
+        """Send a single line to a specific agent.
+
+        When new_chat is True, the cursor focuses a stable location and triggers Ctrl+T
+        to open a new chat before sending to the input box.
+        """
         agent = self._fmt_id(agent)
         if agent not in self._coords:
             log.error("Agent %s not found in %s mode", agent, self._layout_mode)
@@ -103,13 +123,59 @@ class AgentCellPhone:
         msg = AgentMessage(self._agent_id, agent, message, tag)
         self._conversation_history.append(msg)
         
-        loc   = self._coords[agent]["input_box"]
-        text  = f"{tag.value} {message}".strip()
-        print(f"[SEND] {agent} at ({loc['x']}, {loc['y']}): {text}")
-        self._cursor.move_click(loc["x"], loc["y"])
-        self._cursor.type(text)
+        # Determine target locations
+        starter_loc = self._coords[agent].get("starter_location_box") or self._coords[agent].get("input_box")
+        input_loc = self._coords[agent].get("input_box") or starter_loc
+
+        # Respect default new-chat if requested via environment
+        if not new_chat and self._default_new_chat:
+            new_chat = True
+
+        # Apply per-agent throttling for new-chat openings
+        if new_chat and self._new_chat_interval_sec > 0:
+            now_ts = time.time()
+            last_ts = self._last_new_chat_ts.get(agent, 0.0)
+            elapsed = now_ts - last_ts
+            if elapsed < float(self._new_chat_interval_sec):
+                # Suppress new-chat; fall back to typing in the existing input area
+                remaining = int(self._new_chat_interval_sec - elapsed)
+                log.debug("Suppressing new-chat for %s due to throttle (%ds remaining)", agent, max(0, remaining))
+                new_chat = False
+            else:
+                # Record this new-chat timestamp
+                self._last_new_chat_ts[agent] = now_ts
+
+        # Preferred sequence when opening a new chat:
+        # 1) Click starter location to bring the interface into focus
+        # 2) Wait briefly for UI to settle
+        # 3) Open new chat (Ctrl+T)
+        # 4) Type at starter location and send
+        if new_chat and (starter_loc or input_loc):
+            # Focus the interface at the starter location when available; otherwise fall back to input
+            target_loc = starter_loc or input_loc
+            if target_loc:
+                self._cursor.move_click(target_loc["x"], target_loc["y"])
+                time.sleep(0.8)
+                self._cursor.hotkey("ctrl", "t")
+                time.sleep(0.6)
+        
+        # Final target for typing: starter (if present) when new_chat, otherwise input box
+        target = (starter_loc if new_chat and starter_loc else input_loc)
+
+        # Build a single consolidated message if onboarding pointer is enabled
+        composed_text = f"{tag.value} {message}".strip()
+        if new_chat and self._auto_onboard_enabled and agent not in self._onboarded_agents and self._single_message:
+            pointer = self._compose_onboarding_message(agent)
+            if pointer:
+                composed_text = f"{pointer}\n\n{composed_text}".strip()
+                self._onboarded_agents.add(agent)
+
+        print(f"[SEND] {agent} at ({target['x']}, {target['y']}): {composed_text[:120]}{('...' if len(composed_text)>120 else '')}")
+        self._cursor.move_click(target["x"], target["y"]) 
+        # Type using Shift+Enter for line breaks to avoid sending mid-message
+        self._type_with_shift_enter(composed_text)
         self._cursor.enter()
-        log.info("→ %s %s", agent, text[:80])
+        log.info("→ %s %s", agent, composed_text[:80])
 
     def reply(self, to_agent: str, message: str, tag: MsgTag = MsgTag.REPLY) -> None:
         """Send a reply to a specific agent."""
@@ -253,6 +319,90 @@ class AgentCellPhone:
     def _fmt_id(agent: str) -> str:
         return agent if agent.startswith("Agent-") else f"Agent-{agent}"
 
+    # ──────────────────────────── onboarding helper
+    def _type_with_shift_enter(self, text: str) -> None:
+        """Type the given text, using Shift+Enter for line breaks so we only send once at the end."""
+        normalized = text.replace("\r\n", "\n").replace("\r", "\n")
+        parts = normalized.split("\n")
+        for idx, part in enumerate(parts):
+            if part:
+                self._cursor.type(part)
+            if idx < len(parts) - 1:
+                # Insert a visual line break without sending
+                self._cursor.hotkey("shift", "enter")
+                time.sleep(0.05)
+
+    def _compose_onboarding_message(self, agent: str) -> str:
+        """Create a single-shot onboarding + FSM primer block for a newly opened chat.
+
+        When ACP_MESSAGE_VERBOSITY=extensive (default), produce a detailed but single-message
+        briefing. Still returns a single string to be sent with exactly one Enter.
+        """
+        role_hint = {
+            "Agent-1": "Coordinator & PM",
+            "Agent-2": "Tech Architect",
+            "Agent-3": "Data/Analytics",
+            "Agent-4": "DevOps/Infra",
+            "Agent-5": "AI/ML Engineer",
+            "Agent-6": "Frontend/UI",
+            "Agent-7": "Backend/API",
+            "Agent-8": "QA/Testing",
+        }.get(agent, "Team Member")
+
+        bullet = "• " if self._onboard_style != "ascii" else "* "
+
+        # Extensive single-message briefing
+        if self._msg_verbosity == "extensive":
+            if agent == "Agent-5":
+                return (
+                    "CAPTAIN BRIEFING — Agent-5\n"
+                    "Context: ACP (visible typing) + file inbox (silent JSON). You own coordination, contracts, and verification gates.\n"
+                    f"Start here: agent_workspaces/onboarding/README.md; then CORE_PROTOCOLS.md; DEVELOPMENT_STANDARDS.md.\n"
+                    "Operating model:\n"
+                    f"{bullet}Contracts come from repos' TASK_LIST.md → convert to machine tasks → assign via FSM (Agent-5 orchestrator).\n"
+                    f"{bullet}Anti-duplication: search first; prefer reuse/refactor across repos.\n"
+                    f"{bullet}Quality: ship small, verifiable edits with tests/build evidence.\n"
+                    "Captain duties:\n"
+                    f"{bullet}Seed/adjust contracts; throttle to small batches; prevent duplication across repos.\n"
+                    f"{bullet}Assign via FSM (round‑robin/open tasks). Require acceptance criteria and evidence links.\n"
+                    f"{bullet}Enforce verify gates; if blocked by perms, stage diffs and request review.\n"
+                    f"{bullet}Monitor Agent-5/state.json and contracts.json; keep comms in D:/repositories/communications/overnight_YYYYMMDD_/Agent-5.\n"
+                    "FSM loop:\n"
+                    f"{bullet}Each cadence, trigger fsm_request; agents check inbox, execute, and send fsm_update (task_id, state, summary, evidence).\n"
+                    f"{bullet}When verified, issue next task; maintain momentum; minimize context switching."
+                )
+            else:
+                return (
+                    f"WELCOME {agent} — {role_hint}\n"
+                    "Context: ACP types into Cursor; file inbox carries structured JSON. Work from D:/repositories.\n"
+                    f"Start here: agent_workspaces/onboarding/README.md → role docs → DEVELOPMENT_STANDARDS.md → CORE_PROTOCOLS.md.\n"
+                    "Norms:\n"
+                    f"{bullet}Reuse/refactor; avoid duplication and stubs; keep edits small and cohesive.\n"
+                    f"{bullet}Provide tests/build evidence; write concise commit messages.\n"
+                    "Channels:\n"
+                    f"{bullet}ACP: motivational nudges and coordination.\n"
+                    f"{bullet}Inbox: task/sync/verify messages with task_id/state/evidence (durable/auditable).\n"
+                    "Action now:\n"
+                    f"{bullet}Open your assigned repo’s TASK_LIST.md, select the highest‑leverage contract, execute to acceptance criteria.\n"
+                    f"{bullet}Send fsm_update to Agent-5 inbox with task_id, state, summary, and evidence (tests/build output). If blocked, summarize and propose next steps."
+                )
+
+        # Simple/succinct single-paragraph pointer
+        lines: list[str] = []
+        if agent == "Agent-5":
+            lines.append(
+                "Captain: start here agent_workspaces/onboarding/README.md; coordinate contracts from TASK_LIST.md; use FSM to assign small,"
+                " evidence-backed tasks; enforce verify gates; keep comms under D:/repositories/communications/overnight_YYYYMMDD_/Agent-5."
+                " Trigger fsm_request each cadence and nudge agents to maintain momentum."
+            )
+        else:
+            lines.append(
+                f"Start here agent_workspaces/onboarding/README.md ({role_hint}). Norms: reuse/refactor, no duplication, small verifiable edits"
+                " with tests/build. Channels: ACP nudges; inbox {task/sync/verify} with task_id/state/evidence. Action: open your repo’s"
+                " TASK_LIST.md, pick one contract, execute, then inbox update with evidence."
+            )
+        return " ".join(lines).strip()
+
 # ──────────────────────────── cursor abstraction
 class _Cursor:
     def move_click(self, x: int, y: int) -> None:
@@ -264,12 +414,16 @@ class _Cursor:
     def enter(self) -> None:
         pyautogui.press("enter")
 
+    def hotkey(self, *keys: str) -> None:
+        pyautogui.hotkey(*keys)
+
 class _TestCursor(_Cursor):
     """Headless stub – records actions instead of executing."""
     def __init__(self) -> None: self.record: List[str]=[]
     def move_click(self,x:int,y:int)->None: self.record.append(f"move({x},{y})+click")
     def type(self,t:str)->None: self.record.append(f"type({t})")
     def enter(self)->None: self.record.append("enter")
+    def hotkey(self, *keys: str) -> None: self.record.append(f"hotkey({','.join(keys)})")
 
 # ──────────────────────────── CLI
 def _cli() -> None:
@@ -281,6 +435,7 @@ def _cli() -> None:
     p.add_argument("--mode", help="send predefined mode template key (overrides --msg)")
     p.add_argument("--layout", default="2-agent", help="layout mode (2-agent, 4-agent, 8-agent)")
     p.add_argument("--test", action="store_true", help="dry-run / headless")
+    p.add_argument("--new-chat", action="store_true", help="press Ctrl+T at starter location before sending")
     p.add_argument("--list-layouts", action="store_true", help="list available layout modes")
     p.add_argument("--list-agents", action="store_true", help="list available agents in current layout")
     args = p.parse_args()
@@ -311,8 +466,9 @@ def _cli() -> None:
         acp.exec_mode(acp._fmt_id(target), args.mode)
     elif args.msg:
         if args.agent:
-            acp.send(args.agent, args.msg, MsgTag[args.tag.upper()])
+            acp.send(args.agent, args.msg, MsgTag[args.tag.upper()], new_chat=args.new_chat)
         else:
+            # Broadcast with new-chat is not supported uniformly; send per agent behaves the same
             acp.broadcast(args.msg, MsgTag[args.tag.upper()])
     else:
         p.print_help()

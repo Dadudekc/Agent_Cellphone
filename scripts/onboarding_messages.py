@@ -17,6 +17,9 @@ import sys
 import subprocess
 from pathlib import Path
 
+# Explicit target for the consolidated script
+target_script = "consolidated_onboarding.py"
+
 def main():
     print("🔄 REDIRECTING to consolidated onboarding system...")
     print(f"📁 Original: onboarding_messages.py")
@@ -31,12 +34,8 @@ def main():
         print(f"❌ Error: Target script consolidated_onboarding.py not found!")
         return 1
     
-    # Build command
+    # Build command (pass through original arguments unchanged)
     cmd = [sys.executable, str(target_path)] + sys.argv[1:]
-    
-    # Add default arguments if specified
-    if "--all":
-        cmd.extend("--all".split())
     
     print("🚀 Running command...")
     print()

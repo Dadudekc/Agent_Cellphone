@@ -1,0 +1,20 @@
+{
+  "type": "task",
+  "from": "Agent-5",
+  "to": "Agent-2",
+  "timestamp": "2025-08-12T04:50:17.9379958-05:00",
+  "topic": "contract: docs-train-navigation-models-on-fixed-waypoints-using-stable-baselines3",
+  "summary": "Train navigation models on fixed waypoints using `stable-baselines3`.",
+  "details": {
+    "task_id": "docs-train-navigation-models-on-fixed-waypoints-using-stable-baselines3",
+    "repo": "docs",
+    "repo_path": "D:\\repositories\\dadudekc\\osrsAIagent\\docs",
+    "title": "Train navigation models on fixed waypoints using `stable-baselines3`.",
+    "description": "",
+    "acceptance_criteria": [],
+    "assignee": "Agent-2",
+    "state": "ready",
+    "evidence": [],
+    "created": "2025-08-12T04:50:17"
+  }
+}

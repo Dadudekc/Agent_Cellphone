@@ -194,6 +194,7 @@ The comprehensive onboarding message was successfully sent to Agent-1 with the f
 5. **Include tools and protocols** with examples
 6. **Format professionally** for easy reading
 7. **Use ASCII-compatible encoding** to avoid Unicode issues
+8. **State environment model explicitly**: Agents are Cursor-based and share the same repositories/files. Provide repo-relative paths and coordination norms (use `TASK_LIST.md`, `status.json`, avoid duplication, commit small verifiable changes).
 
 ---
 

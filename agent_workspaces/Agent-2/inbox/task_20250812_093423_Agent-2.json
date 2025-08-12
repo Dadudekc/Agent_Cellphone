@@ -1,0 +1,17 @@
+{
+  "type": "task",
+  "from": "Agent-5",
+  "to": "Agent-2",
+  "timestamp": "2025-08-12T09:34:23",
+  "task_id": "ga-add-first-regression-test",
+  "repo": "gpt-automation",
+  "repo_path": "D:/repositories/gpt-automation",
+  "intent": "Add first regression test for src/gpt_automation/automation.py and wire into validate.ps1",
+  "acceptance_criteria": [
+    "Test added and passing locally",
+    "validate.ps1 runs and reports tests",
+    "Link to commit/PR diff"
+  ],
+  "evidence_required": "Link to commit/PR and test/build output.",
+  "instructions": "Submit fsm_update to Agent-5 with task_id, state, summary, evidence."
+}
