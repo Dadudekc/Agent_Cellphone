@@ -227,7 +227,7 @@ class DreamOSCellPhoneGUIv2(QMainWindow, BaseGUIController):
         row, col = 0, 0
         for i in range(1, 9):
             agent_id = f"agent-{i}"
-            agent_widget = AgentStatusWidget(agent_id)
+            agent_widget = AgentStatusWidget(agent_id, main_gui=self)
             self.agent_widgets[agent_id] = agent_widget
             self.agent_grid.addWidget(agent_widget, row, col)
             
@@ -480,6 +480,52 @@ class DreamOSCellPhoneGUIv2(QMainWindow, BaseGUIController):
                 new_status = random.choice(statuses)
                 widget.update_status(new_status)
                 self.log_message("Status", f"{agent_id} status: {new_status}")
+
+    # Provide default handlers so base controller actions do something visible
+    def _default_agent_action(self, agent_id: str, action_type: str):
+        self.log_message("Action", f"{action_type} -> {agent_id}")
+        # Optional: attempt coordinate-based keystroke for simple actions
+        try:
+            import pyautogui  # type: ignore
+            coords = self.coordinate_finder.get_coordinates(agent_id) if self.coordinate_finder else None
+            if coords:
+                x, y = coords
+                pyautogui.click(x, y)
+                if action_type == "ping":
+                    pyautogui.typewrite("[PING]")
+                elif action_type == "status":
+                    pyautogui.typewrite("status")
+                elif action_type == "resume":
+                    pyautogui.typewrite("resume")
+                elif action_type == "pause":
+                    pyautogui.typewrite("pause")
+                elif action_type == "sync":
+                    pyautogui.typewrite("sync")
+                elif action_type == "task":
+                    pyautogui.typewrite("task: focus highest leverage task")
+                pyautogui.press('enter')
+        except Exception:
+            # Headless or missing dependencies: just log
+            pass
+
+    def _default_broadcast_action(self, action_type: str, default_command: str = None):
+        self.log_message("Broadcast", f"{action_type} -> all agents")
+        try:
+            import pyautogui  # type: ignore
+            for agent_id in self.agent_widgets.keys():
+                coords = self.coordinate_finder.get_coordinates(agent_id) if self.coordinate_finder else None
+                if not coords:
+                    continue
+                x, y = coords
+                pyautogui.click(x, y)
+                text = default_command or action_type
+                if action_type == "message" and not default_command:
+                    text = "Hello from GUI"
+                pyautogui.typewrite(text)
+                pyautogui.press('enter')
+        except Exception:
+            # Headless or missing dependencies: just log
+            pass
     
     # Agent selection methods (inherited from BaseGUIController)
     # select_all_agents() and clear_selection() are now provided by the base class

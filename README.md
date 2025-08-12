@@ -53,17 +53,20 @@ python overnight_runner/runner.py `
 
 #### Main Launcher (Recommended)
 ```bash
-python launch.py
+python main.py
 ```
-This provides a menu-driven interface to access all components.
+This provides a menu-driven interface to access all components (GUIs, tests, docs).
 
 #### Direct GUI Access
 ```bash
-# Launch modern PyQt GUI (recommended)
-python gui/dream_os_gui.py
+# Launch modern PyQt v2 GUI (8 agents panel with controls)
+python gui/dream_os_gui_v2.py
 
-# Alternative launcher
-python gui/run_gui.py
+# Two-Agent Horizontal GUI (focused beta flow)
+python gui/two_agent_horizontal_gui.py
+
+# Four-Agent Horizontal GUI
+python gui/four_agent_horizontal_gui.py
 
 # Legacy GUIs (archived)
 # python archive/simple_gui.py
@@ -209,8 +212,8 @@ python tests/test_harness.py --mode layout --layout 8
 # Run comprehensive diagnostic tests
 python tests/diagnostic_test.py
 
-# Test 8-agent coordinate system
-python tests/test_8_agent_coordinates.py
+# Smoke tests (headless)
+pytest -q tests/smoke/test_smoke.py -q
 ```
 
 ## 📊 Layout Configurations

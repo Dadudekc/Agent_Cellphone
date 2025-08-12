@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt, QTimer
 import json
 from pathlib import Path
+import os
 import subprocess
 import sys
 
@@ -17,10 +18,11 @@ except ImportError:
 
 class AgentStatusWidget(QWidget):
     """Individual agent status widget with modern design."""
-    def __init__(self, agent_id: str, parent=None):
+    def __init__(self, agent_id: str, parent=None, main_gui=None):
         super().__init__(parent)
         self.agent_id = agent_id
         self.status = "offline"
+        self.main_gui = main_gui
         self.init_ui()
 
     def init_ui(self):
@@ -76,6 +78,7 @@ class AgentStatusWidget(QWidget):
                 background-color: #2980B9;
             }
         """)
+        ping_btn.clicked.connect(self._on_ping_clicked)
         button_layout.addWidget(ping_btn)
         status_btn = QPushButton("📊")
         status_btn.setToolTip("Get Status")
@@ -91,6 +94,7 @@ class AgentStatusWidget(QWidget):
                 background-color: #E67E22;
             }
         """)
+        status_btn.clicked.connect(self._on_status_clicked)
         button_layout.addWidget(status_btn)
         resume_btn = QPushButton("▶️")
         resume_btn.setToolTip("Resume Agent")
@@ -106,6 +110,7 @@ class AgentStatusWidget(QWidget):
                 background-color: #229954;
             }
         """)
+        resume_btn.clicked.connect(self._on_resume_clicked)
         button_layout.addWidget(resume_btn)
         container_layout.addLayout(button_layout)
         layout.addWidget(container)
@@ -124,6 +129,31 @@ class AgentStatusWidget(QWidget):
         else:
             self.status_label.setText("⚫ Offline")
             self.status_label.setStyleSheet("color: #7F8C8D;")
+
+    # --- Button handlers wired to main GUI controller ---
+    def _invoke_controller(self, method_name: str):
+        try:
+            if not self.main_gui:
+                return
+            # Temporarily target only this agent
+            prev_selection = list(getattr(self.main_gui, "selected_agents", []))
+            self.main_gui.selected_agents = [self.agent_id]
+            method = getattr(self.main_gui, method_name, None)
+            if callable(method):
+                method()
+            # Restore selection
+            self.main_gui.selected_agents = prev_selection
+        except Exception:
+            pass
+
+    def _on_ping_clicked(self):
+        self._invoke_controller("ping_selected_agents")
+
+    def _on_status_clicked(self):
+        self._invoke_controller("get_status_selected_agents")
+
+    def _on_resume_clicked(self):
+        self._invoke_controller("resume_selected_agents")
 
 class AgentPanel(QWidget):
     """Individual agent panel with status and controls."""
@@ -387,20 +417,26 @@ class AgentPanel(QWidget):
     def update_onboarding_status(self, status: str, progress: int):
         """Update the onboarding status display."""
         self.onboarding_status = status
-        self.onboarding_progress = progress
+        # Ensure progress is an int within [0,100]
+        try:
+            p = int(float(progress))
+        except Exception:
+            p = 0
+        p = max(0, min(100, p))
+        self.onboarding_progress = p
         
         # Update status label
         status_text = f"Status: {status.replace('_', ' ').title()}"
         self.onboarding_status_label.setText(status_text)
         
         # Update progress bar
-        self.onboarding_progress_bar.setValue(progress)
+        self.onboarding_progress_bar.setValue(p)
         
         # Update progress label
-        self.onboarding_progress_label.setText(f"{progress}%")
+        self.onboarding_progress_label.setText(f"{p}%")
         
         # Update colors based on progress
-        if progress == 100:
+        if p == 100:
             self.onboarding_status_label.setStyleSheet("""
                 QLabel {
                     font-size: 11px;
@@ -409,7 +445,7 @@ class AgentPanel(QWidget):
                     font-weight: bold;
                 }
             """)
-        elif progress > 50:
+        elif p > 50:
             self.onboarding_status_label.setStyleSheet("""
                 QLabel {
                     font-size: 11px;
