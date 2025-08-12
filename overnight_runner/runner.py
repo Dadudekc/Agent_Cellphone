@@ -111,6 +111,9 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--skip-assignments", action="store_true", help="skip initial per-agent repository assignment messages")
     p.add_argument("--skip-captain-kickoff", action="store_true", help="skip captain kickoff message")
     p.add_argument("--skip-captain-fsm-feed", action="store_true", help="skip captain FSM feed prompt")
+    # Stall detection / rescue
+    p.add_argument("--stalled-threshold-sec", type=int, default=1200, help="if no state update for N seconds, treat agent as stalled")
+    p.add_argument("--rescue-on-stall", action="store_true", help="when stalled, override with a RESUME rescue prompt (bypasses cooldown)")
     return p.parse_args()
 
 
@@ -273,6 +276,20 @@ def is_recently_active(agent: str, active_grace_sec: int) -> bool:
         return age < float(active_grace_sec)
     except Exception:
         return False
+
+
+def is_stalled(agent: str, stalled_threshold_sec: int) -> bool:
+    """True if agent hasn't updated state.json within stalled_threshold_sec. Missing file counts as stalled."""
+    st = read_agent_state(agent)
+    updated = st.get("updated")
+    if not updated:
+        return True
+    try:
+        ts = _dt.datetime.strptime(updated, "%Y-%m-%dT%H:%M:%S")
+        age = (_dt.datetime.utcnow() - ts).total_seconds()
+        return age >= float(stalled_threshold_sec)
+    except Exception:
+        return True
 
 
 def main() -> int:
@@ -523,15 +540,28 @@ def main() -> int:
                     return False
             if _recent():
                 continue
-            # 2) resume cooldown: limit RESUME frequency
-            if planned.tag == MsgTag.RESUME and not force_resume and (args.suppress_resume or (time.time() - last_sent.get(agent, {}).get("RESUME", 0.0) < args.resume_cooldown_sec)):
+            # 2) stall detection (optional)
+            stalled = False
+            if args.__dict__.get("rescue_on_stall"):
+                try:
+                    stalled = is_stalled(agent, args.__dict__.get("stalled_threshold_sec", 1200))
+                except Exception:
+                    stalled = False
+            # 3) resume cooldown: limit RESUME frequency (unless force or stalled rescue)
+            if planned.tag == MsgTag.RESUME and not (force_resume or stalled) and (args.suppress_resume or (time.time() - last_sent.get(agent, {}).get("RESUME", 0.0) < args.resume_cooldown_sec)):
                 continue
 
             # Build content (tailored when available)
             if contracts_map:
                 content = build_tailored_message(agent, planned.tag, agent_contracts)
             else:
-                if args.plan == "single-repo-beta":
+                if args.__dict__.get("rescue_on_stall") and stalled:
+                    checklist = ", ".join([s.strip() for s in str(args.beta_ready_checklist).split(',') if s.strip()])
+                    content = (
+                        f"{agent} resume. You appear stalled. Regain focus and continue on the beta-ready checklist: {checklist}. "
+                        f"Open TASK_LIST.md, pick the next verifiable step, and after completion send an fsm_update (task_id,state,summary,evidence)."
+                    )
+                elif args.plan == "single-repo-beta":
                     repo_line = f"Focus repo: {focus_repo}. " if focus_repo else "Focus a valid repository under D:/repositories (not caches/temp). "
                     checklist = ", ".join([s.strip() for s in str(args.beta_ready_checklist).split(',') if s.strip()])
                     if planned.tag == MsgTag.RESUME:
