@@ -325,7 +325,7 @@ def main() -> int:
         time.sleep(max(0, args.phase_wait_sec))
 
     # Optional assignments
-    if not args.skip-assignments:
+    if not args.skip_assignments:
         assignments: Dict[str, List[str]] = {}
         try:
             assignments = assign_repositories(args.assign_root, cycle_targets, args.max_repos_per_agent)
@@ -348,7 +348,7 @@ def main() -> int:
             time.sleep(max(0, args.phase_wait_sec))
 
     # Captain kickoff goes only to captain
-    if captain and not args.skip-captain-kickoff:
+    if captain and not args.skip_captain_kickoff:
         kickoff = (
             "You are CAPTAIN tonight. Coordinate all agents. "
             "Tasks: 1) Plan assignments avoiding duplication 2) Prompt peers for sanity checks 3) Ensure work is real (no stubs) 4) Write handoffs in comms folder. "
