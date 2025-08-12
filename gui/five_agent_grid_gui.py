@@ -39,6 +39,8 @@ class FiveAgentGridGUI(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.agent_panels = {}
+        # Selection state used by panel widgets to target specific agents
+        self.selected_agents = []
         self.init_ui()
         self.setup_status_updates()
 
@@ -354,6 +356,38 @@ class FiveAgentGridGUI(QMainWindow):
                 self.log_message("System", f"Log saved to {fn}")
             except Exception as e:
                 self.log_message("Error", f"Failed to save log: {e}")
+
+    # --- Minimal agent control handlers used by panel widgets ---
+    def _selected_or_all(self) -> list[str]:
+        try:
+            if getattr(self, "selected_agents", None):
+                return list(self.selected_agents)
+        except Exception:
+            pass
+        return list(self.agent_panels.keys())
+
+    def ping_selected_agents(self) -> None:
+        for agent_id in self._selected_or_all():
+            self.log_message("Ping", f"Pinging {agent_id}...")
+
+    def get_status_selected_agents(self) -> None:
+        for agent_id in self._selected_or_all():
+            # Lightweight file-based status probe consistent with update_agent_statuses
+            try:
+                status_file = os.path.join("agent_workspaces", agent_id, "status.json")
+                if os.path.exists(status_file):
+                    data = json.load(open(status_file, 'r', encoding='utf-8'))
+                    status = data.get('status', 'unknown')
+                    task = data.get('current_task', 'idle')
+                    self.log_message("Status", f"{agent_id}: {status} - {task}")
+                else:
+                    self.log_message("Status", f"{agent_id}: no status.json")
+            except Exception as e:
+                self.log_message("Error", f"status for {agent_id}: {e}")
+
+    def resume_selected_agents(self) -> None:
+        for agent_id in self._selected_or_all():
+            self.log_message("Resume", f"Resuming {agent_id}...")
 
 
 def main() -> None:
