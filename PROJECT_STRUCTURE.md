@@ -1,0 +1,176 @@
+# Agent Cellphone Project Structure
+
+## 📁 Organized Project Structure
+
+```
+Agent_Cellphone/
+├── main.py                          # Main launcher (entry point)
+├── README.md                        # Project documentation
+├── requirements.txt                  # Consolidated dependencies
+├── .gitignore                       # Git ignore rules
+├── PROJECT_STRUCTURE.md             # This file
+├── ORGANIZATION_PLAN.md             # Organization plan
+│
+├── src/                             # Source code
+│   ├── __init__.py
+│   ├── agent_cell_phone.py         # Main agent cell phone module
+│   ├── inter_agent_framework.py    # Inter-agent communication
+│   ├── main.py                      # Source main module
+│   │
+│   ├── audio/                       # Audio system
+│   │   ├── __init__.py
+│   │   ├── audio_system.py         # Main audio system
+│   │   ├── simple_audio_system.py  # Simple audio system
+│   │   ├── voice_recognition.py    # Voice recognition
+│   │   └── voice_selector.py       # Voice selection
+│   │
+│   ├── vision/                      # Vision system
+│   │   ├── __init__.py
+│   │   ├── vision_system.py        # Main vision system
+│   │   └── agent_vision_integration.py # Agent vision integration
+│   │
+│   ├── core/                        # Core system components
+│   │   ├── __init__.py
+│   │   ├── personal_jarvis.py      # Personal Jarvis
+│   │   ├── conversation_engine.py   # Conversation engine
+│   │   ├── memory_system.py        # Memory system
+│   │   ├── multimodal_agent.py     # Multimodal agent
+│   │   ├── dev_automation_agent.py # Development automation
+│   │   ├── dreamvault_integration.py # DreamVault integration
+│   │   └── fsm_organizer.py        # FSM organizer
+│   │
+│   ├── utils/                       # Utility scripts
+│   ├── runtime/                     # Runtime components
+│   ├── gui/                         # GUI components
+│   └── framework/                   # Framework components
+│
+├── gui/                             # GUI interfaces
+│   ├── dream_os_gui_v2.py          # Main PyQt5 GUI
+│   ├── four_agent_horizontal_gui.py # Four agent GUI
+│   ├── two_agent_horizontal_gui.py  # Two agent GUI
+│   ├── dream_os_splash_gui.py      # Splash GUI
+│   ├── run_two_agent_gui.py        # Two agent runner
+│   ├── components/                  # GUI components
+│   ├── 1logo.png                   # Logo assets
+│   └── logo.png                     # Logo assets
+│
+├── tests/                           # Test suite
+│   ├── test_harness.py             # Main test harness
+│   ├── test_jarvis.py              # Jarvis tests
+│   ├── test_standardization.py     # Standardization tests
+│   └── audio/                       # Audio tests
+│       ├── test_tts_comprehensive.py
+│       ├── test_tts_fix.py
+│       ├── test_audio_fix.py
+│       └── simple_tts_test.py
+│
+├── examples/                        # Example code
+│   ├── multimodal_demo.py          # Multimodal demo
+│   ├── dev_automation_demo.py      # Development automation demo
+│   └── vision/                      # Vision examples
+│       └── vision_demo.py
+│
+├── scripts/                         # Utility scripts
+│   ├── agent_messenger.py          # Agent messaging
+│   ├── agent_onboarding_sequence.py # Onboarding sequence
+│   ├── commit_changes.py           # Git commit automation
+│   └── start_jarvis.bat            # Jarvis startup script
+│
+├── docs/                            # Documentation
+│   ├── AGENT_MESSENGER_REVIEW.md
+│   ├── DEVELOPMENT_AUTOMATION_GUIDE.md
+│   ├── FINAL_PROJECT_STRUCTURE.md
+│   ├── PROJECT_REORGANIZATION_SUMMARY.md
+│   └── VISION_SYSTEM_README.md
+│
+├── config/                          # Configuration
+│   ├── agents/                      # Agent configurations
+│   ├── system/                      # System configurations
+│   ├── templates/                   # Template configurations
+│   └── voice_profiles/              # Voice profiles
+│       └── voice_profile_victor.json
+│
+├── data/                            # Data storage
+│   ├── memory/                      # Memory data
+│   │   ├── jarvis_memory.db
+│   │   └── jarvis_memory.json
+│   └── vision/                      # Vision data
+│       └── vision_demo_output.json
+│
+├── requirements/                     # Requirements files
+│   ├── audio_requirements.txt       # Audio dependencies
+│   └── vision_requirements.txt      # Vision dependencies
+│
+├── debug/                           # Debug files
+│   └── debug_tts_issue.py          # TTS debug script
+│
+├── agent_workspaces/                # Agent workspaces
+├── backup/                          # Backup files
+├── fsm_data/                        # FSM data
+└── project_repository/              # Project repository
+```
+
+## 🎯 Key Improvements Made
+
+### 1. **File Organization**
+- ✅ Moved scattered files to appropriate directories
+- ✅ Created logical module structure (audio, vision, core)
+- ✅ Organized test files by category
+- ✅ Consolidated requirements files
+
+### 2. **Module Structure**
+- ✅ Created proper `__init__.py` files for all modules
+- ✅ Established clear import paths
+- ✅ Separated concerns (audio, vision, core)
+
+### 3. **Configuration Management**
+- ✅ Moved configuration files to `config/` directory
+- ✅ Organized voice profiles separately
+- ✅ Centralized data storage in `data/` directory
+
+### 4. **Documentation**
+- ✅ Moved all documentation to `docs/` directory
+- ✅ Created comprehensive project structure documentation
+- ✅ Maintained clear organization plan
+
+### 5. **Development Tools**
+- ✅ Organized debug files in `debug/` directory
+- ✅ Consolidated requirements into single file
+- ✅ Maintained separate requirements for specific modules
+
+## 🚀 Usage
+
+### Running the System
+```bash
+# Main launcher
+python main.py
+
+# Direct GUI access
+python gui/dream_os_gui_v2.py
+
+# Run tests
+python tests/test_harness.py
+
+# Run examples
+python examples/multimodal_demo.py
+```
+
+### Importing Modules
+```python
+# Audio system
+from src.audio import AudioSystem, VoiceRecognition
+
+# Vision system  
+from src.vision import VisionSystem, AgentVisionIntegration
+
+# Core system
+from src.core import PersonalJarvis, ConversationEngine
+```
+
+## 📋 Next Steps
+
+1. **Update Import Paths**: Ensure all files use correct import paths
+2. **Test Functionality**: Verify all components work with new structure
+3. **Update Documentation**: Update README and other docs
+4. **Clean Up**: Remove any remaining scattered files
+5. **Version Control**: Commit organized structure to git 

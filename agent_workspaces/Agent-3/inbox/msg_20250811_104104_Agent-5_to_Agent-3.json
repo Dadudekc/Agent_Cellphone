@@ -1,0 +1,20 @@
+{
+  "type": "task",
+  "from": "Agent-5",
+  "to": "Agent-3",
+  "timestamp": "2025-08-11T10:41:04.8862084-05:00",
+  "topic": "contract: docs-implement-a-runelite-plugin-for-capturing-screen-regions-and-sending-input",
+  "summary": "Implement a RuneLite plugin for capturing screen regions and sending input.",
+  "details": {
+    "task_id": "docs-implement-a-runelite-plugin-for-capturing-screen-regions-and-sending-input",
+    "repo": "docs",
+    "repo_path": "D:\\repositories\\dadudekc\\osrsAIagent\\docs",
+    "title": "Implement a RuneLite plugin for capturing screen regions and sending input.",
+    "description": "",
+    "acceptance_criteria": [],
+    "assignee": "Agent-3",
+    "state": "ready",
+    "evidence": [],
+    "created": "2025-08-11T10:41:04"
+  }
+}

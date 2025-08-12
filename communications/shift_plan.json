@@ -1,0 +1,15 @@
+{
+  "captain": "Agent-3",
+  "cadence": "hourly",
+  "repos": [
+    "gpt-automation",
+    "trading-platform"
+  ],
+  "objectives": [
+    "reduce duplication",
+    "consolidate utilities",
+    "add tests",
+    "commit small, verifiable improvements"
+  ],
+  "status_folder": "communications"
+}

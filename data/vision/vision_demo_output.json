@@ -1,0 +1,8742 @@
+{
+  "timestamp": 1754322301.731439,
+  "image_shape": [
+    1080,
+    1920,
+    3
+  ],
+  "text_content": "= >\nOPpewy \u00a9 mainpy 4 X py O60\n\u00a9 mainpy >.\n> _pycache_ #-\n alembic # File: main.py \"\n\u00a9 versions # Description: Main script that integrates data fetching, preprocessing,\n# model training (Random Forest and Neural Network),\n# hyperparometer tuning, backtesting, continuous Learning, \u2014\"\n# and risk management.\n\u00a9 envpy #\n@ README 8\ncriptpymako import asyncio\n> backup 202508... more argparse\n\u2018import sys\n> config \u2018import traceback\n> data import logging\n> database import importlib: .\n> deployment, from datetine inport datetine\n> deployment.ne... from pathlib import Path\n> deployment. package from typing import List, Optional, Tuple, Any, Dict\n> does import pandas as pd\n\u2018import numpy as np .\n> logs . from sklearn.model_selection import train test_split\n> models from sklearn.preprocessing import MinMaxScaler\n> reports from tensorflow.keras models import Sequential\n> results from tensorflow.keras. layers import Dense, Dropout\n> savedModels from tensorflow.keras.optinizers import Adam\n> Seri e\n> fers a .\nside, projects # Project Path Setup .\n> ste e :- H\n> tests Review next fle 1\n\u00a9 _init_py # Define project ract and Gm... +. pS\u2019 directory to sys.path\no ew \u00b0 nnninct nant \u2014 Path, \u00a3iln \\ nanant flea cunnant oinnctans ac nmadact nant\ntitttibutes Problems) Output Debug Console Terminal Ports GitLens fen A xX\nsitignore WARNING: ConFighanager :Unsupported config File format: d:\\TradingRobotPlu\n. g\\conFig\\conFig.ini\n7 AAPL daily report20.- Teo: TradingRobotPlugtain:Using CSV directory: D:\\TradingRobotPlug\\data\\\n\u00a9 AAPL daily reporthtm! consolidated :\nJ ARPLdaily reportpdt INFO: TradingRobotPlugtain:Initialized for CSV mode with directory: D:\\Tr\n\u2018lembicini adingRobotPlug\\data\\consolidated\nINFO:data_Fetch_utils:Initializing Alpaca API with provided credentials. ,\narima_model.pk! INFO:DataFetchUtils:Alpaca API client initialized successfully.\nbackup working state... INFO:DataFetchManager:Initializing Alpaca API with provided credentials.\nbackup_working_state.,  INFO:AlModelInitializer:Initialized OpenAI model (gpt-3.5-turbo). '\n\" . INFO:AIUtils:Model \u2018openai\u2019 initialized successfully.\nCODEBASE_OVERVIE..  Twro:DataFetchMtanager:AI model \u2018openai\u2018 initialized.\nconfig.yaml usage: main.py [-h] --symbols SYMBOLS [--start-date START_DATE]\ndashboard.db [--end-date END DATE] [--save-to {database, csv, both}]\n[--ai-model {openai,mistral}]\nW DATAFETCHING.REF. ain py: error: the following arguments are required: --symbols\nPS D:\\TradingRobotPlug> []\nCCutek w generate a command\n= 20 Agents gavization-phasel* ov S's? aunchpac @CA39 Connect 3 Select Postgres Server\nP Type here to search oft Of Bm@B@Q itr\n\nRun main.py \u00a5. Implement logic Far proj +\n\na the scripts directory is sill massive b u havent proven the new system works so we have the confidence to delete the old artifacts\n\noer \u201cerrs\n\n| see the issue! The problem is that some files are still ooking for config_handling.config_manager but the actual module is at trading_robot.utils.conFig_handLing.conFig. manage\n. Let me check what's happening:\n\nRead\nstructure. Let me foc this specific ile and others like it:\n\nIsee the problem! The file is still using the old Uti1ities. imports instead of the new trading robot .utils.\n\ndata fetch_managerpy +6-5 * v\nfrom UCLe1es .aata.aata_revcn UELis UNpore VatAreTcMUTLIS\n\nfrom Data Processing.nain_indicators import apply_all_indicators\n\nfrom Utilities .db.sql_data_handler import Datalandler # Corrected absolute import\n\nfrom trading robot.utils.ai-ai_utils iaport ATUtiIs\n\nfrom trading robotutils.config_handLing.config manager iaport Confighanager\n\nfrom trading robot-utils.config_handling-logging setup import setup_logeing\n\nfrom trading robot .utils.data.data_fetch utils import DataFetchitils\n\nfrom trading robot.data.processors.main_indicators iaport apply_all_indicatars\n\nfrou trading robotutils.db.sql_data_handler iaport DataHiandler # Corrected absolute import\n\nNow let me create a more comprehensive fix for all the remaining import issues:\n\u00a9 fxemaiirg \"~\noriginal_content = content\n# apply additional replacenent:\nfor old pattern, new_pattern in additional_replacenents.items():\ncontent = content.replace(old_pattern, new_pattern)\n# Write back if modified\n\nif content != original_content:\nwith open py_file, \u2018a, en\n\n@ A Active Tab\n2\u00b0 Agent Cust \u00abAuto \u00b0\nCurso-\u201cab \u00a9 JaDude< (10 mont-sagc) Gapiovenaicam Ln Cel 1(183 selected} Spacesid LTF-2 {a Pytrom 3.11.9 64-6 5\ntesa\n\u00aeEOO As ae BOM wm |",
+  "ui_elements": [
+    {
+      "type": "rectangle",
+      "position": [
+        606,
+        1055
+      ],
+      "size": [
+        14,
+        15
+      ],
+      "area": 142.5,
+      "corners": 10
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1736,
+        1052
+      ],
+      "size": [
+        13,
+        17
+      ],
+      "area": 136.5,
+      "corners": 10
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        408,
+        1052
+      ],
+      "size": [
+        16,
+        16
+      ],
+      "area": 185.0,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        15,
+        1052
+      ],
+      "size": [
+        18,
+        16
+      ],
+      "area": 224.0,
+      "corners": 4
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1878,
+        1051
+      ],
+      "size": [
+        26,
+        26
+      ],
+      "area": 428.5,
+      "corners": 9
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        848,
+        1050
+      ],
+      "size": [
+        20,
+        20
+      ],
+      "area": 291.0,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        651,
+        1050
+      ],
+      "size": [
+        22,
+        19
+      ],
+      "area": 346.5,
+      "corners": 4
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        944,
+        1048
+      ],
+      "size": [
+        24,
+        24
+      ],
+      "area": 420.0,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        894,
+        1048
+      ],
+      "size": [
+        26,
+        23
+      ],
+      "area": 101.0,
+      "corners": 12
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        699,
+        1048
+      ],
+      "size": [
+        25,
+        25
+      ],
+      "area": 477.5,
+      "corners": 9
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        49,
+        1041
+      ],
+      "size": [
+        342,
+        38
+      ],
+      "area": 12616.0,
+      "corners": 4
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        35,
+        1039
+      ],
+      "size": [
+        1885,
+        41
+      ],
+      "area": 3651.0,
+      "corners": 2
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1405,
+        1027
+      ],
+      "size": [
+        32,
+        10
+      ],
+      "area": 131.0,
+      "corners": 12
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1892,
+        1022
+      ],
+      "size": [
+        12,
+        14
+      ],
+      "area": 110.0,
+      "corners": 7
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1133,
+        1022
+      ],
+      "size": [
+        15,
+        16
+      ],
+      "area": 167.5,
+      "corners": 6
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        573,
+        1022
+      ],
+      "size": [
+        12,
+        14
+      ],
+      "area": 143.0,
+      "corners": 4
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        496,
+        1022
+      ],
+      "size": [
+        11,
+        14
+      ],
+      "area": 120.0,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        286,
+        1022
+      ],
+      "size": [
+        13,
+        14
+      ],
+      "area": 115.5,
+      "corners": 11
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        20,
+        1002
+      ],
+      "size": [
+        35,
+        10
+      ],
+      "area": 115.5,
+      "corners": 18
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1861,
+        985
+      ],
+      "size": [
+        14,
+        10
+      ],
+      "area": 115.0,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1883,
+        981
+      ],
+      "size": [
+        19,
+        19
+      ],
+      "area": 276.0,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        338,
+        964
+      ],
+      "size": [
+        56,
+        15
+      ],
+      "area": 103.5,
+      "corners": 7
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        56,
+        956
+      ],
+      "size": [
+        44,
+        13
+      ],
+      "area": 118.0,
+      "corners": 14
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        34,
+        934
+      ],
+      "size": [
+        61,
+        11
+      ],
+      "area": 131.0,
+      "corners": 4
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        263,
+        897
+      ],
+      "size": [
+        60,
+        13
+      ],
+      "area": 101.0,
+      "corners": 4
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        491,
+        896
+      ],
+      "size": [
+        47,
+        12
+      ],
+      "area": 151.5,
+      "corners": 15
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1828,
+        888
+      ],
+      "size": [
+        71,
+        22
+      ],
+      "area": 1436.0,
+      "corners": 6
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        471,
+        882
+      ],
+      "size": [
+        32,
+        9
+      ],
+      "area": 117.0,
+      "corners": 18
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        513,
+        879
+      ],
+      "size": [
+        42,
+        15
+      ],
+      "area": 166.5,
+      "corners": 17
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        407,
+        879
+      ],
+      "size": [
+        47,
+        12
+      ],
+      "area": 151.5,
+      "corners": 15
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        233,
+        879
+      ],
+      "size": [
+        39,
+        12
+      ],
+      "area": 137.5,
+      "corners": 15
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        379,
+        862
+      ],
+      "size": [
+        47,
+        12
+      ],
+      "area": 151.5,
+      "corners": 15
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        295,
+        862
+      ],
+      "size": [
+        47,
+        12
+      ],
+      "area": 151.5,
+      "corners": 15
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        263,
+        846
+      ],
+      "size": [
+        60,
+        13
+      ],
+      "area": 101.0,
+      "corners": 4
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        644,
+        845
+      ],
+      "size": [
+        41,
+        12
+      ],
+      "area": 115.5,
+      "corners": 12
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        435,
+        845
+      ],
+      "size": [
+        37,
+        14
+      ],
+      "area": 126.0,
+      "corners": 11
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        365,
+        845
+      ],
+      "size": [
+        64,
+        15
+      ],
+      "area": 202.0,
+      "corners": 10
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        719,
+        842
+      ],
+      "size": [
+        18,
+        16
+      ],
+      "area": 221.5,
+      "corners": 5
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        541,
+        831
+      ],
+      "size": [
+        32,
+        9
+      ],
+      "area": 117.0,
+      "corners": 18
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        583,
+        828
+      ],
+      "size": [
+        42,
+        15
+      ],
+      "area": 166.5,
+      "corners": 17
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        477,
+        828
+      ],
+      "size": [
+        47,
+        12
+      ],
+      "area": 151.5,
+      "corners": 15
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        330,
+        828
+      ],
+      "size": [
+        37,
+        14
+      ],
+      "area": 126.0,
+      "corners": 11
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        263,
+        828
+      ],
+      "size": [
+        58,
+        12
+      ],
+      "area": 194.5,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        719,
+        820
+      ],
+      "size": [
+        18,
+        16
+      ],
+      "area": 221.5,
+      "corners": 5
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        270,
+        812
+      ],
+      "size": [
+        26,
+        11
+      ],
+      "area": 106.5,
+      "corners": 16
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        644,
+        811
+      ],
+      "size": [
+        41,
+        12
+      ],
+      "area": 115.5,
+      "corners": 12
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        435,
+        811
+      ],
+      "size": [
+        37,
+        14
+      ],
+      "area": 126.0,
+      "corners": 11
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        365,
+        811
+      ],
+      "size": [
+        64,
+        15
+      ],
+      "area": 202.0,
+      "corners": 10
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        302,
+        811
+      ],
+      "size": [
+        33,
+        12
+      ],
+      "area": 134.0,
+      "corners": 13
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        719,
+        798
+      ],
+      "size": [
+        18,
+        16
+      ],
+      "area": 221.5,
+      "corners": 5
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        324,
+        794
+      ],
+      "size": [
+        70,
+        12
+      ],
+      "area": 196.5,
+      "corners": 10
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        393,
+        777
+      ],
+      "size": [
+        47,
+        12
+      ],
+      "area": 151.5,
+      "corners": 15
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        719,
+        776
+      ],
+      "size": [
+        18,
+        16
+      ],
+      "area": 221.5,
+      "corners": 5
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        190,
+        760
+      ],
+      "size": [
+        64,
+        12
+      ],
+      "area": 191.0,
+      "corners": 9
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        719,
+        754
+      ],
+      "size": [
+        18,
+        16
+      ],
+      "area": 221.5,
+      "corners": 5
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        722,
+        734
+      ],
+      "size": [
+        12,
+        12
+      ],
+      "area": 119.0,
+      "corners": 5
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        247,
+        726
+      ],
+      "size": [
+        35,
+        12
+      ],
+      "area": 122.5,
+      "corners": 13
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        198,
+        726
+      ],
+      "size": [
+        35,
+        12
+      ],
+      "area": 122.5,
+      "corners": 13
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        344,
+        711
+      ],
+      "size": [
+        49,
+        12
+      ],
+      "area": 133.0,
+      "corners": 14
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        719,
+        710
+      ],
+      "size": [
+        18,
+        16
+      ],
+      "area": 221.5,
+      "corners": 5
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        428,
+        709
+      ],
+      "size": [
+        29,
+        12
+      ],
+      "area": 117.0,
+      "corners": 15
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1031,
+        708
+      ],
+      "size": [
+        40,
+        9
+      ],
+      "area": 122.5,
+      "corners": 16
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        965,
+        708
+      ],
+      "size": [
+        40,
+        9
+      ],
+      "area": 122.5,
+      "corners": 16
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1308,
+        692
+      ],
+      "size": [
+        26,
+        9
+      ],
+      "area": 106.0,
+      "corners": 15
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        391,
+        688
+      ],
+      "size": [
+        25,
+        8
+      ],
+      "area": 105.0,
+      "corners": 10
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        452,
+        686
+      ],
+      "size": [
+        40,
+        10
+      ],
+      "area": 168.5,
+      "corners": 11
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        560,
+        685
+      ],
+      "size": [
+        38,
+        11
+      ],
+      "area": 127.0,
+      "corners": 13
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        513,
+        685
+      ],
+      "size": [
+        28,
+        11
+      ],
+      "area": 117.0,
+      "corners": 13
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        284,
+        685
+      ],
+      "size": [
+        39,
+        13
+      ],
+      "area": 155.5,
+      "corners": 14
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        245,
+        681
+      ],
+      "size": [
+        21,
+        17
+      ],
+      "area": 277.0,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1064,
+        676
+      ],
+      "size": [
+        59,
+        10
+      ],
+      "area": 126.5,
+      "corners": 2
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        142,
+        671
+      ],
+      "size": [
+        13,
+        12
+      ],
+      "area": 103.0,
+      "corners": 9
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        407,
+        647
+      ],
+      "size": [
+        24,
+        11
+      ],
+      "area": 120.5,
+      "corners": 13
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1064,
+        644
+      ],
+      "size": [
+        40,
+        9
+      ],
+      "area": 122.5,
+      "corners": 16
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        998,
+        644
+      ],
+      "size": [
+        40,
+        9
+      ],
+      "area": 122.5,
+      "corners": 16
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        353,
+        590
+      ],
+      "size": [
+        39,
+        13
+      ],
+      "area": 102.0,
+      "corners": 12
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        261,
+        590
+      ],
+      "size": [
+        46,
+        14
+      ],
+      "area": 120.5,
+      "corners": 17
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        246,
+        535
+      ],
+      "size": [
+        23,
+        9
+      ],
+      "area": 123.5,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        546,
+        533
+      ],
+      "size": [
+        31,
+        11
+      ],
+      "area": 147.5,
+      "corners": 12
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        275,
+        532
+      ],
+      "size": [
+        210,
+        17
+      ],
+      "area": 1032.0,
+      "corners": 2
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1299,
+        526
+      ],
+      "size": [
+        27,
+        10
+      ],
+      "area": 106.0,
+      "corners": 12
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        929,
+        526
+      ],
+      "size": [
+        123,
+        13
+      ],
+      "area": 220.5,
+      "corners": 2
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        246,
+        516
+      ],
+      "size": [
+        23,
+        9
+      ],
+      "area": 123.5,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        275,
+        513
+      ],
+      "size": [
+        178,
+        17
+      ],
+      "area": 572.0,
+      "corners": 2
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1339,
+        511
+      ],
+      "size": [
+        32,
+        9
+      ],
+      "area": 131.5,
+      "corners": 12
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        246,
+        497
+      ],
+      "size": [
+        23,
+        9
+      ],
+      "area": 123.5,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1114,
+        494
+      ],
+      "size": [
+        46,
+        12
+      ],
+      "area": 132.5,
+      "corners": 14
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        982,
+        494
+      ],
+      "size": [
+        33,
+        16
+      ],
+      "area": 120.5,
+      "corners": 15
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        275,
+        494
+      ],
+      "size": [
+        178,
+        17
+      ],
+      "area": 744.5,
+      "corners": 2
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1163,
+        479
+      ],
+      "size": [
+        37,
+        11
+      ],
+      "area": 135.5,
+      "corners": 15
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        982,
+        478
+      ],
+      "size": [
+        33,
+        16
+      ],
+      "area": 120.5,
+      "corners": 17
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        362,
+        478
+      ],
+      "size": [
+        38,
+        11
+      ],
+      "area": 133.0,
+      "corners": 15
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        246,
+        478
+      ],
+      "size": [
+        23,
+        9
+      ],
+      "area": 123.5,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1339,
+        464
+      ],
+      "size": [
+        20,
+        10
+      ],
+      "area": 109.0,
+      "corners": 10
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        982,
+        462
+      ],
+      "size": [
+        33,
+        16
+      ],
+      "area": 120.5,
+      "corners": 17
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        246,
+        459
+      ],
+      "size": [
+        23,
+        9
+      ],
+      "area": 123.5,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1049,
+        446
+      ],
+      "size": [
+        45,
+        12
+      ],
+      "area": 105.5,
+      "corners": 18
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        982,
+        446
+      ],
+      "size": [
+        33,
+        16
+      ],
+      "area": 121.5,
+      "corners": 17
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        856,
+        443
+      ],
+      "size": [
+        28,
+        95
+      ],
+      "area": 264.5,
+      "corners": 11
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        292,
+        440
+      ],
+      "size": [
+        38,
+        12
+      ],
+      "area": 155.5,
+      "corners": 15
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1233,
+        430
+      ],
+      "size": [
+        27,
+        10
+      ],
+      "area": 106.0,
+      "corners": 12
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        923,
+        430
+      ],
+      "size": [
+        26,
+        10
+      ],
+      "area": 139.5,
+      "corners": 9
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        890,
+        430
+      ],
+      "size": [
+        33,
+        10
+      ],
+      "area": 110.0,
+      "corners": 19
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        34,
+        428
+      ],
+      "size": [
+        27,
+        11
+      ],
+      "area": 121.0,
+      "corners": 17
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        292,
+        421
+      ],
+      "size": [
+        15,
+        11
+      ],
+      "area": 105.0,
+      "corners": 9
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        246,
+        402
+      ],
+      "size": [
+        23,
+        9
+      ],
+      "area": 123.5,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1036,
+        400
+      ],
+      "size": [
+        58,
+        10
+      ],
+      "area": 158.0,
+      "corners": 9
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        923,
+        400
+      ],
+      "size": [
+        26,
+        8
+      ],
+      "area": 113.0,
+      "corners": 11
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        890,
+        400
+      ],
+      "size": [
+        33,
+        8
+      ],
+      "area": 127.0,
+      "corners": 14
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        331,
+        400
+      ],
+      "size": [
+        30,
+        13
+      ],
+      "area": 101.0,
+      "corners": 14
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        246,
+        383
+      ],
+      "size": [
+        23,
+        9
+      ],
+      "area": 123.5,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        246,
+        364
+      ],
+      "size": [
+        23,
+        9
+      ],
+      "area": 123.5,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        307,
+        363
+      ],
+      "size": [
+        31,
+        10
+      ],
+      "area": 117.5,
+      "corners": 14
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        423,
+        362
+      ],
+      "size": [
+        38,
+        11
+      ],
+      "area": 117.5,
+      "corners": 16
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        885,
+        293
+      ],
+      "size": [
+        18,
+        9
+      ],
+      "area": 100.5,
+      "corners": 10
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1064,
+        274
+      ],
+      "size": [
+        18,
+        9
+      ],
+      "area": 100.5,
+      "corners": 10
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1817,
+        273
+      ],
+      "size": [
+        62,
+        12
+      ],
+      "area": 223.5,
+      "corners": 12
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1714,
+        273
+      ],
+      "size": [
+        89,
+        13
+      ],
+      "area": 177.0,
+      "corners": 9
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1623,
+        273
+      ],
+      "size": [
+        45,
+        12
+      ],
+      "area": 102.0,
+      "corners": 12
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1328,
+        273
+      ],
+      "size": [
+        66,
+        12
+      ],
+      "area": 141.5,
+      "corners": 2
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1226,
+        273
+      ],
+      "size": [
+        45,
+        12
+      ],
+      "area": 167.0,
+      "corners": 15
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        90,
+        252
+      ],
+      "size": [
+        35,
+        11
+      ],
+      "area": 147.5,
+      "corners": 13
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        23,
+        228
+      ],
+      "size": [
+        14,
+        14
+      ],
+      "area": 149.0,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        548,
+        172
+      ],
+      "size": [
+        36,
+        11
+      ],
+      "area": 120.5,
+      "corners": 12
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        584,
+        153
+      ],
+      "size": [
+        24,
+        11
+      ],
+      "area": 120.5,
+      "corners": 12
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        484,
+        153
+      ],
+      "size": [
+        39,
+        11
+      ],
+      "area": 111.5,
+      "corners": 15
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        516,
+        135
+      ],
+      "size": [
+        45,
+        12
+      ],
+      "area": 132.0,
+      "corners": 13
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        446,
+        134
+      ],
+      "size": [
+        31,
+        11
+      ],
+      "area": 161.0,
+      "corners": 14
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        606,
+        133
+      ],
+      "size": [
+        40,
+        15
+      ],
+      "area": 138.5,
+      "corners": 15
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1191,
+        85
+      ],
+      "size": [
+        27,
+        12
+      ],
+      "area": 107.0,
+      "corners": 14
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1825,
+        48
+      ],
+      "size": [
+        15,
+        10
+      ],
+      "area": 102.0,
+      "corners": 7
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1017,
+        48
+      ],
+      "size": [
+        27,
+        13
+      ],
+      "area": 148.5,
+      "corners": 16
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1847,
+        47
+      ],
+      "size": [
+        13,
+        13
+      ],
+      "area": 117.0,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        745,
+        44
+      ],
+      "size": [
+        18,
+        18
+      ],
+      "area": 213.5,
+      "corners": 8
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        107,
+        12
+      ],
+      "size": [
+        21,
+        11
+      ],
+      "area": 131.0,
+      "corners": 11
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        8,
+        11
+      ],
+      "size": [
+        17,
+        13
+      ],
+      "area": 187.0,
+      "corners": 4
+    },
+    {
+      "type": "rectangle",
+      "position": [
+        1758,
+        8
+      ],
+      "size": [
+        18,
+        18
+      ],
+      "area": 203.0,
+      "corners": 8
+    }
+  ],
+  "text_regions": [
+    {
+      "text": "bd",
+      "position": [
+        36,
+        6
+      ],
+      "size": [
+        16,
+        27
+      ],
+      "confidence": 47
+    },
+    {
+      "text": ">",
+      "position": [
+        708,
+        13
+      ],
+      "size": [
+        12,
+        9
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "\u00a9",
+      "position": [
+        29,
+        45
+      ],
+      "size": [
+        77,
+        15
+      ],
+      "confidence": 18
+    },
+    {
+      "text": "9",
+      "position": [
+        63,
+        34
+      ],
+      "size": [
+        17,
+        31
+      ],
+      "confidence": 37
+    },
+    {
+      "text": "wy",
+      "position": [
+        128,
+        51
+      ],
+      "size": [
+        8,
+        4
+      ],
+      "confidence": 37
+    },
+    {
+      "text": "Oren",
+      "position": [
+        185,
+        47
+      ],
+      "size": [
+        62,
+        14
+      ],
+      "confidence": 24
+    },
+    {
+      "text": "bP",
+      "position": [
+        684,
+        47
+      ],
+      "size": [
+        24,
+        13
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "O60",
+      "position": [
+        721,
+        45
+      ],
+      "size": [
+        66,
+        16
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "\u00ae",
+      "position": [
+        191,
+        76
+      ],
+      "size": [
+        10,
+        10
+      ],
+      "confidence": 52
+    },
+    {
+      "text": "mainpy",
+      "position": [
+        209,
+        79
+      ],
+      "size": [
+        44,
+        10
+      ],
+      "confidence": 90
+    },
+    {
+      "text": ">...",
+      "position": [
+        259,
+        76
+      ],
+      "size": [
+        19,
+        10
+      ],
+      "confidence": 93
+    },
+    {
+      "text": ">",
+      "position": [
+        21,
+        98
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "confidence": 88
+    },
+    {
+      "text": "_pycache_",
+      "position": [
+        34,
+        98
+      ],
+      "size": [
+        68,
+        13
+      ],
+      "confidence": 84
+    },
+    {
+      "text": "#-",
+      "position": [
+        238,
+        97
+      ],
+      "size": [
+        21,
+        9
+      ],
+      "confidence": 75
+    },
+    {
+      "text": "\u00a9",
+      "position": [
+        14,
+        110
+      ],
+      "size": [
+        9,
+        27
+      ],
+      "confidence": 60
+    },
+    {
+      "text": "alembic",
+      "position": [
+        34,
+        120
+      ],
+      "size": [
+        44,
+        10
+      ],
+      "confidence": 86
+    },
+    {
+      "text": "#",
+      "position": [
+        238,
+        116
+      ],
+      "size": [
+        8,
+        9
+      ],
+      "confidence": 77
+    },
+    {
+      "text": "File:",
+      "position": [
+        254,
+        115
+      ],
+      "size": [
+        29,
+        10
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "main.py",
+      "position": [
+        300,
+        118
+      ],
+      "size": [
+        53,
+        10
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "7",
+      "position": [
+        825,
+        111
+      ],
+      "size": [
+        4,
+        24
+      ],
+      "confidence": 57
+    },
+    {
+      "text": "OES",
+      "position": [
+        26,
+        145
+      ],
+      "size": [
+        62,
+        7
+      ],
+      "confidence": 46
+    },
+    {
+      "text": "#",
+      "position": [
+        238,
+        135
+      ],
+      "size": [
+        8,
+        9
+      ],
+      "confidence": 91
+    },
+    {
+      "text": "Description:",
+      "position": [
+        254,
+        135
+      ],
+      "size": [
+        89,
+        12
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "Main",
+      "position": [
+        353,
+        135
+      ],
+      "size": [
+        30,
+        9
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "script",
+      "position": [
+        393,
+        135
+      ],
+      "size": [
+        45,
+        12
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "that",
+      "position": [
+        447,
+        134
+      ],
+      "size": [
+        29,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "integrates",
+      "position": [
+        486,
+        134
+      ],
+      "size": [
+        74,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "data",
+      "position": [
+        570,
+        134
+      ],
+      "size": [
+        29,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "fetching,",
+      "position": [
+        607,
+        134
+      ],
+      "size": [
+        66,
+        13
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "preprocessing,",
+      "position": [
+        685,
+        134
+      ],
+      "size": [
+        104,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "#",
+      "position": [
+        238,
+        154
+      ],
+      "size": [
+        8,
+        9
+      ],
+      "confidence": 71
+    },
+    {
+      "text": "model",
+      "position": [
+        354,
+        153
+      ],
+      "size": [
+        37,
+        10
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "training",
+      "position": [
+        401,
+        153
+      ],
+      "size": [
+        60,
+        13
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "(Random",
+      "position": [
+        471,
+        153
+      ],
+      "size": [
+        51,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "Forest",
+      "position": [
+        531,
+        154
+      ],
+      "size": [
+        45,
+        9
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "and",
+      "position": [
+        585,
+        153
+      ],
+      "size": [
+        22,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "Neural",
+      "position": [
+        616,
+        153
+      ],
+      "size": [
+        44,
+        10
+      ],
+      "confidence": 90
+    },
+    {
+      "text": "Network),",
+      "position": [
+        670,
+        153
+      ],
+      "size": [
+        65,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "#",
+      "position": [
+        238,
+        173
+      ],
+      "size": [
+        8,
+        9
+      ],
+      "confidence": 87
+    },
+    {
+      "text": "hyperparameter",
+      "position": [
+        354,
+        172
+      ],
+      "size": [
+        107,
+        13
+      ],
+      "confidence": 59
+    },
+    {
+      "text": "tuning,",
+      "position": [
+        470,
+        172
+      ],
+      "size": [
+        50,
+        13
+      ],
+      "confidence": 59
+    },
+    {
+      "text": "backtesting,",
+      "position": [
+        531,
+        172
+      ],
+      "size": [
+        89,
+        13
+      ],
+      "confidence": 88
+    },
+    {
+      "text": "continuous",
+      "position": [
+        631,
+        172
+      ],
+      "size": [
+        76,
+        10
+      ],
+      "confidence": 89
+    },
+    {
+      "text": "Learning,",
+      "position": [
+        717,
+        172
+      ],
+      "size": [
+        64,
+        13
+      ],
+      "confidence": 70
+    },
+    {
+      "text": "\"",
+      "position": [
+        820,
+        170
+      ],
+      "size": [
+        5,
+        6
+      ],
+      "confidence": 57
+    },
+    {
+      "text": "#",
+      "position": [
+        238,
+        192
+      ],
+      "size": [
+        8,
+        9
+      ],
+      "confidence": 51
+    },
+    {
+      "text": "and",
+      "position": [
+        354,
+        191
+      ],
+      "size": [
+        23,
+        10
+      ],
+      "confidence": 58
+    },
+    {
+      "text": "risk:",
+      "position": [
+        385,
+        191
+      ],
+      "size": [
+        30,
+        10
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "management.",
+      "position": [
+        423,
+        192
+      ],
+      "size": [
+        81,
+        12
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "\u00ae",
+      "position": [
+        25,
+        208
+      ],
+      "size": [
+        10,
+        10
+      ],
+      "confidence": 65
+    },
+    {
+      "text": "envpy",
+      "position": [
+        43,
+        211
+      ],
+      "size": [
+        36,
+        10
+      ],
+      "confidence": 87
+    },
+    {
+      "text": "#",
+      "position": [
+        238,
+        211
+      ],
+      "size": [
+        8,
+        9
+      ],
+      "confidence": 66
+    },
+    {
+      "text": "@",
+      "position": [
+        24,
+        229
+      ],
+      "size": [
+        12,
+        12
+      ],
+      "confidence": 89
+    },
+    {
+      "text": "README",
+      "position": [
+        43,
+        231
+      ],
+      "size": [
+        49,
+        9
+      ],
+      "confidence": 86
+    },
+    {
+      "text": "8",
+      "position": [
+        205,
+        230
+      ],
+      "size": [
+        7,
+        9
+      ],
+      "confidence": 74
+    },
+    {
+      "text": "Satna",
+      "position": [
+        48,
+        252
+      ],
+      "size": [
+        76,
+        13
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "import",
+      "position": [
+        239,
+        248
+      ],
+      "size": [
+        45,
+        13
+      ],
+      "confidence": 84
+    },
+    {
+      "text": "asyncio",
+      "position": [
+        293,
+        248
+      ],
+      "size": [
+        52,
+        13
+      ],
+      "confidence": 84
+    },
+    {
+      "text": ">",
+      "position": [
+        21,
+        274
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "confidence": 90
+    },
+    {
+      "text": "backup",
+      "position": [
+        35,
+        274
+      ],
+      "size": [
+        40,
+        13
+      ],
+      "confidence": 87
+    },
+    {
+      "text": "202508...",
+      "position": [
+        82,
+        264
+      ],
+      "size": [
+        50,
+        30
+      ],
+      "confidence": 87
+    },
+    {
+      "text": "iret",
+      "position": [
+        239,
+        264
+      ],
+      "size": [
+        45,
+        36
+      ],
+      "confidence": 27
+    },
+    {
+      "text": "argparse",
+      "position": [
+        293,
+        270
+      ],
+      "size": [
+        60,
+        10
+      ],
+      "confidence": 79
+    },
+    {
+      "text": "import",
+      "position": [
+        239,
+        289
+      ],
+      "size": [
+        30,
+        10
+      ],
+      "confidence": 86
+    },
+    {
+      "text": "sys",
+      "position": [
+        293,
+        289
+      ],
+      "size": [
+        21,
+        10
+      ],
+      "confidence": 87
+    },
+    {
+      "text": ">",
+      "position": [
+        21,
+        296
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "confidence": 74
+    },
+    {
+      "text": "cay",
+      "position": [
+        35,
+        296
+      ],
+      "size": [
+        34,
+        13
+      ],
+      "confidence": 45
+    },
+    {
+      "text": "\u2018import",
+      "position": [
+        239,
+        305
+      ],
+      "size": [
+        45,
+        13
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "traceback",
+      "position": [
+        292,
+        305
+      ],
+      "size": [
+        69,
+        10
+      ],
+      "confidence": 91
+    },
+    {
+      "text": ">",
+      "position": [
+        21,
+        318
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "data",
+      "position": [
+        35,
+        318
+      ],
+      "size": [
+        24,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "\u2018import",
+      "position": [
+        239,
+        324
+      ],
+      "size": [
+        45,
+        13
+      ],
+      "confidence": 81
+    },
+    {
+      "text": "logging",
+      "position": [
+        293,
+        324
+      ],
+      "size": [
+        53,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": ">",
+      "position": [
+        21,
+        340
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "database",
+      "position": [
+        35,
+        340
+      ],
+      "size": [
+        50,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "import",
+      "position": [
+        239,
+        343
+      ],
+      "size": [
+        45,
+        13
+      ],
+      "confidence": 80
+    },
+    {
+      "text": "importlib",
+      "position": [
+        293,
+        343
+      ],
+      "size": [
+        68,
+        13
+      ],
+      "confidence": 80
+    },
+    {
+      "text": ".",
+      "position": [
+        820,
+        342
+      ],
+      "size": [
+        5,
+        6
+      ],
+      "confidence": 36
+    },
+    {
+      "text": ">",
+      "position": [
+        21,
+        362
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "deployment",
+      "position": [
+        35,
+        362
+      ],
+      "size": [
+        68,
+        13
+      ],
+      "confidence": 72
+    },
+    {
+      "text": "from",
+      "position": [
+        238,
+        362
+      ],
+      "size": [
+        31,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "datetime",
+      "position": [
+        277,
+        362
+      ],
+      "size": [
+        61,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "import",
+      "position": [
+        347,
+        362
+      ],
+      "size": [
+        45,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "datetime",
+      "position": [
+        400,
+        362
+      ],
+      "size": [
+        61,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": ">",
+      "position": [
+        21,
+        384
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "deployment_ne...",
+      "position": [
+        34,
+        384
+      ],
+      "size": [
+        94,
+        13
+      ],
+      "confidence": 50
+    },
+    {
+      "text": "from",
+      "position": [
+        238,
+        381
+      ],
+      "size": [
+        31,
+        13
+      ],
+      "confidence": 84
+    },
+    {
+      "text": "pathlib",
+      "position": [
+        277,
+        381
+      ],
+      "size": [
+        53,
+        13
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "import",
+      "position": [
+        339,
+        381
+      ],
+      "size": [
+        45,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "Path",
+      "position": [
+        393,
+        381
+      ],
+      "size": [
+        29,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": ">",
+      "position": [
+        21,
+        406
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "confidence": 81
+    },
+    {
+      "text": "Cem",
+      "position": [
+        35,
+        406
+      ],
+      "size": [
+        121,
+        13
+      ],
+      "confidence": 3
+    },
+    {
+      "text": "er",
+      "position": [
+        110,
+        390
+      ],
+      "size": [
+        23,
+        33
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "aga",
+      "position": [
+        135,
+        390
+      ],
+      "size": [
+        25,
+        33
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "from",
+      "position": [
+        238,
+        400
+      ],
+      "size": [
+        31,
+        21
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "typing",
+      "position": [
+        277,
+        400
+      ],
+      "size": [
+        46,
+        13
+      ],
+      "confidence": 88
+    },
+    {
+      "text": "import",
+      "position": [
+        331,
+        400
+      ],
+      "size": [
+        46,
+        13
+      ],
+      "confidence": 88
+    },
+    {
+      "text": "List,",
+      "position": [
+        386,
+        400
+      ],
+      "size": [
+        34,
+        12
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "Optional,",
+      "position": [
+        430,
+        400
+      ],
+      "size": [
+        67,
+        13
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "Tuple,",
+      "position": [
+        508,
+        400
+      ],
+      "size": [
+        43,
+        13
+      ],
+      "confidence": 91
+    },
+    {
+      "text": "Any,",
+      "position": [
+        561,
+        401
+      ],
+      "size": [
+        29,
+        12
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "Dict",
+      "position": [
+        600,
+        400
+      ],
+      "size": [
+        30,
+        10
+      ],
+      "confidence": 80
+    },
+    {
+      "text": "one",
+      "position": [
+        21,
+        428
+      ],
+      "size": [
+        39,
+        10
+      ],
+      "confidence": 43
+    },
+    {
+      "text": "\u2018import",
+      "position": [
+        239,
+        420
+      ],
+      "size": [
+        45,
+        20
+      ],
+      "confidence": 67
+    },
+    {
+      "text": "pandas",
+      "position": [
+        293,
+        419
+      ],
+      "size": [
+        44,
+        13
+      ],
+      "confidence": 88
+    },
+    {
+      "text": "as",
+      "position": [
+        346,
+        422
+      ],
+      "size": [
+        15,
+        7
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "pd",
+      "position": [
+        370,
+        419
+      ],
+      "size": [
+        13,
+        13
+      ],
+      "confidence": 88
+    },
+    {
+      "text": "import",
+      "position": [
+        239,
+        439
+      ],
+      "size": [
+        45,
+        12
+      ],
+      "confidence": 79
+    },
+    {
+      "text": "numpy",
+      "position": [
+        293,
+        441
+      ],
+      "size": [
+        37,
+        10
+      ],
+      "confidence": 90
+    },
+    {
+      "text": "as",
+      "position": [
+        338,
+        441
+      ],
+      "size": [
+        15,
+        7
+      ],
+      "confidence": 83
+    },
+    {
+      "text": "np",
+      "position": [
+        362,
+        441
+      ],
+      "size": [
+        14,
+        10
+      ],
+      "confidence": 83
+    },
+    {
+      "text": "o",
+      "position": [
+        820,
+        445
+      ],
+      "size": [
+        5,
+        6
+      ],
+      "confidence": 4
+    },
+    {
+      "text": ">",
+      "position": [
+        21,
+        450
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "confidence": 24
+    },
+    {
+      "text": "EES",
+      "position": [
+        35,
+        450
+      ],
+      "size": [
+        23,
+        13
+      ],
+      "confidence": 28
+    },
+    {
+      "text": "c",
+      "position": [
+        146,
+        452
+      ],
+      "size": [
+        6,
+        6
+      ],
+      "confidence": 31
+    },
+    {
+      "text": "from",
+      "position": [
+        238,
+        457
+      ],
+      "size": [
+        31,
+        13
+      ],
+      "confidence": 91
+    },
+    {
+      "text": "sklearn.model_selection",
+      "position": [
+        277,
+        457
+      ],
+      "size": [
+        176,
+        13
+      ],
+      "confidence": 89
+    },
+    {
+      "text": "import",
+      "position": [
+        462,
+        457
+      ],
+      "size": [
+        45,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "train",
+      "position": [
+        516,
+        457
+      ],
+      "size": [
+        37,
+        10
+      ],
+      "confidence": 71
+    },
+    {
+      "text": "test_split",
+      "position": [
+        563,
+        457
+      ],
+      "size": [
+        75,
+        13
+      ],
+      "confidence": 71
+    },
+    {
+      "text": ">",
+      "position": [
+        21,
+        472
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "models",
+      "position": [
+        35,
+        472
+      ],
+      "size": [
+        41,
+        10
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "from",
+      "position": [
+        238,
+        476
+      ],
+      "size": [
+        31,
+        13
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "sklearn.preprocessing",
+      "position": [
+        277,
+        476
+      ],
+      "size": [
+        161,
+        13
+      ],
+      "confidence": 91
+    },
+    {
+      "text": "import",
+      "position": [
+        447,
+        476
+      ],
+      "size": [
+        45,
+        13
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "MinMaxScaler",
+      "position": [
+        500,
+        476
+      ],
+      "size": [
+        92,
+        10
+      ],
+      "confidence": 92
+    },
+    {
+      "text": ">",
+      "position": [
+        21,
+        494
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "reports",
+      "position": [
+        35,
+        495
+      ],
+      "size": [
+        40,
+        12
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "from",
+      "position": [
+        238,
+        495
+      ],
+      "size": [
+        31,
+        13
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "tensorflow.keras.models",
+      "position": [
+        277,
+        495
+      ],
+      "size": [
+        176,
+        10
+      ],
+      "confidence": 85
+    },
+    {
+      "text": "import",
+      "position": [
+        462,
+        495
+      ],
+      "size": [
+        45,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "Sequential",
+      "position": [
+        516,
+        495
+      ],
+      "size": [
+        76,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": ">",
+      "position": [
+        21,
+        516
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "results",
+      "position": [
+        35,
+        516
+      ],
+      "size": [
+        36,
+        10
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "from",
+      "position": [
+        238,
+        514
+      ],
+      "size": [
+        31,
+        13
+      ],
+      "confidence": 90
+    },
+    {
+      "text": "tensorflow.keras.layers",
+      "position": [
+        277,
+        514
+      ],
+      "size": [
+        176,
+        15
+      ],
+      "confidence": 42
+    },
+    {
+      "text": "import",
+      "position": [
+        462,
+        514
+      ],
+      "size": [
+        45,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "Dense,",
+      "position": [
+        516,
+        515
+      ],
+      "size": [
+        43,
+        11
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "Dropout",
+      "position": [
+        569,
+        515
+      ],
+      "size": [
+        53,
+        12
+      ],
+      "confidence": 96
+    },
+    {
+      "text": ">",
+      "position": [
+        21,
+        538
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "confidence": 86
+    },
+    {
+      "text": "savedModels",
+      "position": [
+        35,
+        538
+      ],
+      "size": [
+        75,
+        10
+      ],
+      "confidence": 67
+    },
+    {
+      "text": "from",
+      "position": [
+        238,
+        533
+      ],
+      "size": [
+        31,
+        13
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "tensorflow.keras",
+      "position": [
+        277,
+        533
+      ],
+      "size": [
+        122,
+        10
+      ],
+      "confidence": 56
+    },
+    {
+      "text": "optimizers",
+      "position": [
+        406,
+        533
+      ],
+      "size": [
+        78,
+        15
+      ],
+      "confidence": 56
+    },
+    {
+      "text": "import",
+      "position": [
+        493,
+        533
+      ],
+      "size": [
+        45,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "Adam",
+      "position": [
+        546,
+        533
+      ],
+      "size": [
+        30,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": ".",
+      "position": [
+        820,
+        550
+      ],
+      "size": [
+        5,
+        6
+      ],
+      "confidence": 21
+    },
+    {
+      "text": ">",
+      "position": [
+        21,
+        560
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "Sori",
+      "position": [
+        34,
+        561
+      ],
+      "size": [
+        20,
+        9
+      ],
+      "confidence": 68
+    },
+    {
+      "text": "e",
+      "position": [
+        146,
+        562
+      ],
+      "size": [
+        6,
+        6
+      ],
+      "confidence": 19
+    },
+    {
+      "text": ">",
+      "position": [
+        21,
+        582
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "an",
+      "position": [
+        43,
+        561
+      ],
+      "size": [
+        29,
+        31
+      ],
+      "confidence": 31
+    },
+    {
+      "text": ")",
+      "position": [
+        238,
+        572
+      ],
+      "size": [
+        21,
+        9
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "o",
+      "position": [
+        820,
+        581
+      ],
+      "size": [
+        5,
+        6
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "side.",
+      "position": [
+        35,
+        585
+      ],
+      "size": [
+        7,
+        7
+      ],
+      "confidence": 65
+    },
+    {
+      "text": "projects",
+      "position": [
+        51,
+        583
+      ],
+      "size": [
+        57,
+        12
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "#",
+      "position": [
+        238,
+        591
+      ],
+      "size": [
+        8,
+        9
+      ],
+      "confidence": 86
+    },
+    {
+      "text": "Project",
+      "position": [
+        254,
+        591
+      ],
+      "size": [
+        53,
+        12
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "Path",
+      "position": [
+        316,
+        590
+      ],
+      "size": [
+        29,
+        10
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "Setup",
+      "position": [
+        354,
+        591
+      ],
+      "size": [
+        37,
+        12
+      ],
+      "confidence": 96
+    },
+    {
+      "text": ".",
+      "position": [
+        820,
+        600
+      ],
+      "size": [
+        5,
+        6
+      ],
+      "confidence": 0
+    },
+    {
+      "text": ">",
+      "position": [
+        21,
+        604
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "sre",
+      "position": [
+        34,
+        607
+      ],
+      "size": [
+        16,
+        7
+      ],
+      "confidence": 75
+    },
+    {
+      "text": "\u00b0",
+      "position": [
+        146,
+        606
+      ],
+      "size": [
+        6,
+        6
+      ],
+      "confidence": 38
+    },
+    {
+      "text": "#-",
+      "position": [
+        238,
+        610
+      ],
+      "size": [
+        21,
+        9
+      ],
+      "confidence": 78
+    },
+    {
+      "text": "LJ",
+      "position": [
+        820,
+        611
+      ],
+      "size": [
+        5,
+        13
+      ],
+      "confidence": 43
+    },
+    {
+      "text": ">is",
+      "position": [
+        21,
+        626
+      ],
+      "size": [
+        39,
+        10
+      ],
+      "confidence": 44
+    },
+    {
+      "text": "Review",
+      "position": [
+        456,
+        633
+      ],
+      "size": [
+        33,
+        8
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "next",
+      "position": [
+        493,
+        633
+      ],
+      "size": [
+        19,
+        8
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "file",
+      "position": [
+        516,
+        633
+      ],
+      "size": [
+        14,
+        8
+      ],
+      "confidence": 88
+    },
+    {
+      "text": "1",
+      "position": [
+        820,
+        629
+      ],
+      "size": [
+        5,
+        13
+      ],
+      "confidence": 69
+    },
+    {
+      "text": "\u00a9",
+      "position": [
+        17,
+        648
+      ],
+      "size": [
+        10,
+        10
+      ],
+      "confidence": 69
+    },
+    {
+      "text": "_init_py",
+      "position": [
+        34,
+        649
+      ],
+      "size": [
+        56,
+        12
+      ],
+      "confidence": 89
+    },
+    {
+      "text": "#",
+      "position": [
+        238,
+        648
+      ],
+      "size": [
+        8,
+        9
+      ],
+      "confidence": 82
+    },
+    {
+      "text": "Define",
+      "position": [
+        254,
+        647
+      ],
+      "size": [
+        45,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "project",
+      "position": [
+        307,
+        647
+      ],
+      "size": [
+        54,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "root",
+      "position": [
+        370,
+        648
+      ],
+      "size": [
+        29,
+        9
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "and",
+      "position": [
+        408,
+        647
+      ],
+      "size": [
+        22,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "duu",
+      "position": [
+        439,
+        650
+      ],
+      "size": [
+        18,
+        7
+      ],
+      "confidence": 73
+    },
+    {
+      "text": "um",
+      "position": [
+        471,
+        655
+      ],
+      "size": [
+        19,
+        2
+      ],
+      "confidence": 61
+    },
+    {
+      "text": "5\"",
+      "position": [
+        538,
+        647
+      ],
+      "size": [
+        29,
+        13
+      ],
+      "confidence": 16
+    },
+    {
+      "text": "directory",
+      "position": [
+        578,
+        647
+      ],
+      "size": [
+        67,
+        13
+      ],
+      "confidence": 90
+    },
+    {
+      "text": "to",
+      "position": [
+        655,
+        648
+      ],
+      "size": [
+        13,
+        9
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "sys.path",
+      "position": [
+        678,
+        647
+      ],
+      "size": [
+        60,
+        13
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "0",
+      "position": [
+        17,
+        670
+      ],
+      "size": [
+        10,
+        11
+      ],
+      "confidence": 43
+    },
+    {
+      "text": "aw",
+      "position": [
+        37,
+        673
+      ],
+      "size": [
+        20,
+        7
+      ],
+      "confidence": 74
+    },
+    {
+      "text": "\u00b0",
+      "position": [
+        143,
+        672
+      ],
+      "size": [
+        11,
+        10
+      ],
+      "confidence": 40
+    },
+    {
+      "text": "|",
+      "position": [
+        239,
+        666
+      ],
+      "size": [
+        590,
+        6
+      ],
+      "confidence": 30
+    },
+    {
+      "text": "enous",
+      "position": [
+        37,
+        692
+      ],
+      "size": [
+        69,
+        13
+      ],
+      "confidence": 30
+    },
+    {
+      "text": "Problems",
+      "position": [
+        191,
+        682
+      ],
+      "size": [
+        75,
+        16
+      ],
+      "confidence": 85
+    },
+    {
+      "text": "@)",
+      "position": [
+        251,
+        671
+      ],
+      "size": [
+        18,
+        35
+      ],
+      "confidence": 73
+    },
+    {
+      "text": "Output",
+      "position": [
+        284,
+        686
+      ],
+      "size": [
+        39,
+        12
+      ],
+      "confidence": 72
+    },
+    {
+      "text": "Debug",
+      "position": [
+        344,
+        686
+      ],
+      "size": [
+        34,
+        12
+      ],
+      "confidence": 72
+    },
+    {
+      "text": "Console",
+      "position": [
+        383,
+        686
+      ],
+      "size": [
+        43,
+        9
+      ],
+      "confidence": 76
+    },
+    {
+      "text": "Terminal",
+      "position": [
+        446,
+        686
+      ],
+      "size": [
+        46,
+        9
+      ],
+      "confidence": 61
+    },
+    {
+      "text": "Ports",
+      "position": [
+        513,
+        686
+      ],
+      "size": [
+        27,
+        9
+      ],
+      "confidence": 34
+    },
+    {
+      "text": "Gitlens",
+      "position": [
+        561,
+        686
+      ],
+      "size": [
+        40,
+        9
+      ],
+      "confidence": 54
+    },
+    {
+      "text": "fen",
+      "position": [
+        711,
+        684
+      ],
+      "size": [
+        26,
+        13
+      ],
+      "confidence": 37
+    },
+    {
+      "text": "A",
+      "position": [
+        775,
+        687
+      ],
+      "size": [
+        10,
+        5
+      ],
+      "confidence": 47
+    },
+    {
+      "text": "x",
+      "position": [
+        802,
+        686
+      ],
+      "size": [
+        8,
+        9
+      ],
+      "confidence": 70
+    },
+    {
+      "text": "ata",
+      "position": [
+        37,
+        715
+      ],
+      "size": [
+        52,
+        12
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "SEE",
+      "position": [
+        190,
+        711
+      ],
+      "size": [
+        49,
+        27
+      ],
+      "confidence": 9
+    },
+    {
+      "text": "CoB",
+      "position": [
+        242,
+        700
+      ],
+      "size": [
+        39,
+        42
+      ],
+      "confidence": 11
+    },
+    {
+      "text": "eva",
+      "position": [
+        301,
+        710
+      ],
+      "size": [
+        120,
+        19
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "config",
+      "position": [
+        429,
+        710
+      ],
+      "size": [
+        42,
+        13
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "file",
+      "position": [
+        477,
+        710
+      ],
+      "size": [
+        28,
+        10
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "format:",
+      "position": [
+        512,
+        710
+      ],
+      "size": [
+        47,
+        10
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "d:\\TradingRobotPlu",
+      "position": [
+        569,
+        710
+      ],
+      "size": [
+        125,
+        13
+      ],
+      "confidence": 87
+    },
+    {
+      "text": ":",
+      "position": [
+        21,
+        738
+      ],
+      "size": [
+        1,
+        3
+      ],
+      "confidence": 13
+    },
+    {
+      "text": "g\\config\\config.ini",
+      "position": [
+        190,
+        730
+      ],
+      "size": [
+        133,
+        10
+      ],
+      "confidence": 34
+    },
+    {
+      "text": "7",
+      "position": [
+        18,
+        742
+      ],
+      "size": [
+        3,
+        3
+      ],
+      "confidence": 54
+    },
+    {
+      "text": "Aart",
+      "position": [
+        34,
+        732
+      ],
+      "size": [
+        28,
+        30
+      ],
+      "confidence": 16
+    },
+    {
+      "text": "daily",
+      "position": [
+        69,
+        732
+      ],
+      "size": [
+        28,
+        30
+      ],
+      "confidence": 16
+    },
+    {
+      "text": "repor20.-",
+      "position": [
+        96,
+        736
+      ],
+      "size": [
+        60,
+        13
+      ],
+      "confidence": 18
+    },
+    {
+      "text": "Teo:",
+      "position": [
+        191,
+        745
+      ],
+      "size": [
+        32,
+        9
+      ],
+      "confidence": 6
+    },
+    {
+      "text": "TradingRobotPlugtain:Using",
+      "position": [
+        225,
+        744
+      ],
+      "size": [
+        183,
+        13
+      ],
+      "confidence": 24
+    },
+    {
+      "text": "CSV",
+      "position": [
+        414,
+        745
+      ],
+      "size": [
+        22,
+        9
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "directory:",
+      "position": [
+        443,
+        744
+      ],
+      "size": [
+        67,
+        13
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "D:\\TradingRobotPlug\\data\\",
+      "position": [
+        519,
+        744
+      ],
+      "size": [
+        175,
+        13
+      ],
+      "confidence": 89
+    },
+    {
+      "text": "\u00a9",
+      "position": [
+        17,
+        759
+      ],
+      "size": [
+        10,
+        8
+      ],
+      "confidence": 83
+    },
+    {
+      "text": "AAPL",
+      "position": [
+        33,
+        748
+      ],
+      "size": [
+        30,
+        30
+      ],
+      "confidence": 68
+    },
+    {
+      "text": "daily",
+      "position": [
+        68,
+        748
+      ],
+      "size": [
+        29,
+        30
+      ],
+      "confidence": 68
+    },
+    {
+      "text": "reporthtml",
+      "position": [
+        103,
+        758
+      ],
+      "size": [
+        62,
+        10
+      ],
+      "confidence": 76
+    },
+    {
+      "text": "consolidated",
+      "position": [
+        191,
+        761
+      ],
+      "size": [
+        83,
+        10
+      ],
+      "confidence": 55
+    },
+    {
+      "text": ":",
+      "position": [
+        705,
+        768
+      ],
+      "size": [
+        4,
+        6
+      ],
+      "confidence": 53
+    },
+    {
+      "text": "J",
+      "position": [
+        18,
+        782
+      ],
+      "size": [
+        4,
+        7
+      ],
+      "confidence": 47
+    },
+    {
+      "text": "AAPL",
+      "position": [
+        36,
+        768
+      ],
+      "size": [
+        28,
+        30
+      ],
+      "confidence": 38
+    },
+    {
+      "text": "daily",
+      "position": [
+        69,
+        780
+      ],
+      "size": [
+        28,
+        13
+      ],
+      "confidence": 38
+    },
+    {
+      "text": "reportpdt",
+      "position": [
+        104,
+        780
+      ],
+      "size": [
+        56,
+        13
+      ],
+      "confidence": 66
+    },
+    {
+      "text": "INFO:",
+      "position": [
+        191,
+        768
+      ],
+      "size": [
+        32,
+        30
+      ],
+      "confidence": 6
+    },
+    {
+      "text": "TradingRobotPlugMain:Initialized",
+      "position": [
+        225,
+        778
+      ],
+      "size": [
+        224,
+        13
+      ],
+      "confidence": 6
+    },
+    {
+      "text": "for",
+      "position": [
+        456,
+        778
+      ],
+      "size": [
+        21,
+        10
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "CSV",
+      "position": [
+        484,
+        779
+      ],
+      "size": [
+        22,
+        9
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "mode",
+      "position": [
+        512,
+        778
+      ],
+      "size": [
+        28,
+        10
+      ],
+      "confidence": 90
+    },
+    {
+      "text": "with",
+      "position": [
+        547,
+        778
+      ],
+      "size": [
+        28,
+        10
+      ],
+      "confidence": 90
+    },
+    {
+      "text": "directory:",
+      "position": [
+        583,
+        778
+      ],
+      "size": [
+        67,
+        13
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "D:\\Tr",
+      "position": [
+        659,
+        778
+      ],
+      "size": [
+        35,
+        11
+      ],
+      "confidence": 70
+    },
+    {
+      "text": "ee",
+      "position": [
+        34,
+        802
+      ],
+      "size": [
+        60,
+        10
+      ],
+      "confidence": 26
+    },
+    {
+      "text": "adingRobotPlug\\data\\consolidated",
+      "position": [
+        191,
+        795
+      ],
+      "size": [
+        223,
+        13
+      ],
+      "confidence": 85
+    },
+    {
+      "text": "INFO:data",
+      "position": [
+        191,
+        812
+      ],
+      "size": [
+        238,
+        13
+      ],
+      "confidence": 86
+    },
+    {
+      "text": "fetch",
+      "position": [
+        262,
+        802
+      ],
+      "size": [
+        33,
+        30
+      ],
+      "confidence": 54
+    },
+    {
+      "text": "utils:Initializing",
+      "position": [
+        302,
+        812
+      ],
+      "size": [
+        127,
+        13
+      ],
+      "confidence": 54
+    },
+    {
+      "text": "Alpaca",
+      "position": [
+        435,
+        812
+      ],
+      "size": [
+        42,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "API",
+      "position": [
+        484,
+        813
+      ],
+      "size": [
+        21,
+        9
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "with",
+      "position": [
+        512,
+        812
+      ],
+      "size": [
+        28,
+        10
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "provided",
+      "position": [
+        548,
+        812
+      ],
+      "size": [
+        55,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "credentials.",
+      "position": [
+        611,
+        812
+      ],
+      "size": [
+        81,
+        10
+      ],
+      "confidence": 79
+    },
+    {
+      "text": "arima_model.pkl",
+      "position": [
+        34,
+        824
+      ],
+      "size": [
+        93,
+        13
+      ],
+      "confidence": 38
+    },
+    {
+      "text": "INFO:DataFetchUtils:Alpaca",
+      "position": [
+        191,
+        829
+      ],
+      "size": [
+        181,
+        13
+      ],
+      "confidence": 56
+    },
+    {
+      "text": "API",
+      "position": [
+        379,
+        830
+      ],
+      "size": [
+        21,
+        9
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "client",
+      "position": [
+        408,
+        829
+      ],
+      "size": [
+        41,
+        10
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "initialized",
+      "position": [
+        457,
+        829
+      ],
+      "size": [
+        76,
+        10
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "successfully.",
+      "position": [
+        541,
+        829
+      ],
+      "size": [
+        88,
+        13
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "backup",
+      "position": [
+        31,
+        836
+      ],
+      "size": [
+        44,
+        30
+      ],
+      "confidence": 53
+    },
+    {
+      "text": "working",
+      "position": [
+        81,
+        846
+      ],
+      "size": [
+        45,
+        13
+      ],
+      "confidence": 53
+    },
+    {
+      "text": "state...",
+      "position": [
+        131,
+        836
+      ],
+      "size": [
+        50,
+        30
+      ],
+      "confidence": 63
+    },
+    {
+      "text": "INFO:DataFetchManager:",
+      "position": [
+        191,
+        836
+      ],
+      "size": [
+        151,
+        30
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "Initializing",
+      "position": [
+        346,
+        846
+      ],
+      "size": [
+        83,
+        13
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "Alpaca",
+      "position": [
+        435,
+        846
+      ],
+      "size": [
+        42,
+        13
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "API",
+      "position": [
+        484,
+        847
+      ],
+      "size": [
+        21,
+        9
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "with",
+      "position": [
+        512,
+        846
+      ],
+      "size": [
+        28,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "provided",
+      "position": [
+        548,
+        846
+      ],
+      "size": [
+        55,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "credentials.",
+      "position": [
+        611,
+        846
+      ],
+      "size": [
+        81,
+        10
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "backup",
+      "position": [
+        35,
+        868
+      ],
+      "size": [
+        39,
+        13
+      ],
+      "confidence": 60
+    },
+    {
+      "text": "working",
+      "position": [
+        81,
+        868
+      ],
+      "size": [
+        44,
+        13
+      ],
+      "confidence": 60
+    },
+    {
+      "text": "state,",
+      "position": [
+        132,
+        869
+      ],
+      "size": [
+        31,
+        11
+      ],
+      "confidence": 28
+    },
+    {
+      "text": "INFO:AIModelInitializer:Initialized",
+      "position": [
+        191,
+        863
+      ],
+      "size": [
+        244,
+        10
+      ],
+      "confidence": 43
+    },
+    {
+      "text": "OpenAI",
+      "position": [
+        442,
+        864
+      ],
+      "size": [
+        42,
+        12
+      ],
+      "confidence": 75
+    },
+    {
+      "text": "model",
+      "position": [
+        491,
+        863
+      ],
+      "size": [
+        35,
+        10
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "(gpt-3.5-turbo).",
+      "position": [
+        535,
+        863
+      ],
+      "size": [
+        108,
+        13
+      ],
+      "confidence": 66
+    },
+    {
+      "text": "i",
+      "position": [
+        705,
+        870
+      ],
+      "size": [
+        4,
+        6
+      ],
+      "confidence": 18
+    },
+    {
+      "text": "INFO:AIUtils:Model",
+      "position": [
+        191,
+        880
+      ],
+      "size": [
+        125,
+        10
+      ],
+      "confidence": 81
+    },
+    {
+      "text": "\u2018openai\u2019",
+      "position": [
+        326,
+        880
+      ],
+      "size": [
+        51,
+        13
+      ],
+      "confidence": 48
+    },
+    {
+      "text": "initialized",
+      "position": [
+        387,
+        880
+      ],
+      "size": [
+        76,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "successfully.",
+      "position": [
+        471,
+        880
+      ],
+      "size": [
+        88,
+        13
+      ],
+      "confidence": 79
+    },
+    {
+      "text": "CODEBASE",
+      "position": [
+        35,
+        887
+      ],
+      "size": [
+        61,
+        27
+      ],
+      "confidence": 69
+    },
+    {
+      "text": "OVERVIE..",
+      "position": [
+        103,
+        898
+      ],
+      "size": [
+        58,
+        2
+      ],
+      "confidence": 46
+    },
+    {
+      "text": " TwF9:DataFetchManager:AI",
+      "position": [
+        191,
+        897
+      ],
+      "size": [
+        167,
+        13
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "model",
+      "position": [
+        365,
+        897
+      ],
+      "size": [
+        35,
+        10
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "\u2018openai\u2019",
+      "position": [
+        410,
+        897
+      ],
+      "size": [
+        51,
+        13
+      ],
+      "confidence": 11
+    },
+    {
+      "text": "initialized.",
+      "position": [
+        471,
+        897
+      ],
+      "size": [
+        81,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "config.yaml",
+      "position": [
+        35,
+        912
+      ],
+      "size": [
+        64,
+        13
+      ],
+      "confidence": 68
+    },
+    {
+      "text": "usage:",
+      "position": [
+        191,
+        917
+      ],
+      "size": [
+        39,
+        10
+      ],
+      "confidence": 82
+    },
+    {
+      "text": "main.py",
+      "position": [
+        239,
+        914
+      ],
+      "size": [
+        49,
+        13
+      ],
+      "confidence": 79
+    },
+    {
+      "text": "[-h]",
+      "position": [
+        297,
+        914
+      ],
+      "size": [
+        25,
+        13
+      ],
+      "confidence": 79
+    },
+    {
+      "text": "--symbols",
+      "position": [
+        332,
+        914
+      ],
+      "size": [
+        61,
+        13
+      ],
+      "confidence": 70
+    },
+    {
+      "text": "SYMBOLS",
+      "position": [
+        400,
+        915
+      ],
+      "size": [
+        49,
+        9
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "[--start-date",
+      "position": [
+        458,
+        914
+      ],
+      "size": [
+        89,
+        13
+      ],
+      "confidence": 88
+    },
+    {
+      "text": "START_DATE]",
+      "position": [
+        554,
+        914
+      ],
+      "size": [
+        76,
+        13
+      ],
+      "confidence": 88
+    },
+    {
+      "text": "dashboard.db",
+      "position": [
+        35,
+        934
+      ],
+      "size": [
+        78,
+        10
+      ],
+      "confidence": 80
+    },
+    {
+      "text": "[--end-date",
+      "position": [
+        297,
+        931
+      ],
+      "size": [
+        75,
+        13
+      ],
+      "confidence": 89
+    },
+    {
+      "text": "END_DATE]",
+      "position": [
+        380,
+        931
+      ],
+      "size": [
+        61,
+        13
+      ],
+      "confidence": 85
+    },
+    {
+      "text": "[--save-to",
+      "position": [
+        451,
+        931
+      ],
+      "size": [
+        68,
+        13
+      ],
+      "confidence": 88
+    },
+    {
+      "text": "{database,",
+      "position": [
+        527,
+        931
+      ],
+      "size": [
+        138,
+        13
+      ],
+      "confidence": 53
+    },
+    {
+      "text": "csv,",
+      "position": [
+        598,
+        921
+      ],
+      "size": [
+        25,
+        30
+      ],
+      "confidence": 53
+    },
+    {
+      "text": "both}]",
+      "position": [
+        625,
+        931
+      ],
+      "size": [
+        40,
+        13
+      ],
+      "confidence": 66
+    },
+    {
+      "text": "[--ai-model",
+      "position": [
+        297,
+        948
+      ],
+      "size": [
+        75,
+        13
+      ],
+      "confidence": 79
+    },
+    {
+      "text": "{openai,mistral}]",
+      "position": [
+        380,
+        948
+      ],
+      "size": [
+        117,
+        13
+      ],
+      "confidence": 79
+    },
+    {
+      "text": "VERMEIGR",
+      "position": [
+        17,
+        956
+      ],
+      "size": [
+        88,
+        10
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "NESE",
+      "position": [
+        113,
+        957
+      ],
+      "size": [
+        41,
+        11
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "aa",
+      "position": [
+        190,
+        965
+      ],
+      "size": [
+        28,
+        10
+      ],
+      "confidence": 31
+    },
+    {
+      "text": "oe",
+      "position": [
+        225,
+        968
+      ],
+      "size": [
+        19,
+        10
+      ],
+      "confidence": 37
+    },
+    {
+      "text": "aan",
+      "position": [
+        254,
+        968
+      ],
+      "size": [
+        39,
+        7
+      ],
+      "confidence": 34
+    },
+    {
+      "text": "ie",
+      "position": [
+        302,
+        965
+      ],
+      "size": [
+        21,
+        10
+      ],
+      "confidence": 52
+    },
+    {
+      "text": "filling",
+      "position": [
+        330,
+        965
+      ],
+      "size": [
+        64,
+        13
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "Seren",
+      "position": [
+        401,
+        966
+      ],
+      "size": [
+        62,
+        12
+      ],
+      "confidence": 8
+    },
+    {
+      "text": "Se",
+      "position": [
+        471,
+        968
+      ],
+      "size": [
+        20,
+        7
+      ],
+      "confidence": 39
+    },
+    {
+      "text": "meek",
+      "position": [
+        499,
+        965
+      ],
+      "size": [
+        60,
+        13
+      ],
+      "confidence": 24
+    },
+    {
+      "text": "apts",
+      "position": [
+        570,
+        965
+      ],
+      "size": [
+        61,
+        13
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "PS",
+      "position": [
+        191,
+        983
+      ],
+      "size": [
+        13,
+        9
+      ],
+      "confidence": 91
+    },
+    {
+      "text": "D:\\TradingRobotPlug>",
+      "position": [
+        211,
+        982
+      ],
+      "size": [
+        140,
+        13
+      ],
+      "confidence": 82
+    },
+    {
+      "text": "[]",
+      "position": [
+        358,
+        979
+      ],
+      "size": [
+        7,
+        17
+      ],
+      "confidence": 88
+    },
+    {
+      "text": "CColeK",
+      "position": [
+        367,
+        991
+      ],
+      "size": [
+        30,
+        30
+      ],
+      "confidence": 27
+    },
+    {
+      "text": "to",
+      "position": [
+        402,
+        991
+      ],
+      "size": [
+        8,
+        30
+      ],
+      "confidence": 58
+    },
+    {
+      "text": "generate",
+      "position": [
+        414,
+        1004
+      ],
+      "size": [
+        94,
+        9
+      ],
+      "confidence": 58
+    },
+    {
+      "text": "3",
+      "position": [
+        457,
+        991
+      ],
+      "size": [
+        3,
+        30
+      ],
+      "confidence": 47
+    },
+    {
+      "text": "command",
+      "position": [
+        464,
+        1004
+      ],
+      "size": [
+        44,
+        9
+      ],
+      "confidence": 70
+    },
+    {
+      "text": "<i",
+      "position": [
+        0,
+        1014
+      ],
+      "size": [
+        38,
+        30
+      ],
+      "confidence": 51
+    },
+    {
+      "text": "coAgents",
+      "position": [
+        43,
+        1025
+      ],
+      "size": [
+        53,
+        12
+      ],
+      "confidence": 6
+    },
+    {
+      "text": " reorganization-phasel*",
+      "position": [
+        112,
+        1022
+      ],
+      "size": [
+        139,
+        15
+      ],
+      "confidence": 55
+    },
+    {
+      "text": "@",
+      "position": [
+        259,
+        1025
+      ],
+      "size": [
+        12,
+        9
+      ],
+      "confidence": 81
+    },
+    {
+      "text": "Ip",
+      "position": [
+        287,
+        1023
+      ],
+      "size": [
+        11,
+        12
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "7c\"",
+      "position": [
+        317,
+        1023
+      ],
+      "size": [
+        25,
+        12
+      ],
+      "confidence": 36
+    },
+    {
+      "text": "Launchpad",
+      "position": [
+        349,
+        1025
+      ],
+      "size": [
+        55,
+        12
+      ],
+      "confidence": 91
+    },
+    {
+      "text": "@0A39",
+      "position": [
+        422,
+        1023
+      ],
+      "size": [
+        56,
+        12
+      ],
+      "confidence": 64
+    },
+    {
+      "text": "GO",
+      "position": [
+        497,
+        1023
+      ],
+      "size": [
+        9,
+        12
+      ],
+      "confidence": 14
+    },
+    {
+      "text": "Connect",
+      "position": [
+        513,
+        1025
+      ],
+      "size": [
+        43,
+        9
+      ],
+      "confidence": 14
+    },
+    {
+      "text": "\u00a7",
+      "position": [
+        570,
+        1017
+      ],
+      "size": [
+        9,
+        25
+      ],
+      "confidence": 38
+    },
+    {
+      "text": "Select",
+      "position": [
+        574,
+        1023
+      ],
+      "size": [
+        46,
+        12
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "Postgres",
+      "position": [
+        631,
+        1028
+      ],
+      "size": [
+        37,
+        9
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "Server",
+      "position": [
+        673,
+        1025
+      ],
+      "size": [
+        32,
+        9
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "ZO",
+      "position": [
+        23,
+        1052
+      ],
+      "size": [
+        53,
+        16
+      ],
+      "confidence": 24
+    },
+    {
+      "text": "Type",
+      "position": [
+        88,
+        1043
+      ],
+      "size": [
+        28,
+        33
+      ],
+      "confidence": 75
+    },
+    {
+      "text": "here",
+      "position": [
+        120,
+        1043
+      ],
+      "size": [
+        29,
+        33
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "to",
+      "position": [
+        156,
+        1056
+      ],
+      "size": [
+        12,
+        10
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "search",
+      "position": [
+        173,
+        1055
+      ],
+      "size": [
+        43,
+        14
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "ort",
+      "position": [
+        408,
+        1052
+      ],
+      "size": [
+        64,
+        16
+      ],
+      "confidence": 62
+    },
+    {
+      "text": "OB",
+      "position": [
+        503,
+        1048
+      ],
+      "size": [
+        119,
+        24
+      ],
+      "confidence": 50
+    },
+    {
+      "text": "@",
+      "position": [
+        651,
+        1051
+      ],
+      "size": [
+        22,
+        18
+      ],
+      "confidence": 44
+    },
+    {
+      "text": "Os)",
+      "position": [
+        699,
+        1048
+      ],
+      "size": [
+        66,
+        25
+      ],
+      "confidence": 6
+    },
+    {
+      "text": "&",
+      "position": [
+        797,
+        1054
+      ],
+      "size": [
+        24,
+        15
+      ],
+      "confidence": 20
+    },
+    {
+      "text": "Run",
+      "position": [
+        851,
+        48
+      ],
+      "size": [
+        20,
+        9
+      ],
+      "confidence": 91
+    },
+    {
+      "text": "main.pyw",
+      "position": [
+        876,
+        51
+      ],
+      "size": [
+        51,
+        9
+      ],
+      "confidence": 50
+    },
+    {
+      "text": "Implement",
+      "position": [
+        954,
+        48
+      ],
+      "size": [
+        132,
+        12
+      ],
+      "confidence": 57
+    },
+    {
+      "text": "logic",
+      "position": [
+        1017,
+        38
+      ],
+      "size": [
+        24,
+        28
+      ],
+      "confidence": 87
+    },
+    {
+      "text": "for",
+      "position": [
+        1047,
+        38
+      ],
+      "size": [
+        13,
+        28
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "pro}",
+      "position": [
+        1066,
+        38
+      ],
+      "size": [
+        24,
+        28
+      ],
+      "confidence": 82
+    },
+    {
+      "text": "+",
+      "position": [
+        1806,
+        49
+      ],
+      "size": [
+        8,
+        8
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "a",
+      "position": [
+        847,
+        74
+      ],
+      "size": [
+        7,
+        28
+      ],
+      "confidence": 83
+    },
+    {
+      "text": "the",
+      "position": [
+        858,
+        74
+      ],
+      "size": [
+        17,
+        28
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "scripts",
+      "position": [
+        882,
+        74
+      ],
+      "size": [
+        31,
+        28
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "directory",
+      "position": [
+        919,
+        74
+      ],
+      "size": [
+        43,
+        28
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "is",
+      "position": [
+        968,
+        74
+      ],
+      "size": [
+        8,
+        28
+      ],
+      "confidence": 69
+    },
+    {
+      "text": "still",
+      "position": [
+        980,
+        74
+      ],
+      "size": [
+        17,
+        28
+      ],
+      "confidence": 69
+    },
+    {
+      "text": "massive",
+      "position": [
+        1005,
+        74
+      ],
+      "size": [
+        36,
+        28
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "b",
+      "position": [
+        1047,
+        84
+      ],
+      "size": [
+        6,
+        9
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "u",
+      "position": [
+        1057,
+        87
+      ],
+      "size": [
+        5,
+        6
+      ],
+      "confidence": 91
+    },
+    {
+      "text": "havent",
+      "position": [
+        1066,
+        74
+      ],
+      "size": [
+        36,
+        28
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "proven",
+      "position": [
+        1106,
+        74
+      ],
+      "size": [
+        33,
+        28
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "the",
+      "position": [
+        1145,
+        74
+      ],
+      "size": [
+        17,
+        28
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "new",
+      "position": [
+        1169,
+        74
+      ],
+      "size": [
+        17,
+        28
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "system",
+      "position": [
+        1192,
+        74
+      ],
+      "size": [
+        33,
+        28
+      ],
+      "confidence": 87
+    },
+    {
+      "text": "works",
+      "position": [
+        1232,
+        74
+      ],
+      "size": [
+        28,
+        28
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "so",
+      "position": [
+        1267,
+        74
+      ],
+      "size": [
+        10,
+        28
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "we",
+      "position": [
+        1283,
+        74
+      ],
+      "size": [
+        12,
+        28
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "have",
+      "position": [
+        1299,
+        74
+      ],
+      "size": [
+        22,
+        28
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "the",
+      "position": [
+        1327,
+        74
+      ],
+      "size": [
+        17,
+        28
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "confidence",
+      "position": [
+        1348,
+        74
+      ],
+      "size": [
+        55,
+        28
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "to",
+      "position": [
+        1409,
+        74
+      ],
+      "size": [
+        10,
+        28
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "delete",
+      "position": [
+        1425,
+        74
+      ],
+      "size": [
+        29,
+        28
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "the",
+      "position": [
+        1458,
+        74
+      ],
+      "size": [
+        17,
+        28
+      ],
+      "confidence": 87
+    },
+    {
+      "text": "old",
+      "position": [
+        1479,
+        74
+      ],
+      "size": [
+        17,
+        28
+      ],
+      "confidence": 87
+    },
+    {
+      "text": "artifacts",
+      "position": [
+        1500,
+        74
+      ],
+      "size": [
+        45,
+        28
+      ],
+      "confidence": 90
+    },
+    {
+      "text": "(pen",
+      "position": [
+        1811,
+        235
+      ],
+      "size": [
+        25,
+        8
+      ],
+      "confidence": 77
+    },
+    {
+      "text": "in",
+      "position": [
+        1844,
+        237
+      ],
+      "size": [
+        4,
+        2
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "Terminal",
+      "position": [
+        1852,
+        235
+      ],
+      "size": [
+        38,
+        8
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "I",
+      "position": [
+        845,
+        263
+      ],
+      "size": [
+        5,
+        29
+      ],
+      "confidence": 67
+    },
+    {
+      "text": "see",
+      "position": [
+        855,
+        275
+      ],
+      "size": [
+        19,
+        7
+      ],
+      "confidence": 67
+    },
+    {
+      "text": "the",
+      "position": [
+        878,
+        272
+      ],
+      "size": [
+        18,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "issue!",
+      "position": [
+        900,
+        272
+      ],
+      "size": [
+        31,
+        10
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "The",
+      "position": [
+        935,
+        272
+      ],
+      "size": [
+        21,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "problem",
+      "position": [
+        961,
+        272
+      ],
+      "size": [
+        47,
+        13
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "is",
+      "position": [
+        1013,
+        275
+      ],
+      "size": [
+        8,
+        7
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "that",
+      "position": [
+        1024,
+        272
+      ],
+      "size": [
+        23,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "some",
+      "position": [
+        1051,
+        275
+      ],
+      "size": [
+        31,
+        7
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "files",
+      "position": [
+        1085,
+        272
+      ],
+      "size": [
+        23,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "are",
+      "position": [
+        1112,
+        275
+      ],
+      "size": [
+        18,
+        7
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "still",
+      "position": [
+        1133,
+        272
+      ],
+      "size": [
+        19,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "looking",
+      "position": [
+        1157,
+        272
+      ],
+      "size": [
+        42,
+        13
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "for",
+      "position": [
+        1203,
+        272
+      ],
+      "size": [
+        16,
+        10
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "config_handling.config_manager",
+      "position": [
+        1226,
+        273
+      ],
+      "size": [
+        192,
+        11
+      ],
+      "confidence": 36
+    },
+    {
+      "text": "but",
+      "position": [
+        1426,
+        272
+      ],
+      "size": [
+        18,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "the",
+      "position": [
+        1448,
+        272
+      ],
+      "size": [
+        19,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "actual",
+      "position": [
+        1470,
+        272
+      ],
+      "size": [
+        34,
+        10
+      ],
+      "confidence": 91
+    },
+    {
+      "text": "module",
+      "position": [
+        1508,
+        272
+      ],
+      "size": [
+        44,
+        10
+      ],
+      "confidence": 91
+    },
+    {
+      "text": "is",
+      "position": [
+        1556,
+        275
+      ],
+      "size": [
+        8,
+        7
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "at",
+      "position": [
+        1567,
+        273
+      ],
+      "size": [
+        11,
+        9
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "trading",
+      "position": [
+        1586,
+        263
+      ],
+      "size": [
+        45,
+        29
+      ],
+      "confidence": 53
+    },
+    {
+      "text": "robot.utils.config_handling.config",
+      "position": [
+        1637,
+        273
+      ],
+      "size": [
+        263,
+        11
+      ],
+      "confidence": 53
+    },
+    {
+      "text": "manage",
+      "position": [
+        1862,
+        263
+      ],
+      "size": [
+        42,
+        29
+      ],
+      "confidence": 85
+    },
+    {
+      "text": "F.",
+      "position": [
+        849,
+        296
+      ],
+      "size": [
+        11,
+        6
+      ],
+      "confidence": 38
+    },
+    {
+      "text": "Let",
+      "position": [
+        865,
+        292
+      ],
+      "size": [
+        16,
+        9
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "me",
+      "position": [
+        885,
+        294
+      ],
+      "size": [
+        18,
+        7
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "check",
+      "position": [
+        907,
+        291
+      ],
+      "size": [
+        32,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "what's",
+      "position": [
+        942,
+        291
+      ],
+      "size": [
+        37,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "happening:",
+      "position": [
+        983,
+        291
+      ],
+      "size": [
+        63,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "Read",
+      "position": [
+        869,
+        321
+      ],
+      "size": [
+        25,
+        9
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "I",
+      "position": [
+        845,
+        340
+      ],
+      "size": [
+        5,
+        29
+      ],
+      "confidence": 52
+    },
+    {
+      "text": "see",
+      "position": [
+        849,
+        350
+      ],
+      "size": [
+        25,
+        9
+      ],
+      "confidence": 52
+    },
+    {
+      "text": "the",
+      "position": [
+        878,
+        349
+      ],
+      "size": [
+        18,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "problem!",
+      "position": [
+        900,
+        349
+      ],
+      "size": [
+        51,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "The",
+      "position": [
+        956,
+        349
+      ],
+      "size": [
+        21,
+        10
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "file",
+      "position": [
+        980,
+        349
+      ],
+      "size": [
+        17,
+        10
+      ],
+      "confidence": 83
+    },
+    {
+      "text": "i",
+      "position": [
+        1002,
+        352
+      ],
+      "size": [
+        7,
+        7
+      ],
+      "confidence": 81
+    },
+    {
+      "text": "still",
+      "position": [
+        1014,
+        349
+      ],
+      "size": [
+        18,
+        10
+      ],
+      "confidence": 83
+    },
+    {
+      "text": "using",
+      "position": [
+        1037,
+        352
+      ],
+      "size": [
+        30,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "the",
+      "position": [
+        1071,
+        349
+      ],
+      "size": [
+        18,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "old",
+      "position": [
+        1093,
+        349
+      ],
+      "size": [
+        18,
+        10
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "Utilities.",
+      "position": [
+        1118,
+        350
+      ],
+      "size": [
+        62,
+        9
+      ],
+      "confidence": 58
+    },
+    {
+      "text": "imports",
+      "position": [
+        1189,
+        349
+      ],
+      "size": [
+        44,
+        13
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "instead",
+      "position": [
+        1237,
+        349
+      ],
+      "size": [
+        40,
+        10
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "of",
+      "position": [
+        1282,
+        349
+      ],
+      "size": [
+        12,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "the",
+      "position": [
+        1297,
+        349
+      ],
+      "size": [
+        18,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "new",
+      "position": [
+        1319,
+        352
+      ],
+      "size": [
+        24,
+        7
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "trading",
+      "position": [
+        1349,
+        350
+      ],
+      "size": [
+        126,
+        11
+      ],
+      "confidence": 77
+    },
+    {
+      "text": "robot",
+      "position": [
+        1400,
+        340
+      ],
+      "size": [
+        30,
+        29
+      ],
+      "confidence": 57
+    },
+    {
+      "text": "utils.",
+      "position": [
+        1437,
+        350
+      ],
+      "size": [
+        38,
+        11
+      ],
+      "confidence": 31
+    },
+    {
+      "text": "structure.",
+      "position": [
+        1484,
+        350
+      ],
+      "size": [
+        53,
+        9
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "Let",
+      "position": [
+        1542,
+        350
+      ],
+      "size": [
+        17,
+        9
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "me",
+      "position": [
+        1563,
+        352
+      ],
+      "size": [
+        17,
+        7
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "fix",
+      "position": [
+        1584,
+        340
+      ],
+      "size": [
+        13,
+        29
+      ],
+      "confidence": 86
+    },
+    {
+      "text": "this",
+      "position": [
+        1601,
+        349
+      ],
+      "size": [
+        20,
+        10
+      ],
+      "confidence": 86
+    },
+    {
+      "text": "specific",
+      "position": [
+        1625,
+        349
+      ],
+      "size": [
+        42,
+        13
+      ],
+      "confidence": 88
+    },
+    {
+      "text": "file",
+      "position": [
+        1670,
+        349
+      ],
+      "size": [
+        18,
+        10
+      ],
+      "confidence": 82
+    },
+    {
+      "text": "and",
+      "position": [
+        1691,
+        349
+      ],
+      "size": [
+        21,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "others",
+      "position": [
+        1717,
+        349
+      ],
+      "size": [
+        35,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "like",
+      "position": [
+        1757,
+        349
+      ],
+      "size": [
+        19,
+        10
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "it:",
+      "position": [
+        1780,
+        350
+      ],
+      "size": [
+        9,
+        9
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "\u00a9",
+      "position": [
+        859,
+        384
+      ],
+      "size": [
+        9,
+        8
+      ],
+      "confidence": 41
+    },
+    {
+      "text": "data",
+      "position": [
+        875,
+        384
+      ],
+      "size": [
+        20,
+        8
+      ],
+      "confidence": 91
+    },
+    {
+      "text": "fetch",
+      "position": [
+        901,
+        374
+      ],
+      "size": [
+        23,
+        28
+      ],
+      "confidence": 49
+    },
+    {
+      "text": "managersy",
+      "position": [
+        925,
+        386
+      ],
+      "size": [
+        62,
+        8
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "+6-6*",
+      "position": [
+        994,
+        384
+      ],
+      "size": [
+        35,
+        8
+      ],
+      "confidence": 28
+    },
+    {
+      "text": "v",
+      "position": [
+        1867,
+        384
+      ],
+      "size": [
+        8,
+        7
+      ],
+      "confidence": 85
+    },
+    {
+      "text": "From",
+      "position": [
+        857,
+        401
+      ],
+      "size": [
+        27,
+        8
+      ],
+      "confidence": 12
+    },
+    {
+      "text": "vtuaaties.ata.aata_retcn_uTais",
+      "position": [
+        890,
+        401
+      ],
+      "size": [
+        204,
+        8
+      ],
+      "confidence": 15
+    },
+    {
+      "text": "uport",
+      "position": [
+        1102,
+        401
+      ],
+      "size": [
+        39,
+        8
+      ],
+      "confidence": 13
+    },
+    {
+      "text": "vataretcnutais",
+      "position": [
+        1148,
+        401
+      ],
+      "size": [
+        91,
+        6
+      ],
+      "confidence": 45
+    },
+    {
+      "text": "from",
+      "position": [
+        857,
+        415
+      ],
+      "size": [
+        27,
+        10
+      ],
+      "confidence": 90
+    },
+    {
+      "text": "Data_Processing.main_indicators",
+      "position": [
+        890,
+        414
+      ],
+      "size": [
+        204,
+        11
+      ],
+      "confidence": 70
+    },
+    {
+      "text": "import",
+      "position": [
+        1102,
+        414
+      ],
+      "size": [
+        39,
+        11
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "apply_all_indicators",
+      "position": [
+        1148,
+        414
+      ],
+      "size": [
+        131,
+        11
+      ],
+      "confidence": 68
+    },
+    {
+      "text": "from",
+      "position": [
+        857,
+        431
+      ],
+      "size": [
+        27,
+        10
+      ],
+      "confidence": 88
+    },
+    {
+      "text": "Utilities.db.sql_data_handler",
+      "position": [
+        890,
+        430
+      ],
+      "size": [
+        191,
+        11
+      ],
+      "confidence": 65
+    },
+    {
+      "text": "import",
+      "position": [
+        1089,
+        430
+      ],
+      "size": [
+        39,
+        11
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "DataHandler",
+      "position": [
+        1135,
+        431
+      ],
+      "size": [
+        72,
+        8
+      ],
+      "confidence": 37
+    },
+    {
+      "text": "#",
+      "position": [
+        1220,
+        431
+      ],
+      "size": [
+        7,
+        8
+      ],
+      "confidence": 37
+    },
+    {
+      "text": "Corrected",
+      "position": [
+        1234,
+        431
+      ],
+      "size": [
+        59,
+        8
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "absolute",
+      "position": [
+        1300,
+        431
+      ],
+      "size": [
+        51,
+        8
+      ],
+      "confidence": 87
+    },
+    {
+      "text": "import",
+      "position": [
+        1360,
+        431
+      ],
+      "size": [
+        38,
+        10
+      ],
+      "confidence": 89
+    },
+    {
+      "text": "fron",
+      "position": [
+        857,
+        447
+      ],
+      "size": [
+        27,
+        10
+      ],
+      "confidence": 68
+    },
+    {
+      "text": "trading",
+      "position": [
+        890,
+        436
+      ],
+      "size": [
+        47,
+        28
+      ],
+      "confidence": 83
+    },
+    {
+      "text": "robet.utils.ai.ai_utils",
+      "position": [
+        944,
+        446
+      ],
+      "size": [
+        150,
+        11
+      ],
+      "confidence": 37
+    },
+    {
+      "text": "imort",
+      "position": [
+        1102,
+        446
+      ],
+      "size": [
+        39,
+        11
+      ],
+      "confidence": 87
+    },
+    {
+      "text": "ATUtils",
+      "position": [
+        1147,
+        446
+      ],
+      "size": [
+        46,
+        9
+      ],
+      "confidence": 65
+    },
+    {
+      "text": "from",
+      "position": [
+        857,
+        463
+      ],
+      "size": [
+        27,
+        10
+      ],
+      "confidence": 64
+    },
+    {
+      "text": "trading",
+      "position": [
+        890,
+        453
+      ],
+      "size": [
+        47,
+        28
+      ],
+      "confidence": 42
+    },
+    {
+      "text": "robot-utils.config",
+      "position": [
+        944,
+        453
+      ],
+      "size": [
+        119,
+        28
+      ],
+      "confidence": 42
+    },
+    {
+      "text": "handling.config",
+      "position": [
+        1070,
+        453
+      ],
+      "size": [
+        98,
+        28
+      ],
+      "confidence": 64
+    },
+    {
+      "text": "manager",
+      "position": [
+        1175,
+        453
+      ],
+      "size": [
+        45,
+        28
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "import",
+      "position": [
+        1227,
+        462
+      ],
+      "size": [
+        39,
+        11
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "ConfigManager",
+      "position": [
+        1273,
+        462
+      ],
+      "size": [
+        86,
+        11
+      ],
+      "confidence": 5
+    },
+    {
+      "text": "from",
+      "position": [
+        857,
+        479
+      ],
+      "size": [
+        27,
+        10
+      ],
+      "confidence": 75
+    },
+    {
+      "text": "trading",
+      "position": [
+        890,
+        469
+      ],
+      "size": [
+        47,
+        28
+      ],
+      "confidence": 31
+    },
+    {
+      "text": "robot-utils.config",
+      "position": [
+        944,
+        469
+      ],
+      "size": [
+        119,
+        28
+      ],
+      "confidence": 31
+    },
+    {
+      "text": "handling-logging",
+      "position": [
+        1070,
+        469
+      ],
+      "size": [
+        105,
+        28
+      ],
+      "confidence": 77
+    },
+    {
+      "text": "setup",
+      "position": [
+        1182,
+        469
+      ],
+      "size": [
+        31,
+        28
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "import",
+      "position": [
+        1220,
+        478
+      ],
+      "size": [
+        40,
+        11
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "setup_logging",
+      "position": [
+        1267,
+        478
+      ],
+      "size": [
+        85,
+        11
+      ],
+      "confidence": 49
+    },
+    {
+      "text": "from",
+      "position": [
+        857,
+        495
+      ],
+      "size": [
+        27,
+        10
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "trading",
+      "position": [
+        890,
+        484
+      ],
+      "size": [
+        47,
+        28
+      ],
+      "confidence": 87
+    },
+    {
+      "text": "robot-utils.data.data_fetch_utils",
+      "position": [
+        943,
+        494
+      ],
+      "size": [
+        217,
+        11
+      ],
+      "confidence": 52
+    },
+    {
+      "text": "import",
+      "position": [
+        1168,
+        494
+      ],
+      "size": [
+        39,
+        11
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "DataFetchUtils",
+      "position": [
+        1213,
+        494
+      ],
+      "size": [
+        92,
+        9
+      ],
+      "confidence": 76
+    },
+    {
+      "text": "from",
+      "position": [
+        857,
+        511
+      ],
+      "size": [
+        27,
+        10
+      ],
+      "confidence": 83
+    },
+    {
+      "text": "trading",
+      "position": [
+        890,
+        500
+      ],
+      "size": [
+        47,
+        28
+      ],
+      "confidence": 49
+    },
+    {
+      "text": "robot.data.processors.main_indicators",
+      "position": [
+        943,
+        510
+      ],
+      "size": [
+        243,
+        11
+      ],
+      "confidence": 49
+    },
+    {
+      "text": "import",
+      "position": [
+        1194,
+        510
+      ],
+      "size": [
+        39,
+        11
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "apply_all_indicators",
+      "position": [
+        1240,
+        510
+      ],
+      "size": [
+        131,
+        11
+      ],
+      "confidence": 83
+    },
+    {
+      "text": "from",
+      "position": [
+        857,
+        527
+      ],
+      "size": [
+        27,
+        10
+      ],
+      "confidence": 75
+    },
+    {
+      "text": "trading",
+      "position": [
+        890,
+        517
+      ],
+      "size": [
+        47,
+        28
+      ],
+      "confidence": 88
+    },
+    {
+      "text": "robot-utils.db.sql_data_handler",
+      "position": [
+        943,
+        526
+      ],
+      "size": [
+        204,
+        11
+      ],
+      "confidence": 66
+    },
+    {
+      "text": "import",
+      "position": [
+        1154,
+        526
+      ],
+      "size": [
+        40,
+        11
+      ],
+      "confidence": 54
+    },
+    {
+      "text": "DataHandler",
+      "position": [
+        1200,
+        527
+      ],
+      "size": [
+        73,
+        8
+      ],
+      "confidence": 24
+    },
+    {
+      "text": "#",
+      "position": [
+        1286,
+        527
+      ],
+      "size": [
+        7,
+        8
+      ],
+      "confidence": 24
+    },
+    {
+      "text": "Corrected",
+      "position": [
+        1299,
+        527
+      ],
+      "size": [
+        60,
+        8
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "absolute",
+      "position": [
+        1365,
+        527
+      ],
+      "size": [
+        53,
+        8
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "import",
+      "position": [
+        1425,
+        526
+      ],
+      "size": [
+        39,
+        11
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "Now",
+      "position": [
+        849,
+        578
+      ],
+      "size": [
+        26,
+        9
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "let",
+      "position": [
+        879,
+        577
+      ],
+      "size": [
+        14,
+        10
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "me",
+      "position": [
+        897,
+        580
+      ],
+      "size": [
+        17,
+        7
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "create",
+      "position": [
+        918,
+        578
+      ],
+      "size": [
+        35,
+        9
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "a",
+      "position": [
+        957,
+        580
+      ],
+      "size": [
+        6,
+        7
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "more",
+      "position": [
+        967,
+        580
+      ],
+      "size": [
+        30,
+        7
+      ],
+      "confidence": 89
+    },
+    {
+      "text": "comprehensive",
+      "position": [
+        1001,
+        577
+      ],
+      "size": [
+        86,
+        13
+      ],
+      "confidence": 89
+    },
+    {
+      "text": "fix",
+      "position": [
+        1091,
+        577
+      ],
+      "size": [
+        13,
+        10
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "for",
+      "position": [
+        1108,
+        577
+      ],
+      "size": [
+        16,
+        10
+      ],
+      "confidence": 79
+    },
+    {
+      "text": "all",
+      "position": [
+        1128,
+        577
+      ],
+      "size": [
+        12,
+        10
+      ],
+      "confidence": 79
+    },
+    {
+      "text": "the",
+      "position": [
+        1144,
+        577
+      ],
+      "size": [
+        19,
+        10
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "remaining",
+      "position": [
+        1167,
+        577
+      ],
+      "size": [
+        56,
+        13
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "import",
+      "position": [
+        1228,
+        578
+      ],
+      "size": [
+        38,
+        12
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "issues:",
+      "position": [
+        1270,
+        580
+      ],
+      "size": [
+        36,
+        7
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "fix",
+      "position": [
+        875,
+        602
+      ],
+      "size": [
+        11,
+        29
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "remaining",
+      "position": [
+        886,
+        615
+      ],
+      "size": [
+        66,
+        8
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "i",
+      "position": [
+        942,
+        602
+      ],
+      "size": [
+        13,
+        29
+      ],
+      "confidence": 56
+    },
+    {
+      "text": "original_content",
+      "position": [
+        933,
+        643
+      ],
+      "size": [
+        104,
+        11
+      ],
+      "confidence": 70
+    },
+    {
+      "text": "=",
+      "position": [
+        1045,
+        647
+      ],
+      "size": [
+        6,
+        3
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "content",
+      "position": [
+        1058,
+        644
+      ],
+      "size": [
+        45,
+        8
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "#",
+      "position": [
+        933,
+        676
+      ],
+      "size": [
+        6,
+        7
+      ],
+      "confidence": 90
+    },
+    {
+      "text": "Apply",
+      "position": [
+        946,
+        676
+      ],
+      "size": [
+        32,
+        10
+      ],
+      "confidence": 82
+    },
+    {
+      "text": "additional",
+      "position": [
+        986,
+        675
+      ],
+      "size": [
+        63,
+        9
+      ],
+      "confidence": 54
+    },
+    {
+      "text": "repLacenent:",
+      "position": [
+        1059,
+        676
+      ],
+      "size": [
+        71,
+        10
+      ],
+      "confidence": 14
+    },
+    {
+      "text": "\u2018for",
+      "position": [
+        931,
+        692
+      ],
+      "size": [
+        21,
+        10
+      ],
+      "confidence": 73
+    },
+    {
+      "text": "old",
+      "position": [
+        959,
+        681
+      ],
+      "size": [
+        19,
+        29
+      ],
+      "confidence": 17
+    },
+    {
+      "text": "pattern,",
+      "position": [
+        978,
+        692
+      ],
+      "size": [
+        58,
+        10
+      ],
+      "confidence": 17
+    },
+    {
+      "text": "new_pattern",
+      "position": [
+        1045,
+        692
+      ],
+      "size": [
+        71,
+        10
+      ],
+      "confidence": 86
+    },
+    {
+      "text": "in",
+      "position": [
+        1124,
+        691
+      ],
+      "size": [
+        13,
+        9
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "additional_replacenents.itens():",
+      "position": [
+        1144,
+        691
+      ],
+      "size": [
+        208,
+        11
+      ],
+      "confidence": 82
+    },
+    {
+      "text": "content",
+      "position": [
+        959,
+        708
+      ],
+      "size": [
+        45,
+        8
+      ],
+      "confidence": 88
+    },
+    {
+      "text": "=",
+      "position": [
+        1012,
+        711
+      ],
+      "size": [
+        6,
+        3
+      ],
+      "confidence": 88
+    },
+    {
+      "text": "content.replace(old",
+      "position": [
+        1025,
+        698
+      ],
+      "size": [
+        124,
+        29
+      ],
+      "confidence": 9
+    },
+    {
+      "text": "pattern,",
+      "position": [
+        1155,
+        698
+      ],
+      "size": [
+        53,
+        29
+      ],
+      "confidence": 9
+    },
+    {
+      "text": "new_pattern)",
+      "position": [
+        1217,
+        707
+      ],
+      "size": [
+        77,
+        11
+      ],
+      "confidence": 89
+    },
+    {
+      "text": "#",
+      "position": [
+        932,
+        740
+      ],
+      "size": [
+        7,
+        8
+      ],
+      "confidence": 28
+    },
+    {
+      "text": "Write",
+      "position": [
+        945,
+        739
+      ],
+      "size": [
+        33,
+        9
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "back",
+      "position": [
+        986,
+        740
+      ],
+      "size": [
+        25,
+        8
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "if",
+      "position": [
+        1019,
+        739
+      ],
+      "size": [
+        12,
+        9
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "modified",
+      "position": [
+        1038,
+        739
+      ],
+      "size": [
+        52,
+        9
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "if",
+      "position": [
+        933,
+        755
+      ],
+      "size": [
+        12,
+        9
+      ],
+      "confidence": 87
+    },
+    {
+      "text": "content",
+      "position": [
+        953,
+        756
+      ],
+      "size": [
+        45,
+        8
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "!=",
+      "position": [
+        1006,
+        746
+      ],
+      "size": [
+        12,
+        28
+      ],
+      "confidence": 92
+    },
+    {
+      "text": "original_content:",
+      "position": [
+        1025,
+        755
+      ],
+      "size": [
+        109,
+        11
+      ],
+      "confidence": 91
+    },
+    {
+      "text": "with",
+      "position": [
+        958,
+        771
+      ],
+      "size": [
+        26,
+        9
+      ],
+      "confidence": 95
+    },
+    {
+      "text": "open",
+      "position": [
+        992,
+        774
+      ],
+      "size": [
+        25,
+        8
+      ],
+      "confidence": 72
+    },
+    {
+      "text": "py",
+      "position": [
+        1024,
+        762
+      ],
+      "size": [
+        14,
+        28
+      ],
+      "confidence": 34
+    },
+    {
+      "text": "file,",
+      "position": [
+        1045,
+        771
+      ],
+      "size": [
+        31,
+        11
+      ],
+      "confidence": 34
+    },
+    {
+      "text": "\u2018w',",
+      "position": [
+        1086,
+        772
+      ],
+      "size": [
+        23,
+        10
+      ],
+      "confidence": 19
+    },
+    {
+      "text": "en",
+      "position": [
+        1117,
+        774
+      ],
+      "size": [
+        13,
+        6
+      ],
+      "confidence": 94
+    },
+    {
+      "text": "@",
+      "position": [
+        853,
+        925
+      ],
+      "size": [
+        10,
+        11
+      ],
+      "confidence": 93
+    },
+    {
+      "text": "=",
+      "position": [
+        868,
+        920
+      ],
+      "size": [
+        9,
+        21
+      ],
+      "confidence": 10
+    },
+    {
+      "text": "Active",
+      "position": [
+        878,
+        926
+      ],
+      "size": [
+        61,
+        9
+      ],
+      "confidence": 83
+    },
+    {
+      "text": "Tab",
+      "position": [
+        924,
+        920
+      ],
+      "size": [
+        18,
+        21
+      ],
+      "confidence": 83
+    },
+    {
+      "text": "SAEGHAA)",
+      "position": [
+        854,
+        986
+      ],
+      "size": [
+        82,
+        10
+      ],
+      "confidence": 0
+    },
+    {
+      "text": "Auto",
+      "position": [
+        950,
+        987
+      ],
+      "size": [
+        23,
+        8
+      ],
+      "confidence": 79
+    },
+    {
+      "text": "\u00b0",
+      "position": [
+        1883,
+        981
+      ],
+      "size": [
+        19,
+        19
+      ],
+      "confidence": 53
+    },
+    {
+      "text": "CursorTab",
+      "position": [
+        882,
+        1025
+      ],
+      "size": [
+        54,
+        9
+      ],
+      "confidence": 56
+    },
+    {
+      "text": "$",
+      "position": [
+        957,
+        1025
+      ],
+      "size": [
+        5,
+        8
+      ],
+      "confidence": 43
+    },
+    {
+      "text": "DaDudeKC",
+      "position": [
+        972,
+        1025
+      ],
+      "size": [
+        145,
+        12
+      ],
+      "confidence": 85
+    },
+    {
+      "text": "(10",
+      "position": [
+        1030,
+        1016
+      ],
+      "size": [
+        17,
+        25
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "months",
+      "position": [
+        1053,
+        1016
+      ],
+      "size": [
+        38,
+        25
+      ],
+      "confidence": 96
+    },
+    {
+      "text": "ago)",
+      "position": [
+        1096,
+        1016
+      ],
+      "size": [
+        28,
+        25
+      ],
+      "confidence": 73
+    },
+    {
+      "text": "@apiopenaicom",
+      "position": [
+        1134,
+        1023
+      ],
+      "size": [
+        96,
+        14
+      ],
+      "confidence": 74
+    },
+    {
+      "text": "Ln",
+      "position": [
+        1252,
+        1025
+      ],
+      "size": [
+        20,
+        9
+      ],
+      "confidence": 59
+    },
+    {
+      "text": "8,",
+      "position": [
+        1265,
+        1016
+      ],
+      "size": [
+        11,
+        25
+      ],
+      "confidence": 59
+    },
+    {
+      "text": "Col",
+      "position": [
+        1280,
+        1016
+      ],
+      "size": [
+        17,
+        25
+      ],
+      "confidence": 89
+    },
+    {
+      "text": "1",
+      "position": [
+        1301,
+        1025
+      ],
+      "size": [
+        3,
+        9
+      ],
+      "confidence": 60
+    },
+    {
+      "text": "(183",
+      "position": [
+        1310,
+        1025
+      ],
+      "size": [
+        21,
+        11
+      ],
+      "confidence": 60
+    },
+    {
+      "text": "selected)",
+      "position": [
+        1336,
+        1025
+      ],
+      "size": [
+        46,
+        11
+      ],
+      "confidence": 69
+    },
+    {
+      "text": "Spaces:4_UTF-8",
+      "position": [
+        1399,
+        1025
+      ],
+      "size": [
+        95,
+        12
+      ],
+      "confidence": 27
+    },
+    {
+      "text": "{3",
+      "position": [
+        1553,
+        1024
+      ],
+      "size": [
+        11,
+        11
+      ],
+      "confidence": 89
+    },
+    {
+      "text": "Python",
+      "position": [
+        1572,
+        1025
+      ],
+      "size": [
+        35,
+        12
+      ],
+      "confidence": 59
+    },
+    {
+      "text": "3.11.9",
+      "position": [
+        1623,
+        1016
+      ],
+      "size": [
+        30,
+        26
+      ],
+      "confidence": 59
+    },
+    {
+      "text": "64-bit",
+      "position": [
+        1657,
+        1016
+      ],
+      "size": [
+        31,
+        26
+      ],
+      "confidence": 75
+    },
+    {
+      "text": "fay",
+      "position": [
+        1894,
+        1023
+      ],
+      "size": [
+        8,
+        12
+      ],
+      "confidence": 69
+    },
+    {
+      "text": "Sea",
+      "position": [
+        1796,
+        1046
+      ],
+      "size": [
+        63,
+        10
+      ],
+      "confidence": 10
+    },
+    {
+      "text": "e\u00aeFzoOe",
+      "position": [
+        848,
+        1033
+      ],
+      "size": [
+        169,
+        47
+      ],
+      "confidence": 29
+    },
+    {
+      "text": "AS",
+      "position": [
+        1713,
+        1040
+      ],
+      "size": [
+        203,
+        40
+      ],
+      "confidence": 36
+    },
+    {
+      "text": "SEM",
+      "position": [
+        1815,
+        1036
+      ],
+      "size": [
+        45,
+        44
+      ],
+      "confidence": 34
+    },
+    {
+      "text": "|",
+      "position": [
+        1888,
+        1036
+      ],
+      "size": [
+        30,
+        44
+      ],
+      "confidence": 23
+    }
+  ]
+}

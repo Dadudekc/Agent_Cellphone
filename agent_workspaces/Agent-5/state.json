@@ -1,0 +1,18 @@
+{
+  "state": "syncing",
+  "last_message": {
+    "type": "fsm_request",
+    "from": "Agent-5",
+    "to": "Agent-5",
+    "workflow": "default",
+    "agents": [
+      "Agent-1",
+      "Agent-2",
+      "Agent-3",
+      "Agent-4"
+    ],
+    "timestamp": "2025-08-12T10:41:01"
+  },
+  "updated": "2025-08-12T10:41:01",
+  "schema_version": 1
+}

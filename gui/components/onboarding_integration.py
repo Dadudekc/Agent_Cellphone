@@ -88,7 +88,7 @@ class OnboardingIntegration:
                     "completed_steps": [],
                     "current_step": None,
                     "start_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "completion_date": null,
+                    "completion_date": None,
                     "verification_passed": False,
                     "checklist": {
                         "quick_start_completed": False,

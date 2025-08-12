@@ -6,8 +6,8 @@
         "y": 176
       },
       "input_box": {
-        "x": -1283,
-        "y": 1012
+        "x": -1049,
+        "y": 727
       }
     },
     "Agent-2": {
@@ -16,16 +16,20 @@
         "y": 173
       },
       "input_box": {
-        "x": -370,
-        "y": 981
+        "x": -374,
+        "y": 465
       }
     }
   },
   "4-agent": {
     "Agent-1": {
       "input_box": {
-        "x": -1203,
-        "y": 496
+        "x": -1266,
+        "y": 490
+      },
+      "starter_location_box": {
+        "x": -1266,
+        "y": 490
       }
     },
     "Agent-2": {
@@ -42,8 +46,12 @@
     },
     "Agent-4": {
       "input_box": {
-        "x": -331,
-        "y": 1017
+        "x": -401,
+        "y": 1004
+      },
+      "starter_location_box": {
+        "x": -401,
+        "y": 1004
       }
     }
   },
@@ -74,8 +82,12 @@
     },
     "Agent-5": {
       "input_box": {
-        "x": 625,
-        "y": 440
+        "x": 1514,
+        "y": 945
+      },
+      "starter_location_box": {
+        "x": 1514,
+        "y": 945
       }
     },
     "Agent-6": {
@@ -94,6 +106,58 @@
       "input_box": {
         "x": 1594,
         "y": 959
+      }
+    }
+  },
+  "5-agent": {
+    "Agent-1": {
+      "input_box": {
+        "x": -1395,
+        "y": 480
+      },
+      "starter_location_box": {
+        "x": -1319,
+        "y": 173
+      }
+    },
+    "Agent-2": {
+      "input_box": {
+        "x": -313,
+        "y": 488
+      },
+      "starter_location_box": {
+        "x": -352,
+        "y": 175
+      }
+    },
+    "Agent-3": {
+      "input_box": {
+        "x": -1300,
+        "y": 1010
+      },
+      "starter_location_box": {
+        "x": -1309,
+        "y": 696
+      }
+    },
+    "Agent-4": {
+      "input_box": {
+        "x": -358,
+        "y": 1004
+      },
+      "starter_location_box": {
+        "x": -422,
+        "y": 699
+      }
+    },
+    "Agent-5": {
+      "input_box": {
+        "x": 1512,
+        "y": 943
+      },
+      "starter_location_box": {
+        "x": 1563,
+        "y": 116
       }
     }
   }

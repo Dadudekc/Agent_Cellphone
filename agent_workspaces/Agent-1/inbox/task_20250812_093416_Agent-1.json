@@ -1,0 +1,17 @@
+{
+  "type": "task",
+  "from": "Agent-5",
+  "to": "Agent-1",
+  "timestamp": "2025-08-12T09:34:16",
+  "task_id": "tp-validate-and-tighten-tests",
+  "repo": "trading-platform",
+  "repo_path": "D:/repositories/trading-platform",
+  "intent": "Run validate.ps1 and add edge-case tests for file_hash.py",
+  "acceptance_criteria": [
+    "PR includes new tests that pass locally",
+    "Attach validate.ps1 output and pytest summary",
+    "Link to commit/PR diff"
+  ],
+  "evidence_required": "Link to commit/PR and test/build output.",
+  "instructions": "Submit fsm_update to Agent-5 with task_id, state, summary, evidence."
+}

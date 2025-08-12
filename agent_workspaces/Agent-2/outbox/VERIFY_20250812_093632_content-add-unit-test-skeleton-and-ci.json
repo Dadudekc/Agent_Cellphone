@@ -1,0 +1,16 @@
+{
+  "task_id": "content-add-unit-test-skeleton-and-ci",
+  "repo": "content",
+  "state": "completed",
+  "commit": "675c2fe26b569cef9213ee195acc346bad051f0b",
+  "acceptance_criteria": [
+    "tests directory contains at least one passing test",
+    "workflow runs validation and tests",
+    "local validate.ps1 exits 0"
+  ],
+  "results": {
+    "pytest": "..                                                                       [100%]\r\n2 passed in 0.44s\r\n",
+    "validate": "==> content validation start\r\nValidation succeeded.\r\n"
+  },
+  "timestamp": "2025-08-12T09:36:32"
+}

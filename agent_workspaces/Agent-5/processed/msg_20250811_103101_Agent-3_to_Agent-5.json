@@ -1,0 +1,14 @@
+{
+  "type": "sync",
+  "from": "Agent-3",
+  "to": "Agent-5",
+  "timestamp": "2025-08-11T10:31:01.9519848-05:00",
+  "topic": "fsm_update",
+  "summary": "Update from Agent-3",
+  "details": {
+    "task_id": "sample__001",
+    "state": "executing",
+    "summary": "Working on assigned repo improvements (tests/build/lint/docs)",
+    "evidence": []
+  }
+}

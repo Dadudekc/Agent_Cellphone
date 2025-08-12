@@ -1,8 +1,13 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFrame, QLabel, QPushButton, QGroupBox, QProgressBar
+from PyQt5.QtWidgets import (
+    QWidget, QVBoxLayout, QHBoxLayout, QFrame, QLabel, QPushButton, QGroupBox,
+    QProgressBar, QLineEdit, QTextEdit, QComboBox
+)
 from PyQt5.QtCore import Qt, QTimer
 import json
 import os
 from pathlib import Path
+import subprocess
+import sys
 
 # Import onboarding integration
 try:
@@ -131,6 +136,10 @@ class AgentPanel(QWidget):
         self.last_update = "never"
         self.onboarding_progress = 0
         self.onboarding_status = "not_started"
+        # Contract UI state
+        self.contract_task_id_input: QLineEdit | None = None
+        self.contract_state_select: QComboBox | None = None
+        self.contract_evidence_input: QTextEdit | None = None
         self.init_ui()
         
         # Set up auto-refresh timer for onboarding status
@@ -296,33 +305,60 @@ class AgentPanel(QWidget):
             }
         """)
         controls_layout = QVBoxLayout(controls_group)
-        controls = [
+
+        # Row 1: quick actions
+        row1 = QHBoxLayout()
+        for text, tooltip, callback in [
             ("🔍 Ping", "Test if agent is responsive", self.ping_agent),
-            ("📊 Status", "Read agent's status.json file", self.get_status),
-            ("▶️ Resume", "Tell agent to resume operations", self.resume_agent),
-            ("⏸️ Pause", "Tell agent to pause operations", self.pause_agent),
-            ("🎯 Task", "Send a specific task to agent", self.assign_task)
-        ]
-        for text, tooltip, callback in controls:
+            ("📊 Status", "Read agent status", self.get_status),
+            ("▶️ Resume", "Resume operations", self.resume_agent),
+            ("⏸️ Pause", "Pause operations", self.pause_agent),
+        ]:
             btn = QPushButton(text)
             btn.setToolTip(tooltip)
             btn.clicked.connect(callback)
             btn.setStyleSheet("""
-                QPushButton {
-                    background-color: #34495E;
-                    color: white;
-                    border-radius: 6px;
-                    padding: 8px;
-                    font-weight: bold;
-                    text-align: left;
-                    font-size: 11px;
-                    margin: 1px;
-                }
-                QPushButton:hover {
-                    background-color: #2C3E50;
-                }
+                QPushButton { background-color: #34495E; color: white; border-radius: 6px; padding: 8px; font-weight: bold; }
+                QPushButton:hover { background-color: #2C3E50; }
             """)
-            controls_layout.addWidget(btn)
+            row1.addWidget(btn)
+        controls_layout.addLayout(row1)
+
+        # Contract update section
+        contract_group = QGroupBox("Contract Update")
+        contract_group.setStyleSheet("""
+            QGroupBox { color: white; border: 2px solid #34495E; border-radius: 6px; margin-top: 8px; padding-top: 8px; }
+        """)
+        cg = QVBoxLayout(contract_group)
+        # Task ID input
+        self.contract_task_id_input = QLineEdit()
+        self.contract_task_id_input.setPlaceholderText("task_id (e.g., repo-task-slug)")
+        self.contract_task_id_input.setStyleSheet("QLineEdit { background-color: #2C3E50; color: #ECF0F1; border: 1px solid #34495E; border-radius: 4px; padding: 6px; }")
+        cg.addWidget(self.contract_task_id_input)
+        # State selector
+        self.contract_state_select = QComboBox()
+        self.contract_state_select.addItems(["ready", "executing", "syncing", "verifying", "done", "blocked"])
+        self.contract_state_select.setStyleSheet("QComboBox { background-color: #2C3E50; color: #ECF0F1; border: 1px solid #34495E; border-radius: 4px; padding: 4px; }")
+        cg.addWidget(self.contract_state_select)
+        # Evidence input
+        self.contract_evidence_input = QTextEdit()
+        self.contract_evidence_input.setPlaceholderText("evidence (links, notes)")
+        self.contract_evidence_input.setFixedHeight(60)
+        self.contract_evidence_input.setStyleSheet("QTextEdit { background-color: #2C3E50; color: #ECF0F1; border: 1px solid #34495E; border-radius: 4px; }")
+        cg.addWidget(self.contract_evidence_input)
+        # Buttons row
+        row2 = QHBoxLayout()
+        for label, state in [("Start", "executing"), ("Sync", "syncing"), ("Verify", "verifying"), ("Complete", "done")]:
+            b = QPushButton(label)
+            b.setStyleSheet("QPushButton { background-color: #16A085; color: white; border-radius: 6px; padding: 6px 10px; font-weight: bold; } QPushButton:hover { background-color: #138D75; }")
+            b.clicked.connect(lambda _, s=state: self.send_contract_update(s))
+            row2.addWidget(b)
+        send_btn = QPushButton("Send Update")
+        send_btn.setStyleSheet("QPushButton { background-color: #27AE60; color: white; border-radius: 6px; padding: 6px 10px; font-weight: bold; } QPushButton:hover { background-color: #229954; }")
+        send_btn.clicked.connect(self.send_selected_update)
+        row2.addWidget(send_btn)
+        cg.addLayout(row2)
+        controls_layout.addWidget(contract_group)
         container_layout.addWidget(controls_group)
         layout.addWidget(container)
 
@@ -416,12 +452,71 @@ class AgentPanel(QWidget):
 
     # Agent control methods (to be connected in main GUI)
     def ping_agent(self):
-        pass
+        self._send_note("ping", "ping")
     def get_status(self):
-        pass
+        # Read state/status files if present
+        try:
+            agent_fs_id = self._agent_fs_id()
+            state_file = Path(f"agent_workspaces/{agent_fs_id}/state.json")
+            status_file = Path(f"agent_workspaces/{agent_fs_id}/status.json")
+            state = json.loads(state_file.read_text(encoding="utf-8")) if state_file.exists() else {}
+            status = json.loads(status_file.read_text(encoding="utf-8")) if status_file.exists() else {}
+            print(f"[STATUS] {self.agent_id}: state={state} status={status}")
+        except Exception as e:
+            print(f"[STATUS_ERR] {self.agent_id}: {e}")
     def resume_agent(self):
-        pass
+        self._send_note("resume", "resume operations")
     def pause_agent(self):
-        pass
+        self._send_note("note", "pause operations")
     def assign_task(self):
-        pass 
+        self._send_note("task", "focus highest leverage task from TASK_LIST.md")
+
+    def send_contract_update(self, state: str) -> None:
+        task_id = (self.contract_task_id_input.text().strip() if self.contract_task_id_input else "")
+        evidence = (self.contract_evidence_input.toPlainText().strip() if self.contract_evidence_input else "")
+        if not task_id:
+            print(f"[CONTRACT] {self.agent_id}: missing task_id")
+            return
+        details = {"task_id": task_id, "state": state, "evidence": [evidence] if evidence else []}
+        summary = f"{self.agent_id} contract update: {task_id} -> {state}"
+        self._send_sync(to_agent="Agent-5", msg_type="sync", topic="contract_update", summary=summary, details=details)
+
+    def send_selected_update(self) -> None:
+        state = self.contract_state_select.currentText() if self.contract_state_select else "executing"
+        self.send_contract_update(state)
+
+    def _agent_label(self) -> str:
+        # Convert gui id like 'agent-1' to 'Agent-1'
+        parts = self.agent_id.split('-')
+        return f"{parts[0].capitalize()}-{parts[1]}" if len(parts) == 2 else self.agent_id
+
+    def _agent_fs_id(self) -> str:
+        # filesystem uses lowercase 'agent-1'
+        return self.agent_id
+
+    def _send_note(self, note_type: str, text: str) -> None:
+        summary = f"{self._agent_label()} {text}"
+        self._send_sync(to_agent=self._agent_label(), msg_type="note", topic=note_type, summary=summary, details={})
+
+    def _send_sync(self, to_agent: str, msg_type: str, topic: str, summary: str, details: dict) -> None:
+        """Use send-sync.ps1 to send a JSON message to an agent inbox."""
+        try:
+            script = os.path.join("overnight_runner", "tools", "send-sync.ps1")
+            payload_path = None
+            if details:
+                import tempfile
+                payload_path = Path(tempfile.gettempdir()) / f"payload_{os.getpid()}_{self.agent_id}.json"
+                payload_path.write_text(json.dumps(details, ensure_ascii=False), encoding="utf-8")
+            cmd = [
+                "pwsh", "-NoLogo", "-NoProfile", "-File", script,
+                "-To", to_agent,
+                "-Type", msg_type,
+                "-Topic", topic,
+                "-Summary", summary,
+                "-From", self._agent_label(),
+            ]
+            if payload_path:
+                cmd += ["-PayloadPath", str(payload_path)]
+            subprocess.run(cmd, check=False, cwd=os.getcwd())
+        except Exception as e:
+            print(f"[SEND_ERR] {self.agent_id}: {e}")

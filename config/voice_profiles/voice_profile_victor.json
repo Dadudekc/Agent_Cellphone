@@ -1,0 +1,9 @@
+{
+  "user_name": "Victor",
+  "voice_samples": [
+    {
+      "duration": 3.5062131519274375,
+      "sample_rate": 44100,
+      "amplitude_mean": 232.49344215645695,
+      "amplitude_std": 393.7920132420876,
+      "zero_crossings": 

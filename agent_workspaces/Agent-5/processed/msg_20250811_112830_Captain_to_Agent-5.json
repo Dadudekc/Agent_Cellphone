@@ -1,0 +1,10 @@
+{
+  "type": "broadcast",
+  "from": "Captain",
+  "to": "Agent-5",
+  "timestamp": "2025-08-11T11:28:30-05:00",
+  "message": "BROADCAST TEST: All 8 agents should receive this message simultaneously!"
+}
+
+
+

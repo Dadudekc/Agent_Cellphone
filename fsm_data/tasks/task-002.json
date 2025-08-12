@@ -1,0 +1,6 @@
+{
+  "task_id": "task-002",
+  "repo": "trading-platform",
+  "intent": "add pre-commit (flake8/black) and fix top lint errors",
+  "state": "new"
+}

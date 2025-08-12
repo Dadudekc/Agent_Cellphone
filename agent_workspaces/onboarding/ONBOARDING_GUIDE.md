@@ -10,6 +10,17 @@ Complete onboarding process for new agents in the Dream.OS multi-agent system.
 4. **Integration Testing**: Verify agent functionality within the system
 5. **Performance Optimization**: Ensure optimal agent performance
 
+## 🧭 Agent environment model (Cursor + shared repo)
+- **Cursor-based agents**: Each agent is a Cursor instance with its own window. Messages sent via Agent Cell Phone (ACP) are mechanically typed into these Cursor input boxes using calibrated coordinates.
+- **Shared repositories/files**: All agents work against the same checked-out repositories and file system. Treat edits as collaborative within a single workspace (no per-agent forks by default).
+- **Messaging channels**:
+  - Visible UI typing (ACP) to Cursor windows for synchronization and prompts
+  - File inbox (JSON) for silent, scriptable messages into `agent_workspaces/Agent-N/inbox/`
+- **Coordination artifacts**: Use each repo’s `TASK_LIST.md`, `status.json`, and (when present) `sprint_plan.json` to avoid duplication and track work.
+- **Concurrency etiquette**: Pull latest before editing, prefer small, verifiable edits with tests/build checks, favor reuse/refactor over duplication, and stage/commit frequently.
+- **Path conventions**: Run tools from `D:\Agent_Cellphone`. Project repositories typically live under `D:\repositories\...`; relative paths in prompts apply to the shared workspace.
+- **Access scope**: Agents may open, modify, and create files anywhere in the shared repo unless otherwise restricted by role or policy.
+
 ## 📋 Pre-Onboarding Checklist
 
 ### System Requirements

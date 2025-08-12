@@ -1,0 +1,7 @@
+{
+  "from": "Agent-3",
+  "to": "Agent-3",
+  "message": "Agent-3 verify outcomes (tests/build). If blocked by permissions, stage diffs and summarize impact + next steps for review.",
+  "command": "verify",
+  "args": {}
+}

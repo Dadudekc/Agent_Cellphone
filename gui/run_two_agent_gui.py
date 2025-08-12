@@ -1,22 +1,24 @@
 #!/usr/bin/env python3
 """
-Dream.OS Cell Phone - Two Agent GUI Launcher
-============================================
-Launcher script for the horizontal 2-agent GUI.
+Dream.OS Cell Phone - Two Agent Horizontal GUI Launcher
+=======================================================
+Simple launcher for the horizontal 2-agent GUI from project root.
 """
 
 import sys
 import os
 
-# Add the project root to the path
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, project_root)
-
 def main():
     """Launch the two agent horizontal GUI."""
     try:
+        # Add gui directory to path
+        gui_path = os.path.join(os.path.dirname(__file__), 'gui')
+        sys.path.insert(0, gui_path)
+        
         from two_agent_horizontal_gui import main as gui_main
         print("🚀 Launching Dream.OS Cell Phone - Two Agent Horizontal GUI...")
+        print("📱 Horizontal layout with Agent-1 (left) and Agent-2 (right)")
+        print("🎨 Modern v2-inspired design with clean, minimal interface")
         gui_main()
     except ImportError as e:
         print(f"❌ Import error: {e}")

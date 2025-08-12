@@ -1,0 +1,21 @@
+{
+  "tasks": {
+    "gpt-auto-ci-validate": {
+      "meta": {},
+      "validated_at": "2025-08-11T09:40:21",
+      "status": "validated",
+      "repo_path": "D:\\repositories\\gpt-automation",
+      "end_state": "CI validates on push/PR",
+      "branch": "chore/ci-validate"
+    },
+    "gpt-auto-tests": {
+      "repo_path": "D:\\repositories\\gpt-automation",
+      "branch": "chore/tests-readme",
+      "end_state": "CI runs unit tests",
+      "meta": {},
+      "status": "validated",
+      "validated_at": "2025-08-11T09:47:19"
+    }
+  },
+  "last_update": "2025-08-11T09:47:19"
+}
