@@ -126,12 +126,21 @@ def discover_repositories(root_path: str) -> List[str]:
     repos: List[str] = []
     if not os.path.isdir(root_path):
         return repos
+    # Common non-repo directories to exclude at the root
+    exclude_names = {
+        ".git", ".github", ".vscode", ".idea", ".pytest_cache", "__pycache__",
+        "node_modules", "venv", ".venv", "dist", "build", ".mypy_cache", ".ruff_cache", ".tox", ".cache"
+    }
     try:
         for name in sorted(os.listdir(root_path)):
+            if name in exclude_names or name.startswith('.'):
+                continue
             path = os.path.join(root_path, name)
             if not os.path.isdir(path):
                 continue
-            markers = [".git", "requirements.txt", "package.json", "pyproject.toml", "setup.py", ".env", "README.md"]
+            markers = [
+                ".git", "requirements.txt", "package.json", "pyproject.toml", "setup.py", ".env", "README.md"
+            ]
             if any(os.path.exists(os.path.join(path, m)) for m in markers):
                 repos.append(name)
     except Exception:
@@ -383,7 +392,11 @@ def main() -> int:
                     for agent, repos in assignments.items():
                         if not repos:
                             continue
-                        summary = ", ".join(repos)
+                        # Filter out obvious non-repo noise from assignments just in case
+                        filtered = [r for r in repos if r.lower() not in {".pytest_cache", "__pycache__", ".cache", "node_modules", "dist", "build"}]
+                        if not filtered:
+                            continue
+                        summary = ", ".join(filtered)
                         msg = (
                             f"Assignment: focus these repos tonight: {summary}. "
                             f"Objectives: reduce duplication, consolidate utilities, add tests, and commit small, verifiable improvements. "
@@ -519,7 +532,7 @@ def main() -> int:
                 content = build_tailored_message(agent, planned.tag, agent_contracts)
             else:
                 if args.plan == "single-repo-beta":
-                    repo_line = f"Focus repo: {focus_repo}. " if focus_repo else "Focus the selected repo. "
+                    repo_line = f"Focus repo: {focus_repo}. " if focus_repo else "Focus a valid repository under D:/repositories (not caches/temp). "
                     checklist = ", ".join([s.strip() for s in str(args.beta_ready_checklist).split(',') if s.strip()])
                     if planned.tag == MsgTag.RESUME:
                         content = (
