@@ -144,6 +144,17 @@ def main() -> int:
         })
         save_state(st)
 
+        # Emit a lightweight resume trigger note for runner when state moves to a done/completed state
+        try:
+            if msg_type in ("fsm_update", "verify") and st.get("state") in ("done", "completed", "ready"):
+                # Drop a small note file under communications to signal runner for immediate RESUME
+                from pathlib import Path as _P
+                signal_root = _P("D:/repositories/communications/_signals")
+                signal_root.mkdir(parents=True, exist_ok=True)
+                (signal_root / f"resume_now_{agent}.signal").write_text(_now(), encoding="utf-8")
+        except Exception:
+            pass
+
         # If a task_id present, update consolidated contracts file and optionally patch TASK_LIST.md
         try:
             if "task_id" in data:

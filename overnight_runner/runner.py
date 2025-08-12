@@ -26,14 +26,14 @@ class PlannedMessage:
 
 def build_message_plan(plan: str) -> List[PlannedMessage]:
     plan = plan.lower()
-    # Single‑repo, beta‑readiness focused cadence
+    # Single-repo, beta-readiness focused cadence
     if plan == "single-repo-beta":
         return [
-            PlannedMessage(MsgTag.RESUME, "{agent} resume: focus the target repo to reach beta‑ready."),
-            PlannedMessage(MsgTag.TASK,   "{agent} implement one concrete step toward beta‑ready in the focus repo."),
+            PlannedMessage(MsgTag.RESUME, "{agent} resume: focus the target repo to reach beta-ready."),
+            PlannedMessage(MsgTag.TASK,   "{agent} implement one concrete step toward beta-ready in the focus repo."),
             PlannedMessage(MsgTag.COORDINATE, "{agent} coordinate to avoid duplication; declare your focus area in the repo."),
-            PlannedMessage(MsgTag.SYNC,   "{agent} 10‑min sync: status vs beta‑ready checklist for the focus repo; next verifiable step."),
-            PlannedMessage(MsgTag.VERIFY, "{agent} verify beta‑ready criteria (GUI flows/tests). Attach evidence; summarize gaps if any."),
+            PlannedMessage(MsgTag.SYNC,   "{agent} 10-min sync: status vs beta-ready checklist for the focus repo; next verifiable step."),
+            PlannedMessage(MsgTag.VERIFY, "{agent} verify beta-ready criteria (GUI flows/tests). Attach evidence; summarize gaps if any."),
         ]
     if plan == "resume-only":
         return [PlannedMessage(MsgTag.RESUME, "{agent} resume autonomous operations. Continue working overnight. Summarize hourly.")]
@@ -104,7 +104,8 @@ def parse_args() -> argparse.Namespace:
     # Contracts tailoring (optional)
     p.add_argument("--contracts-file", help="path to contracts.json to tailor messages per agent")
     # Noise/pacing controls
-    p.add_argument("--resume-cooldown-sec", type=int, default=3600, help="minimum seconds between RESUME messages per agent")
+    p.add_argument("--resume-cooldown-sec", type=int, default=600, help="minimum seconds between RESUME messages per agent")
+    p.add_argument("--resume-on-state-change", action="store_true", help="when an agent completes a task (FSM update), trigger RESUME immediately (bypasses cooldown once)")
     p.add_argument("--active-grace-sec", type=int, default=900, help="suppress messages to agents updated within the last N seconds")
     p.add_argument("--suppress-resume", action="store_true", help="do not send RESUME messages at all")
     p.add_argument("--skip-assignments", action="store_true", help="skip initial per-agent repository assignment messages")
@@ -336,7 +337,7 @@ def main() -> int:
         fsm_agent = args.fsm_agent or captain or ("Agent-5" if args.layout == "5-agent" else None)
         print(f"FSM: enabled | agent={fsm_agent} | workflow={args.fsm_workflow}")
     if args.single_repo_mode:
-        print(f"Single‑repo mode: focus_repo={(focus_repo or 'N/A')} | checklist={args.beta_ready_checklist}")
+        print(f"Single-repo mode: focus_repo={(focus_repo or 'N/A')} | checklist={args.beta_ready_checklist}")
 
     # Optional preamble
     if args.preamble:
@@ -366,8 +367,8 @@ def main() -> int:
                 if target_repo:
                     checklist = ", ".join([s.strip() for s in str(args.beta_ready_checklist).split(',') if s.strip()])
                     msg = (
-                        f"Assignment: SINGLE‑REPO FOCUS — {target_repo}. "
-                        f"Goal: reach beta‑ready tonight. Criteria: {checklist}. "
+                        f"Assignment: SINGLE-REPO FOCUS - {target_repo}. "
+                        f"Goal: reach beta-ready tonight. Criteria: {checklist}. "
                         f"Action: open {target_repo}/TASK_LIST.md (or create), pick highest‑leverage item; keep edits small and verifiable."
                     )
                     for agent in cycle_targets:
@@ -441,6 +442,8 @@ def main() -> int:
     time.sleep(max(0, args.initial_wait_sec))
 
     last_sent: Dict[str, Dict[str, float]] = {}
+    # Signal path for immediate resume on state-changes
+    signal_dir = Path("D:/repositories/communications/_signals")
     for cycle in range(total_cycles):
         if stop_flag["stop"]:
             break
@@ -468,6 +471,19 @@ def main() -> int:
             except Exception:
                 pass
         for agent in cycle_targets:
+            # Check for immediate resume signal and honor it once by bypassing cooldown
+            force_resume = False
+            try:
+                if args.resume_on_state_change and planned.tag == MsgTag.RESUME and signal_dir.exists():
+                    sig = signal_dir / f"resume_now_{agent}.signal"
+                    if sig.exists():
+                        force_resume = True
+                        try:
+                            sig.unlink()
+                        except Exception:
+                            pass
+            except Exception:
+                pass
             # If FSM is enabled, adjust RESUME content to inbox-driven flow
             agent_contracts = contracts_map.get(agent, []) or contracts_map.get(f"Agent-{agent}", [])
 
@@ -495,7 +511,7 @@ def main() -> int:
             if _recent():
                 continue
             # 2) resume cooldown: limit RESUME frequency
-            if planned.tag == MsgTag.RESUME and (args.suppress_resume or (time.time() - last_sent.get(agent, {}).get("RESUME", 0.0) < args.resume_cooldown_sec)):
+            if planned.tag == MsgTag.RESUME and not force_resume and (args.suppress_resume or (time.time() - last_sent.get(agent, {}).get("RESUME", 0.0) < args.resume_cooldown_sec)):
                 continue
 
             # Build content (tailored when available)
@@ -507,12 +523,12 @@ def main() -> int:
                     checklist = ", ".join([s.strip() for s in str(args.beta_ready_checklist).split(',') if s.strip()])
                     if planned.tag == MsgTag.RESUME:
                         content = (
-                            f"{agent} resume. {repo_line}Goal: reach beta‑ready tonight. "
-                            f"Checklist: {checklist}. Start with GUI loads cleanly; all buttons/menus wired; happy‑path flows; basic tests; README quickstart."
+                            f"{agent} resume. {repo_line}Goal: reach beta-ready tonight. "
+                            f"Checklist: {checklist}. Start with GUI loads cleanly; all buttons/menus wired; happy-path flows; basic tests; README quickstart."
                         )
                     elif planned.tag == MsgTag.TASK:
                         content = (
-                            f"{agent} implement one concrete step toward beta‑ready in {focus_repo or 'the focus repo'}: "
+                            f"{agent} implement one concrete step toward beta-ready in {focus_repo or 'the focus repo'}: "
                             f"e.g., wire a missing button handler, fix a flow, add a smoke test. Commit small, verifiable edits with evidence."
                         )
                     elif planned.tag == MsgTag.COORDINATE:
@@ -522,7 +538,7 @@ def main() -> int:
                         )
                     elif planned.tag == MsgTag.SYNC:
                         content = (
-                            f"{agent} 10‑min sync: status vs beta‑ready checklist for {focus_repo or 'the focus repo'}; next verifiable step; risks."
+                            f"{agent} 10-min sync: status vs beta-ready checklist for {focus_repo or 'the focus repo'}; next verifiable step; risks."
                         )
                     elif planned.tag == MsgTag.VERIFY:
                         content = (
