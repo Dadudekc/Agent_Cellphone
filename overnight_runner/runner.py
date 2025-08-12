@@ -26,6 +26,15 @@ class PlannedMessage:
 
 def build_message_plan(plan: str) -> List[PlannedMessage]:
     plan = plan.lower()
+    # Single‑repo, beta‑readiness focused cadence
+    if plan == "single-repo-beta":
+        return [
+            PlannedMessage(MsgTag.RESUME, "{agent} resume: focus the target repo to reach beta‑ready."),
+            PlannedMessage(MsgTag.TASK,   "{agent} implement one concrete step toward beta‑ready in the focus repo."),
+            PlannedMessage(MsgTag.COORDINATE, "{agent} coordinate to avoid duplication; declare your focus area in the repo."),
+            PlannedMessage(MsgTag.SYNC,   "{agent} 10‑min sync: status vs beta‑ready checklist for the focus repo; next verifiable step."),
+            PlannedMessage(MsgTag.VERIFY, "{agent} verify beta‑ready criteria (GUI flows/tests). Attach evidence; summarize gaps if any."),
+        ]
     if plan == "resume-only":
         return [PlannedMessage(MsgTag.RESUME, "{agent} resume autonomous operations. Continue working overnight. Summarize hourly.")]
     if plan == "contracts":
@@ -73,7 +82,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--interval-sec", type=int, default=600, help="seconds between cycles (default 600=10m)")
     p.add_argument("--duration-min", type=int, help="total minutes to run; alternative to --iterations")
     p.add_argument("--iterations", type=int, help="number of cycles to run; overrides duration if provided")
-    p.add_argument("--plan", choices=["resume-only", "resume-task-sync", "aggressive", "autonomous-dev", "contracts"], default="autonomous-dev", help="message plan to rotate through")
+    p.add_argument("--plan", choices=["resume-only", "resume-task-sync", "aggressive", "autonomous-dev", "contracts", "single-repo-beta"], default="autonomous-dev", help="message plan to rotate through")
     p.add_argument("--test", action="store_true", help="dry-run; do not move mouse/keyboard")
     p.add_argument("--stagger-ms", type=int, default=2000, help="delay between sends per agent within a cycle (ms)")
     p.add_argument("--jitter-ms", type=int, default=500, help="random +/- jitter added to stagger (ms)")
@@ -84,6 +93,10 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--max-repos-per-agent", type=int, default=5, help="limit of repos per agent in assignment")
     p.add_argument("--comm-root", default="D:/repositories/_agent_communications", help="central communications root (non-invasive)")
     p.add_argument("--create-comm-folders", action="store_true", help="create central communications folders and kickoff notes")
+    # Single‑repo focus options
+    p.add_argument("--single-repo-mode", action="store_true", help="Focus all agents on a single repository until beta‑ready")
+    p.add_argument("--focus-repo", help="Repository name to focus when in single‑repo mode. If omitted, the first alphabetical repo from --assign-root is used.")
+    p.add_argument("--beta-ready-checklist", default="gui,buttons,happy-path,tests,readme,issues", help="Comma list of beta‑ready criteria to embed in prompts")
     # FSM extensions (optional)
     p.add_argument("--fsm-enabled", action="store_true", help="enable simple FSM orchestration with a designated agent")
     p.add_argument("--fsm-agent", help="agent id who acts as FSM orchestrator (defaults to captain or Agent-5 for 5-agent layout)")
@@ -264,6 +277,21 @@ def main() -> int:
         if args.plan == "autonomous-dev":
             args.plan = "contracts"
 
+    # Resolve focus repo for single‑repo mode
+    focus_repo: str | None = None
+    if args.single_repo_mode:
+        if args.focus_repo:
+            focus_repo = args.focus_repo
+        else:
+            try:
+                repos = discover_repositories(args.assign_root)
+                focus_repo = repos[0] if repos else None
+            except Exception:
+                focus_repo = None
+        # Default plan for single‑repo focus if not explicitly set
+        if args.plan not in ("single-repo-beta", "contracts"):
+            args.plan = "single-repo-beta"
+
     acp = AgentCellPhone(agent_id=args.sender, layout_mode=args.layout, test=args.test)
     available = acp.get_available_agents()
 
@@ -307,6 +335,8 @@ def main() -> int:
     if args.fsm_enabled:
         fsm_agent = args.fsm_agent or captain or ("Agent-5" if args.layout == "5-agent" else None)
         print(f"FSM: enabled | agent={fsm_agent} | workflow={args.fsm_workflow}")
+    if args.single_repo_mode:
+        print(f"Single‑repo mode: focus_repo={(focus_repo or 'N/A')} | checklist={args.beta_ready_checklist}")
 
     # Optional preamble
     if args.preamble:
@@ -328,24 +358,43 @@ def main() -> int:
     if not args.skip_assignments:
         assignments: Dict[str, List[str]] = {}
         try:
-            assignments = assign_repositories(args.assign_root, cycle_targets, args.max_repos_per_agent)
+            if args.single_repo_mode:
+                target_repo = focus_repo
+                if not target_repo:
+                    repos = discover_repositories(args.assign_root)
+                    target_repo = repos[0] if repos else None
+                if target_repo:
+                    checklist = ", ".join([s.strip() for s in str(args.beta_ready_checklist).split(',') if s.strip()])
+                    msg = (
+                        f"Assignment: SINGLE‑REPO FOCUS — {target_repo}. "
+                        f"Goal: reach beta‑ready tonight. Criteria: {checklist}. "
+                        f"Action: open {target_repo}/TASK_LIST.md (or create), pick highest‑leverage item; keep edits small and verifiable."
+                    )
+                    for agent in cycle_targets:
+                        try:
+                            acp.send(agent, msg, MsgTag.TASK)
+                        except Exception:
+                            pass
+                    time.sleep(max(0, args.phase_wait_sec))
+            else:
+                assignments = assign_repositories(args.assign_root, cycle_targets, args.max_repos_per_agent)
+                if assignments:
+                    for agent, repos in assignments.items():
+                        if not repos:
+                            continue
+                        summary = ", ".join(repos)
+                        msg = (
+                            f"Assignment: focus these repos tonight: {summary}. "
+                            f"Objectives: reduce duplication, consolidate utilities, add tests, and commit small, verifiable improvements. "
+                            f"Action: open TASK_LIST.md in each repo (if present), pick the highest-leverage item, and update status as you progress."
+                        )
+                        try:
+                            acp.send(agent, msg, MsgTag.TASK)
+                        except Exception:
+                            pass
+                    time.sleep(max(0, args.phase_wait_sec))
         except Exception:
-            assignments = {}
-        if assignments:
-            for agent, repos in assignments.items():
-                if not repos:
-                    continue
-                summary = ", ".join(repos)
-                msg = (
-                    f"Assignment: focus these repos tonight: {summary}. "
-                    f"Objectives: reduce duplication, consolidate utilities, add tests, and commit small, verifiable improvements. "
-                    f"Action: open TASK_LIST.md in each repo (if present), pick the highest-leverage item, and update status as you progress."
-                )
-                try:
-                    acp.send(agent, msg, MsgTag.TASK)
-                except Exception:
-                    pass
-            time.sleep(max(0, args.phase_wait_sec))
+            pass
 
     # Captain kickoff goes only to captain
     if captain and not args.skip_captain_kickoff:
@@ -409,6 +458,7 @@ def main() -> int:
                     "to": args.fsm_agent,
                     "workflow": args.fsm_workflow,
                     "agents": cycle_targets,
+                    "focus_repo": focus_repo,
                     "timestamp": _t.strftime("%Y-%m-%dT%H:%M:%S"),
                 }
                 inbox = _P("agent_workspaces") / args.fsm_agent / "inbox"
@@ -452,13 +502,43 @@ def main() -> int:
             if contracts_map:
                 content = build_tailored_message(agent, planned.tag, agent_contracts)
             else:
-                if args.fsm_enabled and planned.tag == MsgTag.RESUME:
-                    content = (
-                        f"{agent} check your inbox for new assignments. Create/refresh your TASK_LIST.md based on assigned tasks,"
-                        f" then execute sequentially with small, verifiable edits. Post evidence and updates via inbox."
-                    )
+                if args.plan == "single-repo-beta":
+                    repo_line = f"Focus repo: {focus_repo}. " if focus_repo else "Focus the selected repo. "
+                    checklist = ", ".join([s.strip() for s in str(args.beta_ready_checklist).split(',') if s.strip()])
+                    if planned.tag == MsgTag.RESUME:
+                        content = (
+                            f"{agent} resume. {repo_line}Goal: reach beta‑ready tonight. "
+                            f"Checklist: {checklist}. Start with GUI loads cleanly; all buttons/menus wired; happy‑path flows; basic tests; README quickstart."
+                        )
+                    elif planned.tag == MsgTag.TASK:
+                        content = (
+                            f"{agent} implement one concrete step toward beta‑ready in {focus_repo or 'the focus repo'}: "
+                            f"e.g., wire a missing button handler, fix a flow, add a smoke test. Commit small, verifiable edits with evidence."
+                        )
+                    elif planned.tag == MsgTag.COORDINATE:
+                        content = (
+                            f"{agent} coordinate to avoid duplication in {focus_repo or 'the focus repo'}: declare your current component area, "
+                            f"search first for reuse, and request a quick sanity check from a peer before large changes."
+                        )
+                    elif planned.tag == MsgTag.SYNC:
+                        content = (
+                            f"{agent} 10‑min sync: status vs beta‑ready checklist for {focus_repo or 'the focus repo'}; next verifiable step; risks."
+                        )
+                    elif planned.tag == MsgTag.VERIFY:
+                        content = (
+                            f"{agent} verify: run GUI smoke, tests/build for {focus_repo or 'the focus repo'}. Attach evidence. "
+                            f"If blocked, stage diffs and summarize the gap + next step."
+                        )
+                    else:
+                        content = planned.template.format(agent=agent)
                 else:
-                    content = planned.template.format(agent=agent)
+                    if args.fsm_enabled and planned.tag == MsgTag.RESUME:
+                        content = (
+                            f"{agent} check your inbox for new assignments. Create/refresh your TASK_LIST.md based on assigned tasks,"
+                            f" then execute sequentially with small, verifiable edits. Post evidence and updates via inbox."
+                        )
+                    else:
+                        content = planned.template.format(agent=agent)
             try:
                 acp.send(agent, content, planned.tag)
                 last_sent.setdefault(agent, {})[planned.tag.name] = time.time()

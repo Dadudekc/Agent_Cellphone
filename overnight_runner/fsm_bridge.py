@@ -164,6 +164,7 @@ def handle_fsm_request(payload: Dict[str, Any]) -> Dict[str, Any]:
     { 'type':'fsm_request', 'from':'Agent-3', 'to':'Agent-5', 'workflow':'default', 'agents':['Agent-1','Agent-2','Agent-4'] }
     """
     targets: List[str] = payload.get("agents") or []
+    focus_repo: Optional[str] = payload.get("focus_repo") or None
     workflow_id = payload.get("workflow") or "default"
 
     _ = load_workflow(workflow_id)  # reserved for future branching by state graph
@@ -172,6 +173,11 @@ def handle_fsm_request(payload: Dict[str, Any]) -> Dict[str, Any]:
     assigned: List[Dict[str, Any]] = []
     # simple round-robin: pick tasks with state in {new, queued} and no owner
     open_tasks = [t for t in tasks.values() if t.state in {"new", "queued"} and not t.owner]
+    # If a focus repo is hinted, prioritize tasks from that repo
+    if focus_repo:
+        preferred = [t for t in open_tasks if t.repo == focus_repo]
+        others = [t for t in open_tasks if t.repo != focus_repo]
+        open_tasks = preferred + others
     i = 0
     for t in open_tasks:
         if not targets:

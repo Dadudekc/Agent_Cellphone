@@ -27,8 +27,9 @@ def main() -> int:
     agents = [a.strip() for a in args.agents.split(',') if a.strip()]
 
     base_msg = (
-        "Welcome. New chat initialized. Follow FSM: check your inbox for assignments, "
-        "create/refresh TASK_LIST.md, then execute sequentially with small, verifiable edits. "
+        "Welcome. New chat initialized. Single‑repo focus until beta‑ready. "
+        "Follow FSM: check your inbox for assignments; create/refresh TASK_LIST.md; execute small, verifiable edits. "
+        "Beta‑ready checklist: GUI loads, buttons wired, happy‑path flows, basic tests, README quickstart, issues tracked. "
         "Post evidence and updates via inbox."
     )
 
@@ -48,6 +49,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 
 
 
