@@ -399,7 +399,8 @@ def main() -> int:
                     )
                     for agent in cycle_targets:
                         try:
-                            acp.send(agent, msg, MsgTag.TASK)
+                            # First focus assignment: open a fresh chat so agents see the new focus clearly
+                            acp.send(agent, msg, MsgTag.TASK, new_chat=True)
                         except Exception:
                             pass
                     time.sleep(max(0, args.phase_wait_sec))
@@ -474,6 +475,8 @@ def main() -> int:
     last_sent: Dict[str, Dict[str, float]] = {}
     # Signal path for immediate resume on state-changes
     signal_dir = Path("D:/repositories/communications/_signals")
+    # Track last repo focus we announced per agent, to decide when to re-open a new chat
+    last_focus_repo_sent: Dict[str, str | None] = {a: None for a in available}
     for cycle in range(total_cycles):
         if stop_flag["stop"]:
             break
@@ -598,9 +601,19 @@ def main() -> int:
                         )
                     else:
                         content = planned.template.format(agent=agent)
+            # Decide whether to request new-chat (Ctrl+T) for this send
+            use_new_chat = False
+            # Use new chat when we're doing a force resume or a rescue from stall
+            if planned.tag == MsgTag.RESUME and (force_resume):
+                use_new_chat = True
+            # If single-repo focus changed since last time for this agent, open a fresh chat to reset context
+            if args.single_repo_mode and focus_repo and last_focus_repo_sent.get(agent) != focus_repo:
+                use_new_chat = True
             try:
-                acp.send(agent, content, planned.tag)
+                acp.send(agent, content, planned.tag, new_chat=use_new_chat)
                 last_sent.setdefault(agent, {})[planned.tag.name] = time.time()
+                if args.single_repo_mode:
+                    last_focus_repo_sent[agent] = focus_repo
             except Exception:
                 pass
             base = args.stagger_ms / 1000.0

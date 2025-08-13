@@ -127,9 +127,8 @@ class AgentCellPhone:
         starter_loc = self._coords[agent].get("starter_location_box") or self._coords[agent].get("input_box")
         input_loc = self._coords[agent].get("input_box") or starter_loc
 
-        # Respect default new-chat if requested via environment
-        if not new_chat and self._default_new_chat:
-            new_chat = True
+        # Respect default new-chat if requested via environment, but allow caller override to keep most sends inline
+        # Default behavior remains environment-driven unless explicitly set by caller
 
         # Apply per-agent throttling for new-chat openings
         if new_chat and self._new_chat_interval_sec > 0:
