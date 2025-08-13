@@ -107,6 +107,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--resume-cooldown-sec", type=int, default=600, help="minimum seconds between RESUME messages per agent")
     p.add_argument("--resume-on-state-change", action="store_true", help="when an agent completes a task (FSM update), trigger RESUME immediately (bypasses cooldown once)")
     p.add_argument("--active-grace-sec", type=int, default=900, help="suppress messages to agents updated within the last N seconds")
+    p.add_argument("--per-agent-cooldown-sec", type=int, default=300, help="minimum seconds between ANY messages to the same agent")
     p.add_argument("--suppress-resume", action="store_true", help="do not send RESUME messages at all")
     p.add_argument("--skip-assignments", action="store_true", help="skip initial per-agent repository assignment messages")
     p.add_argument("--skip-captain-kickoff", action="store_true", help="skip captain kickoff message")
@@ -473,6 +474,8 @@ def main() -> int:
     time.sleep(max(0, args.initial_wait_sec))
 
     last_sent: Dict[str, Dict[str, float]] = {}
+    # Track last any-message time per agent for global cooldown
+    last_any_sent: Dict[str, float] = {}
     # Signal path for immediate resume on state-changes
     signal_dir = Path("D:/repositories/communications/_signals")
     # Track last repo focus we announced per agent, to decide when to re-open a new chat
@@ -550,7 +553,10 @@ def main() -> int:
                     stalled = is_stalled(agent, args.__dict__.get("stalled_threshold_sec", 1200))
                 except Exception:
                     stalled = False
-            # 3) resume cooldown: limit RESUME frequency (unless force or stalled rescue)
+            # 3) per-agent global cooldown: avoid sending too frequently to the same agent
+            if (time.time() - last_any_sent.get(agent, 0.0)) < float(args.per_agent_cooldown_sec):
+                continue
+            # 4) resume cooldown: limit RESUME frequency (unless force or stalled rescue)
             if planned.tag == MsgTag.RESUME and not (force_resume or stalled) and (args.suppress_resume or (time.time() - last_sent.get(agent, {}).get("RESUME", 0.0) < args.resume_cooldown_sec)):
                 continue
 
@@ -611,7 +617,9 @@ def main() -> int:
                 use_new_chat = True
             try:
                 acp.send(agent, content, planned.tag, new_chat=use_new_chat)
-                last_sent.setdefault(agent, {})[planned.tag.name] = time.time()
+                now_ts = time.time()
+                last_any_sent[agent] = now_ts
+                last_sent.setdefault(agent, {})[planned.tag.name] = now_ts
                 if args.single_repo_mode:
                     last_focus_repo_sent[agent] = focus_repo
             except Exception:
