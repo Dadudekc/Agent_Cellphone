@@ -15,6 +15,7 @@ FSM_ROOT = Path("fsm_data")
 TASKS_DIR = FSM_ROOT / "tasks"
 WORKFLOWS_DIR = FSM_ROOT / "workflows"
 INBOX_ROOT = Path("agent_workspaces")
+REPO_ROOT = Path("D:/repositories")
 
 
 @dataclass
@@ -62,6 +63,35 @@ def list_task_files() -> List[Path]:
         return []
     return sorted([p for p in TASKS_DIR.iterdir() if p.suffix == ".json"])
 
+def _try_parse_task_list(repo_path: Path) -> List[TaskRecord]:
+    tasks: List[TaskRecord] = []
+    tl = repo_path / "TASK_LIST.md"
+    if not tl.exists():
+        return tasks
+    try:
+        # very light parser: lines starting with - [ ] and fields in following indented lines
+        task_id = title = None
+        state = "new"
+        ac = None
+        for line in tl.read_text(encoding="utf-8").splitlines():
+            s = line.strip()
+            if s.startswith("- ["):
+                if task_id and title:
+                    tasks.append(TaskRecord(task_id=task_id, repo=repo_path.name, intent=title, state=state))
+                task_id = title = None
+                state = "new"
+            if s.startswith("task_id:"):
+                task_id = s.split(":", 1)[1].strip()
+            elif s.startswith("title:"):
+                title = s.split(":", 1)[1].strip()
+            elif s.startswith("state:"):
+                state = s.split(":", 1)[1].strip() or "new"
+        if task_id and title:
+            tasks.append(TaskRecord(task_id=task_id, repo=repo_path.name, intent=title, state=state))
+    except Exception:
+        return []
+    return tasks
+
 
 def load_tasks() -> Dict[str, TaskRecord]:
     tasks: Dict[str, TaskRecord] = {}
@@ -89,6 +119,24 @@ def load_tasks() -> Dict[str, TaskRecord]:
         )
         tasks[task_id] = tr
     return tasks
+
+def discover_and_merge_repo_tasks(existing: Dict[str, TaskRecord]) -> Dict[str, TaskRecord]:
+    """Augment task set by parsing TASK_LIST.md from repos when FSM tasks are sparse."""
+    try:
+        if not REPO_ROOT.exists():
+            return existing
+        exclude = {".git", ".github", ".vscode", ".idea", ".pytest_cache", "__pycache__", "node_modules", "venv", ".venv", "dist", "build", ".mypy_cache", ".ruff_cache", ".tox", ".cache", "communications"}
+        for repo in sorted(REPO_ROOT.iterdir()):
+            if not repo.is_dir() or repo.name in exclude or repo.name.startswith("."):
+                continue
+            markers = [".git", "README.md", "pyproject.toml", "package.json", "requirements.txt"]
+            if not any((repo / m).exists() for m in markers):
+                continue
+            for tr in _try_parse_task_list(repo):
+                existing.setdefault(tr.task_id, tr)
+    except Exception:
+        return existing
+    return existing
 
 
 def _save_task(record: TaskRecord) -> None:
@@ -169,6 +217,9 @@ def handle_fsm_request(payload: Dict[str, Any]) -> Dict[str, Any]:
 
     _ = load_workflow(workflow_id)  # reserved for future branching by state graph
     tasks = load_tasks()
+    # If few open tasks, augment from TASK_LIST.md of repos
+    if len(tasks) < 3:
+        tasks = discover_and_merge_repo_tasks(tasks)
 
     assigned: List[Dict[str, Any]] = []
     # simple round-robin: pick tasks with state in {new, queued} and no owner

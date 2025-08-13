@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ProductRequirementsDoc",
+  "type": "object",
+  "properties": {
+    "repo": { "type": "string" },
+    "vision": { "type": "string" },
+    "personas": { "type": "array", "items": { "type": "string" } },
+    "milestones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "acceptance": { "type": ["string", "array"] },
+          "deadline": { "type": "string" }
+        },
+        "required": ["id", "title"]
+      }
+    }
+  },
+  "required": ["repo", "vision"]
+}
+
+
