@@ -18,6 +18,12 @@ import queue
 
 try:
     import pyautogui  # mechanical control
+    # Allow disabling failsafe via environment for controlled broadcasts
+    try:
+        if os.environ.get("ACP_DISABLE_FAILSAFE", "0").strip() not in ("0", "", "false", "False"):
+            pyautogui.FAILSAFE = False
+    except Exception:
+        pass
 except Exception:  # pragma: no cover - depends on system display
     pyautogui = None  # tolerate headless or missing dependencies
 
