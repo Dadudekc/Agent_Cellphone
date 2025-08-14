@@ -31,7 +31,16 @@ python overnight_runner/runner.py --layout 5-agent --captain Agent-3 --resume-ag
 
 3) (Optional) Start file‑inbox listener for silent JSON messaging
 ```powershell
-python overnight_runner/listener.py --agent Agent-5
+python overnight_runner/listener.py --agent Agent-5 --env-file .env --devlog-embed --devlog-username "Agent Devlog"
+```
+
+Optional: Enable Discord devlogs
+```powershell
+@"
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/XXX/YYY
+DEVLOG_USERNAME=Agent Devlog
+"@ | Set-Content -Path .env -Encoding UTF8
+python scripts/devlog_test.py
 ```
 
 Tips

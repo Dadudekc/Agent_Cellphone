@@ -12,6 +12,10 @@ Sequence
 1) Captain kickoff (visible ACP)
    - Send `[CAPTAIN]` kickoff to self
    - Broadcast `[COORDINATE]` collab norms (no duplication/stubs; reuse/refactor; use `TASK_LIST.md`; log to comms folder)
+   - Start inbox listener with devlog broadcasting (Discord):
+     ```powershell
+     python overnight_runner/listener.py --agent Agent-5 --env-file .env --devlog-embed --devlog-username "Agent Devlog"
+     ```
 2) Assignments (visible ACP)
    - Send `[TASK]` per agent with 1–2 repos each; reference comms folder for logs/handoffs
 3) Start cadence (runner)
@@ -25,6 +29,10 @@ Sequence
 5) Validation
    - Captain sends `[VERIFY]` checks; reviews tests/build; requests evidence or staged diffs
    - If blocked by permissions, stage diffs and summarize impact + next steps in comms folder
+   - Post validation broadcast to Discord (optional):
+     ```powershell
+     ./overnight_runner/tools/devlog_after_validate.ps1 -RepoPath D:\repositories\<repo>
+     ```
 6) Handoffs
    - At cadence or shift end, captain posts `[SYNC]` summary: changed, open TODO, next verifiable action
    - All agents log notes/handoffs in the per‑shift comms folder
@@ -35,10 +43,16 @@ Messaging channels
 
 Start commands
 - See `10_NEW_AGENT_QUICKSTART.md` and `04_OVERNIGHT_RUNNER.md` for copy‑paste commands
+- See `../protocols/DEVLOG_BROADCASTER.md` for devlog setup, testing, and examples
 
 
 
 [Back to Index](00_INDEX.md)
+
+
+
+
+
 
 
 

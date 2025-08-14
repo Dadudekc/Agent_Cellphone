@@ -150,6 +150,9 @@ communications/
 # workspace communications root can be external; ignore if present
 D:/repositories/communications/
 
+# Local monorepo clones; do not embed nested repos
+repos/
+
 # IDE files
 .vscode/
 .idea/

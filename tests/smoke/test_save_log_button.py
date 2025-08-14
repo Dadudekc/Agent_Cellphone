@@ -77,3 +77,32 @@ def test_save_log_button_writes_file(monkeypatch):
     win.close()
 
 
+def test_clear_log_button_clears_log(monkeypatch):
+    module = _load_gui_module()
+
+    # Prepare QApplication and window
+    from PyQt5.QtWidgets import QApplication
+
+    app = QApplication.instance() or QApplication(["test"])  # type: ignore
+    win = module.FiveAgentGridGUI()  # type: ignore[attr-defined]
+    win.show()
+
+    # Seed log
+    win.log_message("System", "Line before clear")
+    assert "Line before clear" in win.log_display.toPlainText()
+
+    # Click Clear Log button
+    from PyQt5.QtWidgets import QPushButton
+    buttons = win.findChildren(QPushButton)
+    clear_btn = next((b for b in buttons if b.text() == "🧹 Clear Log"), None)
+    assert clear_btn is not None, "Clear Log button missing"
+    clear_btn.click()
+
+    # After clear, log should contain only the 'Log cleared' message (with timestamp)
+    text = win.log_display.toPlainText()
+    assert "Line before clear" not in text
+    assert "Log cleared" in text
+
+    win.close()
+
+

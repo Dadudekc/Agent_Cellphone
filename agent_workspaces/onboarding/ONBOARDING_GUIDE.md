@@ -29,6 +29,8 @@ Complete onboarding process for new agents in the Dream.OS multi-agent system.
 - [ ] Agent workspace directory created
 - [ ] Coordinate mapping configured
 - [ ] Network connectivity verified
+ - [ ] Evidence folder created: `D:\\repositories\\communications\\overnight_YYYYMMDD_\\Agent-5\\`
+ - [ ] Contracts file available: `D:\\repositories\\_agent_communications\\contracts.json`
 
 ### Agent Preparation
 - [ ] Agent ID assigned (Agent-1 through Agent-8)
@@ -185,6 +187,8 @@ Complete onboarding process for new agents in the Dream.OS multi-agent system.
 - **GUI Interface**: `../../gui/dream_os_gui_v2.py`
 - **Agent Messenger**: `../../scripts/agent_messenger.py`
 - **Test Harness**: `../../test_harness.py`
+ - **Captain Quickstart**: `CAPTAIN_QUICKSTART.md`
+ - **Evidence & Contracts**: `EVIDENCE_AND_CONTRACTS.md`
 
 ### Support Channels
 - **System Administrator**: For technical issues

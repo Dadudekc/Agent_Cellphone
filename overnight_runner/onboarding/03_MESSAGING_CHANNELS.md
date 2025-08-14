@@ -26,17 +26,29 @@ File system inbox (silent)
 
 Start a listener (PowerShell)
 ```powershell
-python overnight_runner/listener.py --agent Agent-3
+python overnight_runner/listener.py --agent Agent-3 --env-file .env --devlog-embed --devlog-username "Agent Devlog"
 ```
 
 Start a listener (bash)
 ```bash
-python overnight_runner/listener.py --agent Agent-3
+python overnight_runner/listener.py --agent Agent-3 --env-file .env --devlog-embed --devlog-username "Agent Devlog"
 ```
 
 Send a message using the unified tool (preferred)
 ```powershell
 ./overnight_runner/tools/send-sync.ps1 -To Agent-3 -Type sync -Topic "10-min sync" -Summary "What changed, TODO, next" -From Agent-3
+```
+
+Devlog setup (optional, recommended)
+```powershell
+# .env in D:\Agent_Cellphone
+@"
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/XXX/YYY
+DEVLOG_USERNAME=Agent Devlog
+"@ | Set-Content -Path .env -Encoding UTF8
+
+# Test webhook
+python scripts/devlog_test.py
 ```
 
 

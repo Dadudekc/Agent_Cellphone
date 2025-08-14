@@ -1,3 +1,16 @@
+# Git Workflow – Portable Setup
+
+- Configure via env when possible:
+  - `REPOS_ROOT` (default `D:/repositories`)
+  - `ACP_DEFAULT_NEW_CHAT`, `ACP_NEW_CHAT_INTERVAL_SEC`
+- Credentials:
+  - Use credential helper; store token in `github_config.json` only for tooling, never embed in remotes
+- First‑run checklist:
+  - Install venv deps for ACP: pyautogui, pillow, pywin32, mouseinfo
+  - Run coordinate capture per layout
+  - Generate `tasks_index.json` → seed `contracts.json`
+- Evidence paths: `communications/overnight_YYYYMMDD_/Agent-5/`
+
 ### Git Workflow (Minimal)
 
 Standard flow

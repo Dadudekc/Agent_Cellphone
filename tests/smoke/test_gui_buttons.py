@@ -69,6 +69,8 @@ def test_shared_controls_buttons_wired(monkeypatch):
         "📨 Send FSM Request Now",
         "🛑 Stop Overnight/Listener",
         "📊 Refresh Status",
+        "💾 Save Log",
+        "🧹 Clear Log",
     }
     missing = [t for t in expected if t not in texts]
     assert not missing, f"Missing buttons: {missing}"

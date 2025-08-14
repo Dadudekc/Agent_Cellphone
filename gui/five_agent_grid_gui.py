@@ -180,6 +180,12 @@ class FiveAgentGridGUI(QMainWindow):
         self.tasks_list.setMaximumHeight(180)
         v.addWidget(self.tasks_list)
 
+        # Add Clear Log button
+        clear_btn = QPushButton("🧹 Clear Log")
+        clear_btn.clicked.connect(self.clear_log)
+        clear_btn.setStyleSheet("QPushButton { background-color: #7F8C8D; color: white; border-radius: 5px; padding: 8px; font-weight: bold; font-size: 10px; }")
+        v.addWidget(clear_btn)
+
         save_btn = QPushButton("💾 Save Log")
         save_btn.clicked.connect(self.save_log)
         save_btn.setStyleSheet("QPushButton { background-color: #27AE60; color: white; border-radius: 5px; padding: 8px; font-weight: bold; font-size: 10px; }")
@@ -280,7 +286,8 @@ class FiveAgentGridGUI(QMainWindow):
             try:
                 # Ensure comms root exists
                 today = datetime.now().strftime("%Y%m%d")
-                comm_root = f"D:/repositories/communications/overnight_{today}_"
+                comms_base = os.path.join(os.getcwd(), "communications")
+                comm_root = os.path.join(comms_base, f"overnight_{today}")
                 os.makedirs(comm_root, exist_ok=True)
 
                 args = [
@@ -298,6 +305,9 @@ class FiveAgentGridGUI(QMainWindow):
                 subprocess.Popen(args, cwd=os.getcwd())
             except Exception as e:
                 self.log_message("Error", f"Runner failed: {e}")
+        t = threading.Thread(target=run_runner)
+        t.daemon = True
+        t.start()
 
     def seed_sample_tasks(self) -> None:
         self.log_message("System", "Seeding sample FSM tasks...")
@@ -356,6 +366,13 @@ class FiveAgentGridGUI(QMainWindow):
                 self.log_message("System", f"Log saved to {fn}")
             except Exception as e:
                 self.log_message("Error", f"Failed to save log: {e}")
+
+    def clear_log(self) -> None:
+        try:
+            self.log_display.clear()
+            self.log_message("System", "Log cleared")
+        except Exception as e:
+            self.log_message("Error", f"Failed to clear log: {e}")
 
     # --- Minimal agent control handlers used by panel widgets ---
     def _selected_or_all(self) -> list[str]:

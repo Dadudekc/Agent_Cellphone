@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List
 import datetime as _dt
+from urllib import request, error
 
 # Ensure src/ is on path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
@@ -69,6 +70,22 @@ def build_message_plan(plan: str) -> List[PlannedMessage]:
             PlannedMessage(MsgTag.SYNC,   "{agent} sync: what changed, what remains, ETA by next cycle."),
             PlannedMessage(MsgTag.VERIFY, "{agent} verify outcomes. Prepare a concise summary for morning review."),
         ]
+    if plan == "prd-milestones":
+        return [
+            PlannedMessage(MsgTag.RESUME, "{agent} resume: align to PRD milestones; pick next milestone and extract a small, verifiable task."),
+            PlannedMessage(MsgTag.TASK,   "{agent} implement one step tied to the current PRD milestone; commit with tests/build evidence."),
+            PlannedMessage(MsgTag.COORDINATE, "{agent} coordinate on milestone ownership to avoid duplication; declare your current milestone ID."),
+            PlannedMessage(MsgTag.SYNC,   "{agent} 10-min sync: status vs active milestone; next verifiable step; risks."),
+            PlannedMessage(MsgTag.VERIFY, "{agent} verify acceptance against the milestone's criteria; attach evidence and summary."),
+        ]
+    if plan == "repo-git-setup":
+        return [
+            PlannedMessage(MsgTag.RESUME, "{agent} resume: configure git for assigned repos using D:/repositories/github_config.json. Do not overwrite. Create branch DreamscapeSWARM-<date> on conflicts. Summarize findings."),
+            PlannedMessage(MsgTag.TASK,   "{agent} for each assigned repo: if .git missing -> git init; set origin to https://github.com/<owner>/<repo>.git from github_config.json; commit TASK_LIST.md if new; fetch origin and attempt non-destructive merge; on conflicts, abort and create DreamscapeSWARM-<date> branch; leave notes."),
+            PlannedMessage(MsgTag.COORDINATE, "{agent} coordinate: avoid concurrent pushes; open an issue/todo note when manual review is needed; attach repo and branch name."),
+            PlannedMessage(MsgTag.SYNC,   "{agent} 10-min sync: per-repo status (origin set? branch? conflicts?), next step, risks."),
+            PlannedMessage(MsgTag.VERIFY, "{agent} verify: attach git_setup_report.json path and any push logs for assigned repos."),
+        ]
     return build_message_plan("resume-task-sync")
 
 
@@ -82,7 +99,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--interval-sec", type=int, default=600, help="seconds between cycles (default 600=10m)")
     p.add_argument("--duration-min", type=int, help="total minutes to run; alternative to --iterations")
     p.add_argument("--iterations", type=int, help="number of cycles to run; overrides duration if provided")
-    p.add_argument("--plan", choices=["resume-only", "resume-task-sync", "aggressive", "autonomous-dev", "contracts", "single-repo-beta"], default="autonomous-dev", help="message plan to rotate through")
+    p.add_argument("--plan", choices=["resume-only", "resume-task-sync", "aggressive", "autonomous-dev", "contracts", "single-repo-beta", "prd-milestones"], default="autonomous-dev", help="message plan to rotate through")
     p.add_argument("--test", action="store_true", help="dry-run; do not move mouse/keyboard")
     p.add_argument("--stagger-ms", type=int, default=2000, help="delay between sends per agent within a cycle (ms)")
     p.add_argument("--jitter-ms", type=int, default=500, help="random +/- jitter added to stagger (ms)")
@@ -93,6 +110,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--max-repos-per-agent", type=int, default=5, help="limit of repos per agent in assignment")
     p.add_argument("--comm-root", default="D:/repositories/_agent_communications", help="central communications root (non-invasive)")
     p.add_argument("--create-comm-folders", action="store_true", help="create central communications folders and kickoff notes")
+    # Agent workspace root for inbox/outbox and per-agent prompts
+    p.add_argument("--workspace-root", default="agent_workspaces", help="root folder for agent workspaces")
     # Single‑repo focus options
     p.add_argument("--single-repo-mode", action="store_true", help="Focus all agents on a single repository until beta‑ready")
     p.add_argument("--focus-repo", help="Repository name to focus when in single‑repo mode. If omitted, the first alphabetical repo from --assign-root is used.")
@@ -101,6 +120,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--fsm-enabled", action="store_true", help="enable simple FSM orchestration with a designated agent")
     p.add_argument("--fsm-agent", help="agent id who acts as FSM orchestrator (defaults to captain or Agent-5 for 5-agent layout)")
     p.add_argument("--fsm-workflow", default="default", help="workflow name (informational)")
+    p.add_argument("--prd-path", help="path to PRD JSON; with --plan prd-milestones, seeds FSM tasks from PRD milestones")
+    p.add_argument("--seed-from-tasklists", action="store_true", help="scan repos' TASK_LIST.md to seed FSM queued tasks before running")
     # Contracts tailoring (optional)
     p.add_argument("--contracts-file", help="path to contracts.json to tailor messages per agent")
     # Noise/pacing controls
@@ -112,10 +133,27 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--skip-assignments", action="store_true", help="skip initial per-agent repository assignment messages")
     p.add_argument("--skip-captain-kickoff", action="store_true", help="skip captain kickoff message")
     p.add_argument("--skip-captain-fsm-feed", action="store_true", help="skip captain FSM feed prompt")
+    # New‑chat throttling knobs for ACP (propagated via env)
+    p.add_argument("--new-chat-interval-sec", type=int, default=3600, help="minimum seconds between Ctrl+T new tabs per agent (default 3600=1h)")
+    p.add_argument("--default-new-chat", action="store_true", help="request Ctrl+T on first contact only; subsequent sends obey interval throttle")
     # Stall detection / rescue
     p.add_argument("--stalled-threshold-sec", type=int, default=1200, help="if no state update for N seconds, treat agent as stalled")
     p.add_argument("--rescue-on-stall", action="store_true", help="when stalled, override with a RESUME rescue prompt (bypasses cooldown)")
-    return p.parse_args()
+    # Optional focus file name (FFN) to weave into prompts
+    p.add_argument("--focus-file", dest="focus_file", help="fully qualified file path to emphasize in prompts (FFN)")
+    # Devlog options (Discord)
+    p.add_argument("--devlog-webhook", default=os.environ.get("DISCORD_WEBHOOK_URL"), help="Discord webhook URL for devlog notifications (or set DISCORD_WEBHOOK_URL)")
+    p.add_argument("--devlog-username", default=os.environ.get("DEVLOG_USERNAME", "Agent Devlog"))
+    p.add_argument("--devlog-embed", action="store_true", help="Send embed payloads instead of plain content")
+    p.add_argument("--devlog-sends", action="store_true", help="Post a devlog message for each agent send from the runner")
+    args = p.parse_args()
+    # Propagate ACP throttling to environment so AgentCellPhone honors it
+    if args.default_new_chat:
+        os.environ["ACP_DEFAULT_NEW_CHAT"] = "1"
+    else:
+        os.environ.pop("ACP_DEFAULT_NEW_CHAT", None)
+    os.environ["ACP_NEW_CHAT_INTERVAL_SEC"] = str(max(0, int(args.new_chat_interval_sec)))
+    return args
 
 
 def compute_iterations(args: argparse.Namespace) -> int:
@@ -124,6 +162,23 @@ def compute_iterations(args: argparse.Namespace) -> int:
     if args.duration_min and args.interval_sec > 0:
         return max(1, int((args.duration_min * 60) // args.interval_sec))
     return 1
+
+
+def _post_discord(webhook: str | None, username: str, use_embed: bool, title: str, description: str) -> None:
+    if not webhook:
+        return
+    payload: dict = {"username": username}
+    if use_embed:
+        payload["embeds"] = [{"title": title, "description": description, "color": 5814783}]
+    else:
+        payload["content"] = f"**{title}**\n{description}"
+    try:
+        data = __import__("json").dumps(payload).encode("utf-8")
+        req = request.Request(webhook, data=data, headers={"Content-Type": "application/json"})
+        with request.urlopen(req, timeout=6):
+            pass
+    except (error.HTTPError, error.URLError, Exception):
+        pass
 
 
 def discover_repositories(root_path: str) -> List[str]:
@@ -345,7 +400,46 @@ def main() -> int:
         return 2
 
     plan = build_message_plan(args.plan)
-    contracts_map = load_contracts_map(args.contracts_file)
+    # Optional PRD -> FSM seeding when requested
+    if args.plan == "prd-milestones" and getattr(args, "prd_path", None):
+        try:
+            from overnight_runner.fsm_bridge import seed_tasks_from_prd  # type: ignore
+            result = seed_tasks_from_prd(args.prd_path, workflow_id=args.fsm_workflow)
+            if not result.get("ok"):
+                print(f"PRD seed failed: {result.get('error')}")
+            else:
+                print(f"PRD seed ok: created {result.get('count',0)} tasks")
+        except Exception as _exc:
+            print(f"PRD seed exception: {_exc}")
+    # Optional seed from repo TASK_LIST.md files
+    if getattr(args, "seed_from_tasklists", False):
+        try:
+            from overnight_runner.fsm_bridge import seed_tasks_from_tasklists  # type: ignore
+            tl_res = seed_tasks_from_tasklists(workflow_id=args.fsm_workflow)
+            if not tl_res.get("ok"):
+                print(f"TASK_LIST seed failed: {tl_res.get('error')}")
+            else:
+                print(f"TASK_LIST seed ok: created {tl_res.get('count',0)} tasks")
+        except Exception as _exc:
+            print(f"TASK_LIST seed exception: {_exc}")
+    # Resolve contracts file if not explicitly provided: pick latest from communications/overnight_*/<fsm-agent>/contracts.json
+    contracts_file = args.contracts_file
+    if not contracts_file:
+        try:
+            from pathlib import Path as _P
+            comms = _P("D:/repositories/communications")
+            if comms.exists():
+                overnight_dirs = sorted([p for p in comms.iterdir() if p.is_dir() and p.name.startswith("overnight_")])
+                latest = overnight_dirs[-1] if overnight_dirs else None
+                if latest is not None:
+                    fsm_agent = args.fsm_agent or captain or ("Agent-5" if args.layout == "5-agent" else None)
+                    if fsm_agent:
+                        cand = latest / fsm_agent / "contracts.json"
+                        if cand.exists():
+                            contracts_file = str(cand)
+        except Exception:
+            pass
+    contracts_map = load_contracts_map(contracts_file)
     total_cycles = compute_iterations(args)
 
     stop_flag = {"stop": False}
@@ -357,9 +451,15 @@ def main() -> int:
     signal.signal(signal.SIGINT, handle_sigint)
 
     print(f"Overnight Runner starting (layout={args.layout}, sender={args.sender}, test={args.test})")
+    try:
+        _post_discord(args.devlog_webhook, args.devlog_username, args.devlog_embed,
+                      "Overnight Runner starting",
+                      f"layout={args.layout} | sender={args.sender} | plan={args.plan}")
+    except Exception:
+        pass
     print(f"Kickoff targets: {kickoff_targets}")
     print(f"Cycle targets: {cycle_targets}")
-    print(f"Plan: {args.plan} | Interval: {args.interval_sec}s | Cyles: {total_cycles}")
+    print(f"Plan: {args.plan} | Interval: {args.interval_sec}s | Cycles: {total_cycles}")
     if args.fsm_enabled:
         fsm_agent = args.fsm_agent or captain or ("Agent-5" if args.layout == "5-agent" else None)
         print(f"FSM: enabled | agent={fsm_agent} | workflow={args.fsm_workflow}")
@@ -400,8 +500,9 @@ def main() -> int:
                     )
                     for agent in cycle_targets:
                         try:
-                            # First focus assignment: open a fresh chat so agents see the new focus clearly
-                            acp.send(agent, msg, MsgTag.TASK, new_chat=True)
+                            # Avoid forcing a new tab here to prevent double-onboarding.
+                            # Initial onboarding already opened a new chat; rely on per-agent throttling for future Ctrl+T.
+                            acp.send(agent, msg, MsgTag.TASK, new_chat=False)
                         except Exception:
                             pass
                     time.sleep(max(0, args.phase_wait_sec))
@@ -601,22 +702,34 @@ def main() -> int:
                         content = planned.template.format(agent=agent)
                 else:
                     if args.fsm_enabled and planned.tag == MsgTag.RESUME:
+                        # Include per-agent workspace and inbox directories in the guidance
+                        workspace_dir = os.path.join(args.workspace_root, agent)
+                        inbox_dir = os.path.join(workspace_dir, "inbox")
+                        ffn_line = f"\nFocus file: {args.focus_file}" if getattr(args, "focus_file", None) else ""
                         content = (
                             f"{agent} check your inbox for new assignments. Create/refresh your TASK_LIST.md based on assigned tasks,"
-                            f" then execute sequentially with small, verifiable edits. Post evidence and updates via inbox."
+                            f" then execute sequentially with small, verifiable edits. Post evidence and updates via inbox.\n"
+                            f"Workspace: {workspace_dir}\nInbox: {inbox_dir}{ffn_line}"
                         )
                     else:
                         content = planned.template.format(agent=agent)
-            # Decide whether to request new-chat (Ctrl+T) for this send
+            # Decide whether to request new-chat (Ctrl+T) for this send.
+            # Only open a new tab when recovering from a stall or when focus repo changes.
             use_new_chat = False
-            # Use new chat when we're doing a force resume or a rescue from stall
-            if planned.tag == MsgTag.RESUME and (force_resume):
+            if planned.tag == MsgTag.RESUME and force_resume:
                 use_new_chat = True
-            # If single-repo focus changed since last time for this agent, open a fresh chat to reset context
-            if args.single_repo_mode and focus_repo and last_focus_repo_sent.get(agent) != focus_repo:
+            elif args.single_repo_mode and focus_repo and last_focus_repo_sent.get(agent) != focus_repo:
                 use_new_chat = True
             try:
                 acp.send(agent, content, planned.tag, new_chat=use_new_chat)
+                if args.devlog_sends:
+                    _post_discord(
+                        args.devlog_webhook,
+                        args.devlog_username,
+                        args.devlog_embed,
+                        f"SEND {planned.tag.name} -> {agent}",
+                        (content[:900] + "…") if len(content) > 900 else content,
+                    )
                 now_ts = time.time()
                 last_any_sent[agent] = now_ts
                 last_sent.setdefault(agent, {})[planned.tag.name] = now_ts
@@ -636,6 +749,11 @@ def main() -> int:
                 remaining -= 1
 
     print("\nOvernight Runner finished")
+    try:
+        _post_discord(args.devlog_webhook, args.devlog_username, args.devlog_embed,
+                      "Overnight Runner finished", "Done")
+    except Exception:
+        pass
     return 0
 
 

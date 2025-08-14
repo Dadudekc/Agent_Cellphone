@@ -30,8 +30,8 @@ First run (end‑to‑end smoke)
 ```powershell
 # 1) Create comms folder
 $date=(Get-Date).ToString('yyyyMMdd'); $root="D:/repositories/communications/overnight_${date}_"; New-Item -ItemType Directory -Path $root -Force | Out-Null
-# 2) Start listener for Agent-5 (FSM orchestrator)
-python overnight_runner/listener.py --agent Agent-5
+# 2) Start listener for Agent-5 (FSM orchestrator) with Discord devlogs
+python overnight_runner/listener.py --agent Agent-5 --env-file .env --devlog-embed --devlog-username "Agent Devlog"
 # 3) Send a sync message via tool (in another shell)
 ./overnight_runner/tools/send-sync.ps1 -To Agent-3 -Type sync -Topic "first sync" -Summary "smoke"
 # 4) Start runner with safe defaults (short duration). First try add --test to dry-run without typing.
@@ -43,6 +43,9 @@ Task state integration
 # Mark task lifecycle as you work so captain can see readiness for push
 ./overnight_runner/tools/task_state_manager.ps1 -Agent Agent-4 -TaskId basic-bot-quickstart -RepoPath D:\repositories\basic-bot -Branch feat/quickstart -EndState "README+validate added" -Status in_progress
 ./overnight_runner/tools/task_state_manager.ps1 -Agent Agent-4 -TaskId basic-bot-quickstart -Status validated
+# Broadcast validation and push events to Discord devlog (optional)
+./overnight_runner/tools/devlog_after_validate.ps1 -RepoPath D:\repositories\basic-bot
+./overnight_runner/tools/devlog_notify_from_repo.ps1 -RepoPath D:\repositories\basic-bot -Validated -Pushed -Extra "nightly run"
 ```
 
 

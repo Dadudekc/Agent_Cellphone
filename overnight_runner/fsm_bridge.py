@@ -341,8 +341,76 @@ def handle_fsm_update(payload: Dict[str, Any]) -> Dict[str, Any]:
         pass
     return {"ok": True, "task_id": tr.task_id, "state": tr.state}
 
+def seed_tasks_from_prd(prd_path: str, workflow_id: Optional[str] = "default") -> Dict[str, Any]:
+    """Seed FSM tasks from a PRD JSON file.
+
+    Expected PRD schema (see config/templates/prd.schema.json):
+      {
+        "repo": "repo-name",
+        "vision": "...",
+        "milestones": [ {"id": "M1", "title": "...", "acceptance": [..], ... } ]
+      }
+
+    For each milestone, create a queued TaskRecord if it does not already exist.
+    """
+    try:
+        p = Path(prd_path)
+        if not p.exists():
+            return {"ok": False, "error": f"PRD file not found: {prd_path}"}
+        data = _read_json(p)
+        repo = str(data.get("repo", "")).strip()
+        milestones = data.get("milestones") or []
+        if not repo or not isinstance(milestones, list):
+            return {"ok": False, "error": "Invalid PRD: missing repo or milestones"}
+
+        tasks_before = load_tasks()
+        created: List[str] = []
+
+        for m in milestones:
+            if not isinstance(m, dict):
+                continue
+            task_id = str(m.get("id") or "").strip()
+            title = str(m.get("title") or "").strip()
+            if not task_id or not title:
+                continue
+            if task_id in tasks_before:
+                # already present; skip
+                continue
+
+            record = TaskRecord(
+                task_id=task_id,
+                repo=repo,
+                intent=title,
+                state="queued",
+                owner=None,
+                acceptance_criteria=m.get("acceptance"),
+                evidence_required="Link to commit/PR and test/build output.",
+                workflow=workflow_id,
+            )
+            _save_task(record)
+            created.append(task_id)
+
+        return {"ok": True, "created": created, "count": len(created)}
+    except Exception as exc:
+        return {"ok": False, "error": str(exc)}
 
 
+def seed_tasks_from_tasklists(workflow_id: Optional[str] = "default") -> Dict[str, Any]:
+    """Scan all repos under REPO_ROOT for TASK_LIST.md entries and seed queued tasks.
 
-
-
+    Idempotent: skips task_ids that already exist in FSM storage.
+    """
+    try:
+        existing = load_tasks()
+        merged = discover_and_merge_repo_tasks({})
+        created: List[str] = []
+        for task_id, tr in merged.items():
+            if task_id in existing:
+                continue
+            tr.state = tr.state or "queued"
+            tr.workflow = workflow_id
+            _save_task(tr)
+            created.append(task_id)
+        return {"ok": True, "created": created, "count": len(created)}
+    except Exception as exc:
+        return {"ok": False, "error": str(exc)}

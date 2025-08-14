@@ -25,6 +25,13 @@ Consolidated onboarding documentation for the Dream.OS multi-agent system. This 
 4. **Best Practices**: Review [BEST_PRACTICES.md](BEST_PRACTICES.md) for success guidelines
 5. **Development**: Study [DEVELOPMENT_STANDARDS.md](DEVELOPMENT_STANDARDS.md) for coding standards
 
+### First-run preflight (environment + UI)
+- **REPOS_ROOT**: Set your workspace root environment variable (e.g., `REPOS_ROOT=D:\\repositories`). Ensure all tools resolve paths from this root.
+- **Python venv deps**: In your active venv, install: `pyautogui`, `pillow`, `pywin32`, `mouseinfo`.
+- **Coordinate capture**: Run the coordinate capture utility for your screen layout, and save the results per layout/profile.
+- **ACP interactive typing**: Verify the Agent Cellphone can type into an interactive field (send one short test message).
+- **Overnight comms folder**: Create `D:\\repositories\\communications\\overnight_YYYYMMDD_\\Agent-5\\` for evidence and updates.
+
 ### For System Administrators
 1. **Review All Documents**: Ensure you understand the consolidated structure
 2. **Update References**: Point agents to the new consolidated documents
@@ -93,6 +100,61 @@ Consolidated onboarding documentation for the Dream.OS multi-agent system. This 
 3. **Test Changes**: Verify the update works for agents
 4. **Communicate**: Notify agents of important changes
 5. **Archive Old**: Keep old files for reference if needed
+
+## 🧭 Roles, boundaries, and pacing
+
+- **Agent communication**: Agents 1–4 do not contact each other; report only to the Captain.
+- **Active contracts**: 1 active contract per agent.
+- **Batch size**: 3–5 repositories per batch.
+- **Resume-on-state-change**: Enabled; agents should advance upon receiving a verified resume signal.
+- **Posting fsm_update for Agent-5**: Write updates to `communications/overnight_YYYYMMDD_/Agent-5/` as timestamped `fsm_update_*.json`; do not DM other agents.
+
+## 🔁 FSM loop overview
+
+```mermaid
+flowchart LR
+    A[contracts.json] --> B[Prompt generator]
+    B --> C[Repo validate/tests]
+    C --> D[fsm_update]
+    D --> E[Bridge verifies]
+    E --> F{Resume signal}
+    F -- yes --> B
+    F -- no  --> C
+
+    subgraph Files
+    A
+    D
+    end
+```
+
+- **File locations**
+  - Contracts: `D:\\repositories\\_agent_communications\\contracts.json` (or project-specific contracts file)
+  - Updates: `D:\\repositories\\communications\\overnight_YYYYMMDD_\\Agent-5\\fsm_update_*.json`
+  - Signals: `D:\\repositories\\_agent_communications\\signals\\resume.json`
+
+## 🧰 Wizard hooks
+
+- Reuse the Project Scanner’s config wizard to generate `github_config.json` and set `REPOS_ROOT`.
+- Launch from the Project Scanner tool (see that repo’s README) and confirm paths under the same drive as `D:\\repositories`.
+- Bind the wizard output into the overnight runner setup so tokens/remotes match your workspace.
+
+## ✅ Validation precheck
+
+- Per-repo: run `validate.ps1` (or equivalent) to execute repo-specific checks.
+- Workspace-level: use a top-level “validate workspace” checklist before starting the runner.
+- Logs: store outputs under `D:\\repositories\\logs\\validate_YYYYMMDD\\`.
+
+## 🔗 Cross-links (overnight runner)
+
+- Index: [Overnight Runner Onboarding Index](../../overnight_runner/onboarding/00_INDEX.md)
+- Runner: [04_OVERNIGHT_RUNNER.md](../../overnight_runner/onboarding/04_OVERNIGHT_RUNNER.md)
+- Git workflow: [16_GIT_WORKFLOW.md](../../overnight_runner/onboarding/16_GIT_WORKFLOW.md)
+
+## 📎 Captain & Evidence docs
+
+- Captain Quickstart: [CAPTAIN_QUICKSTART.md](CAPTAIN_QUICKSTART.md)
+- Evidence & Contracts: [EVIDENCE_AND_CONTRACTS.md](EVIDENCE_AND_CONTRACTS.md)
+- Troubleshooting: [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
 ## 🚨 Important Notes
 

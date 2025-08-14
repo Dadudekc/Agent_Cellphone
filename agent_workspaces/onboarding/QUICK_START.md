@@ -204,6 +204,8 @@ Agent-1/
 2. **Follow ONBOARDING_GUIDE.md**: Complete onboarding process
 3. **Review BEST_PRACTICES.md**: Best practices for success
 4. **Study DEVELOPMENT_STANDARDS.md**: Development guidelines
+5. **Captain Quickstart**: See [CAPTAIN_QUICKSTART.md](CAPTAIN_QUICKSTART.md)
+6. **Evidence & Contracts**: See [EVIDENCE_AND_CONTRACTS.md](EVIDENCE_AND_CONTRACTS.md)
 
 ### Practice Exercises
 1. **Send test messages** to other agents using CLI

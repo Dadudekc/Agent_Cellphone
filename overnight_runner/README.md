@@ -60,7 +60,8 @@ python overnight_runner/runner.py --layout 5-agent --agents Agent-1,Agent-2,Agen
   --suppress-resume --skip-assignments --skip-captain-kickoff --skip-captain-fsm-feed \
   --resume-cooldown-sec 3600 --active-grace-sec 1200 \
   --initial-wait-sec 10 --phase-wait-sec 8 --stagger-ms 2500 --jitter-ms 800 \
-  --comm-root D:/repositories/communications/overnight_YYYYMMDD_ --create-comm-folders | cat
+  --comm-root D:/repositories/communications/overnight_YYYYMMDD_ --create-comm-folders \
+  --devlog-sends --devlog-embed --devlog-username "Agent Devlog" --devlog-webhook $env:DISCORD_WEBHOOK_URL | cat
 ```
 What happens:
 - Listener tails `agent_workspaces/Agent-5/inbox`, updates `state.json`, and posts Discord devlogs on task/sync/verify/fsm_update.
@@ -137,5 +138,24 @@ In cycles, the runner rotates:
 - `[VERIFY]` verify outcomes (tests/build); stage diffs and summarize if blocked
 
 This balances momentum with collaboration while avoiding duplication.
+
+#### PRD‑driven mode (seed FSM from PRD milestones)
+
+Use the new `prd-milestones` plan to seed the FSM task queue directly from a PRD JSON and rotate milestone‑aligned prompts:
+
+```powershell
+python overnight_runner/runner.py --layout 5-agent --agents Agent-1,Agent-2,Agent-3,Agent-4 \
+  --duration-min 60 --interval-sec 900 --sender Agent-3 --plan prd-milestones \
+  --fsm-enabled --fsm-agent Agent-5 --fsm-workflow default \
+  --prd-path D:/repositories/project_repository/PRDs/<YOUR_PRD>.json \
+  --skip-assignments --skip-captain-kickoff --skip-captain-fsm-feed \
+  --devlog-sends --devlog-embed --devlog-username "Agent Devlog" | cat
+```
+
+What happens:
+- PRD milestones are converted to queued FSM tasks (idempotent; only new ones are created).
+- Each cycle, an FSM request assigns queued tasks round‑robin to agents.
+- Prompts coach agents to align work to the active milestone and acceptance criteria.
+- If `--devlog-sends` is on, each send is echoed to Discord.
 
 

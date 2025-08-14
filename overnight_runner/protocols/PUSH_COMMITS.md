@@ -20,6 +20,9 @@ Steps
 ```powershell
 $env:DISCORD_WEBHOOK_URL = '<webhook>'
 ./overnight_runner/tools/devlog_notify_from_repo.ps1 -RepoPath D:\repositories\<repo> -Validated -Pushed -Extra "nightly run"
+# Or rely on .env and omit explicit env var:
+# python scripts/devlog_test.py  # verify first
+# ./overnight_runner/tools/devlog_notify_from_repo.ps1 -RepoPath D:\repositories\<repo> -Validated -Pushed -Branch feat/xyz -Extra "nightly run"
 ```
 
 Notes

@@ -15,5 +15,6 @@ Index
 - `protocol_validate_repo.md` – run repo validation and summarize
 - `protocol_send_sync.md` – compose and send sync JSON to an agent inbox
 - `protocol_scan_tasklists.md` – inventory repos with TASK_LIST.md and plan quick wins
+- `DEVLOG_BROADCASTER.md` – configure and use the Discord devlog broadcaster (listener + repo tools)
 
 
