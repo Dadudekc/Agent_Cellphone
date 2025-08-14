@@ -3,6 +3,7 @@
 **Project Codename:** `agent_cell_phone`  
 **Version:** 2.0.0  
 **Status:** Autonomous Orchestration Enabled  
+**Current Task List:** see [TASK_LIST.md](./TASK_LIST.md)
 **Purpose:** Enable fast, deterministic inter-agent messaging across Cursor instances via PyAutoGUI using pre-mapped input box coordinates, with a modern GUI interface for seamless agent management.
 
 ## 🎯 Overview
@@ -212,8 +213,8 @@ python tests/test_harness.py --mode layout --layout 8
 # Run comprehensive diagnostic tests
 python tests/diagnostic_test.py
 
-# Smoke tests (headless)
-pytest -q tests/smoke/test_smoke.py -q
+# Smoke tests (headless; clears .pytest_cache automatically)
+pytest tests/smoke
 ```
 
 ## 📊 Layout Configurations

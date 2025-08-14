@@ -5,10 +5,11 @@ Workflow: `Development Workflow` (state: IN_PROGRESS)
 
 ### Tasks (FSM-driven)
 
-- [ ] Design FSM Structure (state: IN_PROGRESS)
+- [x] Design FSM Structure (state: DONE)
   - Description: Design the FSM structure for workflow management
   - Priority: HIGH
   - Deliverable: `docs/FSM_STRUCTURE.md`
+  - Evidence: Document authored; lints clean
 
 - [ ] Implement FSM Logic (state: PENDING)
   - Description: Implement the FSM logic and state transitions
@@ -22,9 +23,9 @@ Workflow: `Development Workflow` (state: IN_PROGRESS)
 
 ### Current Focus
 
-- Design FSM Structure → Provide a minimal, reviewed FSM outline and transitions.
-  - Evidence: `docs/FSM_STRUCTURE.md`
-  - Next small step: Confirm transition names and guard conditions for implementation.
+- Implement FSM Logic → Wire transitions and guards into orchestrator/overnight runner.
+  - Evidence target: smoke/unit tests validating transitions and evidence emission.
+  - Next small step: Confirm transition names and guard keys in code, add minimal test scaffolding.
 
 
 
