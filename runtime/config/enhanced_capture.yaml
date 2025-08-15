@@ -1,0 +1,137 @@
+# Enhanced Response Capture Configuration
+# Integrates cursor database capture with advanced workflow engine
+
+# Primary capture strategy (highest priority)
+primary_strategy: "cursor_db"  # cursor_db | export_chat | copy_response | file
+
+# Fallback strategies in order of preference
+fallback_strategies:
+  - "export_chat"
+  - "copy_response" 
+  - "file"
+
+# Cursor Database Capture Settings
+cursor_db:
+  enabled: true
+  poll_interval: 2.0  # seconds
+  max_message_age: 300  # seconds (5 minutes)
+  deduplication_window: 60  # seconds
+  workspace_mapping: "src/runtime/config/agent_workspace_map.json"
+
+# Export Chat Fallback
+export_chat:
+  enabled: true
+  monitor_directory: "agent_workspaces/exports"
+  file_patterns:
+    - "*.json"
+    - "*.md"
+    - "*.txt"
+  poll_interval: 5.0  # seconds
+
+# Copy Response Fallback (UI automation)
+copy_response:
+  enabled: true
+  copy_delay: 0.5  # seconds
+  paste_delay: 0.3  # seconds
+  max_retries: 3
+
+# File Monitoring Fallback
+file:
+  enabled: true
+  watch_root: "agent_workspaces"
+  response_filename: "response.txt"
+  poll_interval: 1.0  # seconds
+  clear_after_read: true
+
+# Output Routing
+routing:
+  # For workflow engine integration
+  workflow_inbox: "agent_workspaces/Agent-5/inbox"
+  
+  # For FSM bridge integration  
+  fsm_inbox: "runtime/agent_comms/inbox"
+  
+  # Enable both outputs
+  dual_output: true
+
+# Advanced Processing
+processing:
+  enable_conversation_analysis: true
+  enable_sentiment_analysis: true
+  enable_task_extraction: true
+  enable_code_analysis: true
+  
+  # Conversation analysis settings
+  conversation:
+    detect_questions: true
+    detect_commands: true
+    detect_code_blocks: true
+    line_count_threshold: 10
+    
+  # Sentiment analysis settings
+  sentiment:
+    positive_keywords:
+      - "success"
+      - "complete" 
+      - "working"
+      - "fixed"
+      - "resolved"
+      - "good"
+      - "great"
+    negative_keywords:
+      - "error"
+      - "fail"
+      - "broken"
+      - "issue"
+      - "problem"
+      - "bad"
+      - "wrong"
+      
+  # Task extraction settings
+  task_extraction:
+    bullet_patterns:
+      - "-"
+      - "*"
+      - "•"
+      - "1."
+      - "2."
+      - "3."
+    priority_keywords:
+      high: ["urgent", "critical", "blocking", "immediate"]
+      medium: ["normal", "standard", "routine"]
+      low: ["low", "minor", "nice-to-have"]
+
+# Agent Workspace Mapping
+agent_workspaces:
+  Agent-1:
+    workspace_root: "D:/repos/Dadudekc/SWARM"
+    cursor_workspace: "swarm-project"
+    
+  Agent-2:
+    workspace_root: "D:/repos/Dadudekc/FocusForge"
+    cursor_workspace: "focusforge-project"
+    
+  Agent-3:
+    workspace_root: "D:/repos/Dadudekc/HCshinobi"
+    cursor_workspace: "hcshinobi-project"
+    
+  Agent-4:
+    workspace_root: "D:/repos/Dadudekc/MLRobotmaker"
+    cursor_workspace: "mlrobotmaker-project"
+    
+  Agent-5:
+    workspace_root: "D:/repos/Dadudekc/communications"
+    cursor_workspace: "communications-hub"
+
+# Performance Settings
+performance:
+  max_concurrent_captures: 5
+  response_buffer_size: 1000
+  cleanup_interval: 300  # seconds
+  
+# Logging
+logging:
+  level: "INFO"
+  capture_events: true
+  performance_metrics: true
+  response_summaries: true

@@ -1,0 +1,32 @@
+{
+  "Agent-1": {
+    "workspace_root": "D:/repos/Dadudekc/SWARM",
+    "cursor_workspace": "swarm-project",
+    "description": "SWARM repository development",
+    "focus_areas": ["core", "api", "frontend", "testing"]
+  },
+  "Agent-2": {
+    "workspace_root": "D:/repos/Dadudekc/FocusForge",
+    "cursor_workspace": "focusforge-project", 
+    "description": "FocusForge repository development",
+    "focus_areas": ["productivity", "tools", "automation", "testing"]
+  },
+  "Agent-3": {
+    "workspace_root": "D:/repos/Dadudekc/HCshinobi",
+    "cursor_workspace": "hcshinobi-project",
+    "description": "HCshinobi repository development", 
+    "focus_areas": ["ai", "ml", "algorithms", "testing"]
+  },
+  "Agent-4": {
+    "workspace_root": "D:/repos/Dadudekc/MLRobotmaker",
+    "cursor_workspace": "mlrobotmaker-project",
+    "description": "MLRobotmaker repository development",
+    "focus_areas": ["robotics", "ml", "hardware", "testing"]
+  },
+  "Agent-5": {
+    "workspace_root": "D:/repos/Dadudekc/communications",
+    "cursor_workspace": "communications-hub",
+    "description": "FSM coordination and workflow orchestration",
+    "focus_areas": ["coordination", "workflow", "fsm", "monitoring"]
+  }
+}
