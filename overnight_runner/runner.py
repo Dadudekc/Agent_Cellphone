@@ -447,7 +447,8 @@ def main() -> int:
     db_watcher = None
     if args.cursor_db_capture_enabled:
         try:
-            from cursor_capture.watcher import CursorDBWatcher
+            # Use v2 watcher (stoppable), shipped under src/cursor_capture_v2/
+            from src.cursor_capture_v2.watcher import CursorDBWatcher
             import json
             
             # Load agent workspace mapping
@@ -471,26 +472,7 @@ def main() -> int:
             print(f"Warning: Failed to initialize cursor DB capture: {e}")
             print("Ensure cursor_capture module is available")
     
-    # Determine kickoff target(s) and cycle targets
-    captain = args.captain
-    if captain:
-        kickoff_targets = [captain]
-        # For cycles, use provided resume-agents list (defaults to 1,2,4)
-        resume_agents = [a.strip() for a in args.resume_agents.split(',') if a.strip()]
-        cycle_targets = [a for a in resume_agents if a in available]
-        if not cycle_targets:
-            # Fallback: all except captain
-            cycle_targets = [a for a in available if a != captain]
-    else:
-        if args.agents:
-            kickoff_targets = [a.strip() for a in args.agents.split(',') if a.strip()]
-        else:
-            kickoff_targets = available
-        cycle_targets = kickoff_targets
-
-    if not cycle_targets:
-        print(f"No valid cycle targets in layout {args.layout}. Available: {available}")
-        return 2
+    # (removed) duplicate kickoff/cycle targeting block — computed earlier
 
     plan = build_message_plan(args.plan)
     # Optional PRD -> FSM seeding when requested
@@ -520,7 +502,8 @@ def main() -> int:
     if not contracts_file:
         try:
             from pathlib import Path as _P
-            comms = _P("D:/repositories/communications")
+            # Respect --comm-root instead of hardcoded drive path
+            comms = _P(args.comm_root)
             if comms.exists():
                 overnight_dirs = sorted([p for p in comms.iterdir() if p.is_dir() and p.name.startswith("overnight_")])
                 latest = overnight_dirs[-1] if overnight_dirs else None
