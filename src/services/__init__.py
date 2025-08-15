@@ -7,5 +7,10 @@ service implementations (local or remote) to be swapped via dependency
 injection.
 """
 
-__all__ = []
+__all__ = [
+    "agent_service",
+    "api",
+    "event_bus",
+    "browser_utils",
+]
 
