@@ -33,7 +33,7 @@ try:
     # Try to import response_capture
     try:
         import sys
-        response_capture_path = str(Path(__file__).parent / "agent_cell_phone")
+        response_capture_path = str(Path(__file__).parent.parent / "agent_cell_phone")
         sys.path.insert(0, response_capture_path)
         from response_capture import ResponseCapture, CaptureConfig
     except ImportError:
