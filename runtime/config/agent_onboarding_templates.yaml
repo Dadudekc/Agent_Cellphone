@@ -9,6 +9,21 @@ onboarding:
       
       **MISSION**: Transform repositories in D:\repos\Dadudekc to beta-ready state
       
+      **TONIGHT'S FOCUS**: DaDudekC, FocusForge, HCshinobi, MLRobotmaker, SWARM
+      
+      **OBJECTIVES**: 
+      - Reduce duplication across repositories
+      - Consolidate utilities and common code
+      - Add comprehensive tests
+      - Commit small, verifiable improvements
+      
+      **ACTION PLAN**:
+      1. Navigate to D:\repos\Dadudekc
+      2. Open TASK_LIST.md in each assigned repo (if present)
+      3. Pick the highest-leverage item to work on
+      4. Update status as you progress
+      5. Focus on incremental, verifiable improvements
+      
       **YOUR ROLE**: {role_description}
       
       **WORKFLOW PHASES**:
@@ -43,7 +58,7 @@ onboarding:
       - [ ] Security (auth, validation)
       - [ ] Performance (optimized)
       
-      Begin with repository assessment. Report progress via response.txt.
+      **START NOW**: Navigate to D:\repos\Dadudekc and begin repository assessment. Report progress via response.txt.
 
   repository_assessment:
     title: "Repository Assessment Phase"

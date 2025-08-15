@@ -69,22 +69,22 @@ agents:
   Agent-1:
     role: "Repository Assessment Specialist"
     focus: "Priority analysis and quick wins identification"
-    repositories: ["SWARM", "AI_Debugger_Assistant", "DigitalDreamscape"]
+    repositories: ["SWARM", "DaDudekC"]
     
   Agent-2:
     role: "Implementation Architect"
     focus: "Technical implementation and testing"
-    repositories: ["Auto_Blogger", "Dream.os", "FreeWork"]
+    repositories: ["FocusForge", "HCshinobi"]
     
   Agent-3:
     role: "Quality Assurance Engineer"
     focus: "Testing, validation, and deployment"
-    repositories: ["DaDudeKC-Website", "DreamVault", "FreerideinvestorWebsite"]
+    repositories: ["MLRobotmaker"]
     
   Agent-4:
     role: "Documentation & DevOps Specialist"
     focus: "Documentation, CI/CD, and monitoring"
-    repositories: ["DaDudekC", "FocusForge", "HCshinobi"]
+    repositories: ["SWARM", "DaDudekC"]
     
   Agent-5:
     role: "Workflow Coordinator & Captain"

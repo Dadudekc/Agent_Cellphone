@@ -1,0 +1,13 @@
+{
+  "type": "agent_response",
+  "from": "Agent-2",
+  "to": "Agent-5",
+  "timestamp": "2025-08-15T05:51:08",
+  "agent": "Agent-2",
+  "ts": 1755255068,
+  "payload": {
+    "type": "agent_freeform",
+    "summary": "Status: completed",
+    "raw": "Status: completed"
+  }
+}

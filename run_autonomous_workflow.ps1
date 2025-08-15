@@ -56,9 +56,9 @@ Write-Host "  Agent-5: Workflow Coordinator & Captain" -ForegroundColor White
 Write-Host ""
 
 Write-Host "🎯 Target Repositories:" -ForegroundColor Cyan
-Write-Host "  SWARM, AI_Debugger_Assistant, DigitalDreamscape, Auto_Blogger," -ForegroundColor White
-Write-Host "  Dream.os, FreeWork, DaDudeKC-Website, DreamVault," -ForegroundColor White
-Write-Host "  FreerideinvestorWebsite, DaDudekC, FocusForge, HCshinobi" -ForegroundColor White
+Write-Host "  SWARM, MLRobotmaker, DaDudekC, FocusForge, HCshinobi" -ForegroundColor White
+Write-Host "  Focus: Reduce duplication, consolidate utilities, add tests" -ForegroundColor White
+Write-Host "  Strategy: Small, verifiable improvements with TASK_LIST.md focus" -ForegroundColor White
 Write-Host ""
 
 # Confirm launch
@@ -78,7 +78,7 @@ python overnight_runner/runner.py `
   --layout 5-agent `
   --agents Agent-1,Agent-2,Agent-3,Agent-4 `
   --plan autonomous-development-workflow `
-  --focus-repo "ALL" `
+  --focus-repo "SWARM,MLRobotmaker,DaDudekC,FocusForge,HCshinobi" `
   --beta-ready-checklist "tests,build,deploy,docs,ui,monitoring,security,performance" `
   --duration-min 480 `
   --interval-sec 1800 `
