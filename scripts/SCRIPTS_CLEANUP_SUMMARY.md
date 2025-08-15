@@ -19,7 +19,7 @@
 - `commit_changes.py` - Git automation helper
 - `overnight_runner.py` - Scheduled tasks runner
 - `start_inbox_listener.py` - Inbox monitoring starter
-- `start_jarvis.bat` - Jarvis startup script
+
 - `full_featured_2_agent_demo.py` - Demo script for 2-agent system
 - `README_ONBOARDING.md` - Onboarding documentation
 - `AGENT_MESSENGER_INTEGRATION.md` - Integration documentation
@@ -46,7 +46,7 @@ The scripts folder now contains only essential, non-duplicate functionality:
 - `commit_changes.py` - Git automation
 - `overnight_runner.py` - Scheduled tasks
 - `start_inbox_listener.py` - Inbox monitoring
-- `start_jarvis.bat` - Startup automation
+
 
 ### **Documentation**
 - `README_ONBOARDING.md` - Onboarding guide

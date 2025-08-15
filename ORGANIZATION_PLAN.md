@@ -2,19 +2,10 @@
 
 ## Current Issues Identified:
 1. **Scattered Files**: Multiple files in root directory that should be organized
-2. **Duplicate Functionality**: Multiple audio/voice systems
-3. **Inconsistent Naming**: Mixed naming conventions
-4. **Missing Structure**: Some directories lack proper organization
+2. **Inconsistent Naming**: Mixed naming conventions
+3. **Missing Structure**: Some directories lack proper organization
 
 ## Organization Strategy:
-
-### Audio/Voice System Consolidation
-- `audio_system.py` → `src/audio/audio_system.py`
-- `simple_audio_system.py` → `src/audio/simple_audio_system.py`
-- `voice_recognition.py` → `src/audio/voice_recognition.py`
-- `voice_selector.py` → `src/audio/voice_selector.py`
-- `voice_profile_victor.json` → `config/voice_profiles/`
-- Audio test files → `tests/audio/`
 
 ### Vision System Organization
 - `vision_system.py` → `src/vision/vision_system.py`
@@ -24,10 +15,8 @@
 - `vision_requirements.txt` → `requirements/vision_requirements.txt`
 
 ### Core System Files
-- `personal_jarvis.py` → `src/core/personal_jarvis.py`
 - `conversation_engine.py` → `src/core/conversation_engine.py`
 - `memory_system.py` → `src/core/memory_system.py`
-- `multimodal_agent.py` → `src/core/multimodal_agent.py`
 
 ### Development & Testing
 - Test files → `tests/`

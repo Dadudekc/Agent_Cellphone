@@ -20,11 +20,11 @@
 - `test_capture.py` - Test script for response capture system
 - `test_capture_live.py` - Live test script for capture system
 - `requirements_capture.txt` - Duplicate requirements for capture system
-- `debug/debug_tts_issue.py` - Debug script for TTS issues
+
 - `pytest_fsm_bridge_output.txt` - Empty pytest output file
 
 ### **Duplicate Requirements (Consolidated into main requirements.txt)**
-- `requirements/audio_requirements.txt` - Duplicated audio dependencies
+
 - `requirements/vision_requirements.txt` - Duplicated vision dependencies
 - `requirements/` directory - Now empty, removed
 
@@ -47,7 +47,7 @@
 - `main.py` - Main application entry point
 - `agent_cell_phone.py` - Compatibility wrapper (needed for imports)
 - `inter_agent_framework.py` - Compatibility wrapper (needed for imports)
-- `requirements.txt` - Consolidated dependencies (includes all audio/vision deps)
+- `requirements.txt` - Consolidated dependencies (includes all vision deps)
 
 ### **Configuration & Environment**
 - `.env` - Environment configuration

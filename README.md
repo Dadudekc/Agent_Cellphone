@@ -197,7 +197,7 @@ Agent_CellPhone/
 │   ├── start_inbox_listener.py  # File inbox listener starter
 │   ├── overnight_runner.py      # Overnight cadence runner
 │   ├── commit_changes.py        # Git commit helper
-│   └── start_jarvis.bat         # Jarvis startup script
+
 ├── examples/                    # 🎯 Example code
 │   ├── agent_conversation_demo.py # Conversation examples
 │   ├── coordination_demo.py     # Coordination examples

@@ -270,7 +270,7 @@ If the system appears broken:
 ## 🔗 Integration Points
 
 ### With Core Components
-- **MultimodalAgent**: Provides voice/vision capabilities for agents
+- **DevAutomationAgent**: Handles development task automation
 - **DevAutomationAgent**: Handles development task automation
 - **InboxListener**: Manages message routing and processing
 - **CommandRouter**: Processes commands and routes to handlers
