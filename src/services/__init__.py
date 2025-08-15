@@ -8,5 +8,11 @@ injection.
 """
 from .browser_manager import BrowserManager
 
-__all__ = ["BrowserManager"]
+from .browser_manager import BrowserManager
+from .session_authenticator import SessionAuthenticator
+
+__all__ = [
+    "BrowserManager",
+    "SessionAuthenticator",
+]
 

@@ -1,108 +1,58 @@
-"""Browser management utilities built on Playwright.
-
-This module provides a lightweight wrapper around Playwright's synchronous
-API that is tailored for agent usage.  The :class:`BrowserManager` handles
-browser launch, creation of isolated contexts with optional cookie loading,
-and cleanup of all resources.
-"""
-
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
-try:  # pragma: no cover - optional dependency during documentation builds
-    from playwright.sync_api import Browser, BrowserContext, sync_playwright
-except Exception:  # pragma: no cover
-    Browser = BrowserContext = None  # type: ignore
-    sync_playwright = None  # type: ignore
+from playwright.sync_api import sync_playwright, Browser, BrowserContext
+
+from .session_authenticator import SessionAuthenticator
 
 
 class BrowserManager:
-    """Utility class for managing a Playwright browser instance.
+    """Launch and manage a Playwright browser instance.
 
-    Parameters
-    ----------
-    headless:
-        Whether to run the browser in headless mode.  Defaults to ``True``.
-    viewport:
-        Optional viewport dictionary with ``width`` and ``height`` keys used
-        for all created contexts.
-    user_agent:
-        Optional user agent string applied to created contexts.
+    The manager ensures an authenticated session is available before any
+    conversation logic is executed by leveraging :class:`SessionAuthenticator`.
     """
 
-    def __init__(
-        self,
-        headless: bool = True,
-        viewport: Optional[Dict[str, int]] = None,
-        user_agent: Optional[str] = None,
-    ) -> None:
+    def __init__(self, cookie_path: str = "cookies.json", headless: bool = True) -> None:
+        self.cookie_path = cookie_path
         self.headless = headless
-        self.viewport = viewport
-        self.user_agent = user_agent
-        self._playwright = None
-        self._browser: Optional[Browser] = None
-        self._contexts: List[BrowserContext] = []
+        self.playwright = None
+        self.browser: Optional[Browser] = None
+        self.context: Optional[BrowserContext] = None
+        self.auth = SessionAuthenticator(cookie_path)
 
     # ------------------------------------------------------------------
-    def launch(self) -> None:
-        """Launch the underlying browser if not already running."""
+    def start(self, email: Optional[str] = None, password: Optional[str] = None) -> BrowserContext:
+        """Launch browser and authenticate session.
 
-        if self._browser is not None:
-            return
-        if sync_playwright is None:  # pragma: no cover - missing dependency
-            raise RuntimeError("playwright is not installed")
-
-        self._playwright = sync_playwright().start()
-        self._browser = self._playwright.chromium.launch(headless=self.headless)
-
-    # ------------------------------------------------------------------
-    def new_context(self, cookie_path: Optional[str] = None) -> BrowserContext:
-        """Create a new browser context.
-
-        If ``cookie_path`` points to a JSON file containing cookies in
-        Playwright's storage state format, they are loaded into the context
-        before any navigation occurs.
+        Cookie-based login is attempted first. If it fails, credential-based
+        login is tried when ``email`` and ``password`` are provided. Otherwise,
+        the user is prompted to log in manually.
         """
+        self.playwright = sync_playwright().start()
+        self.browser = self.playwright.chromium.launch(headless=self.headless)
+        self.context = self.browser.new_context()
 
-        if self._browser is None:
-            self.launch()
-        assert self._browser is not None  # for type checkers
+        if not self.auth.cookie_login(self.context):
+            success = False
+            if email and password:
+                success = self.auth.credential_login(self.context, email, password)
+            if not success:
+                self.auth.await_manual_login(self.context)
+            self.auth.save_cookies()
 
-        kwargs: Dict = {}
-        if self.viewport:
-            kwargs["viewport"] = self.viewport
-        if self.user_agent:
-            kwargs["user_agent"] = self.user_agent
-        if cookie_path and Path(cookie_path).exists():
-            kwargs["storage_state"] = str(cookie_path)
-
-        context = self._browser.new_context(**kwargs)
-        self._contexts.append(context)
-        return context
+        return self.context
 
     # ------------------------------------------------------------------
-    def close(self) -> None:
-        """Close all contexts and the browser."""
-
-        for ctx in list(self._contexts):
-            try:
-                ctx.close()
-            except Exception:  # pragma: no cover - best effort cleanup
-                pass
-        self._contexts.clear()
-
-        if self._browser is not None:
-            try:
-                self._browser.close()
-            finally:
-                self._browser = None
-
-        if self._playwright is not None:
-            self._playwright.stop()
-            self._playwright = None
-
-
-__all__ = ["BrowserManager"]
+    def stop(self) -> None:
+        """Close browser resources."""
+        try:
+            if self.context:
+                self.context.close()
+            if self.browser:
+                self.browser.close()
+        finally:
+            if self.playwright:
+                self.playwright.stop()
 
