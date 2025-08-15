@@ -7,10 +7,17 @@ service implementations (local or remote) to be swapped via dependency
 injection.
 """
 
+from .conversation_logger import (
+    save_conversation,
+    list_conversations,
+    load_conversation,
+    load_conversations,
+)
+
 __all__ = [
-    "agent_service",
-    "api",
-    "event_bus",
-    "browser_utils",
+    "save_conversation",
+    "list_conversations",
+    "load_conversation",
+    "load_conversations",
 ]
 
