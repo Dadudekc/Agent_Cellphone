@@ -8,8 +8,10 @@ Central launcher for all components of the Agent Cell Phone system.
 import os
 import sys
 import subprocess
-import json
-from pathlib import Path
+
+from src.core.config_loader import load_config
+
+CONFIG = load_config()
 
 def print_banner():
     """Print the application banner."""
@@ -104,13 +106,14 @@ def show_project_status():
     print("-" * 40)
     
     # Check key directories and files
+    paths = CONFIG.get("paths", {})
     status_items = [
-        ("📁 Agent Workspaces", "agent_workspaces/"),
+        ("📁 Agent Workspaces", paths.get("agent_workspaces", "agent_workspaces/")),
         ("📁 Source Code", "src/"),
-        ("📁 GUI Components", "gui/"),
+        ("📁 GUI Components", paths.get("gui_root", "gui/")),
         ("📁 Configuration", "config/"),
         ("📁 Documentation", "docs/"),
-        ("📁 Examples", "examples/"),
+        ("📁 Examples", paths.get("examples_root", "examples/")),
         ("📁 Tests", "tests/"),
         ("📁 Scripts", "scripts/"),
         ("📁 PRDs", "project_repository/PRDs/"),

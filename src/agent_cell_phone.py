@@ -18,42 +18,27 @@ import queue
 
 try:
     import pyautogui  # mechanical control
-    # Allow disabling failsafe via environment for controlled broadcasts
-    try:
-        if os.environ.get("ACP_DISABLE_FAILSAFE", "0").strip() not in ("0", "", "false", "False"):
-            pyautogui.FAILSAFE = False
-    except Exception:
-        pass
-except Exception:  # pragma: no cover - depends on system display
-    pyautogui = None  # tolerate headless or missing dependencies
+except Exception:
+    pyautogui = None  # tolerates headless tests and missing displays
 
-# Response capture integration
-try:
-    import yaml
-    # Try to import response_capture
-    try:
-        import sys
-        response_capture_path = str(Path(__file__).parent / "agent_cell_phone")
-        sys.path.insert(0, response_capture_path)
-        from response_capture import ResponseCapture, CaptureConfig
-    except ImportError:
-        ResponseCapture = None
-        CaptureConfig = None
-except ImportError:
-    ResponseCapture = None
-    CaptureConfig = None
-    yaml = None
+from core.config_loader import load_config
+
+_CONFIG = load_config()
+_PATHS = _CONFIG.get("paths", {})
+_ENV = _CONFIG.get("environment", {})
+
+_REPO_ROOT = Path(_PATHS.get("repo_root", Path(__file__).resolve().parent.parent))
 
 # ──────────────────────────── config paths
-REPO_ROOT   = Path(__file__).resolve().parent.parent    # Go up to project root
-CONFIG_DIR  = REPO_ROOT / "runtime" / "config"
-COORD_FILE  = REPO_ROOT / "runtime" / "agent_comms" / "cursor_agent_coords.json"
-MODE_FILE   = REPO_ROOT / "config" / "templates" / "agent_modes.json"
-CAPTURE_CONFIG_FILE = CONFIG_DIR / "agent_capture.yaml"
+CONFIG_DIR  = Path(_PATHS.get("runtime_config", "src/runtime/config"))
+if not CONFIG_DIR.is_absolute():
+    CONFIG_DIR = _REPO_ROOT / CONFIG_DIR
+COORD_FILE  = CONFIG_DIR / "cursor_agent_coords.json"
+MODE_FILE   = CONFIG_DIR / "templates" / "agent_modes.json"
 
 # ──────────────────────────── logging
 logging.basicConfig(
-    level=logging.INFO,
+    level=getattr(logging, _ENV.get("log_level", "INFO").upper(), logging.INFO),
     format="%(asctime)s | %(levelname)7s | %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
@@ -90,11 +75,14 @@ class AgentMessage:
         return f"{self.from_agent} → {self.to_agent}: {self.tag.value} {self.content}"
 
 # ──────────────────────────── core class
+DEFAULT_LAYOUT = _ENV.get("default_agent_layout", "2-agent")
+
+
 class AgentCellPhone:
     """Deterministic messenger for Cursor agents with inter-agent communication."""
 
     # public API ─────────────────────────
-    def __init__(self, agent_id: str = "Agent-1", layout_mode: str = "2-agent", test: bool = False) -> None:
+    def __init__(self, agent_id: str = "Agent-1", layout_mode: str = DEFAULT_LAYOUT, test: bool = False) -> None:
         self._agent_id = self._fmt_id(agent_id)
         self._layout_mode = layout_mode
         self._all_coords = self._load_json(COORD_FILE, "coordinates")
