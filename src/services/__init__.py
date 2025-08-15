@@ -6,6 +6,7 @@ directly depending on the implementation details.  It enables different
 service implementations (local or remote) to be swapped via dependency
 injection.
 """
+from .browser_manager import BrowserManager
 
-__all__ = []
+__all__ = ["BrowserManager"]
 
