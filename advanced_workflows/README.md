@@ -85,6 +85,10 @@ python advanced_workflows/multi_agent_dev.py --task "build user authentication s
 python advanced_workflows/autonomous_pm.py --goal "deploy production system"
 ```
 
+## 📣 Discord Devlog Notifications
+
+Set the `DISCORD_WEBHOOK_URL` environment variable (and optionally `DEVLOG_USERNAME`) to receive a completion summary for each workflow via Discord. The workflow engine posts a message when runs finish, showing total, completed, and failed steps along with runtime.
+
 ---
 
 ## 🔮 **FUTURE EXPANSIONS**

@@ -5,12 +5,14 @@ Powers sophisticated AI orchestration workflows using the new cursor capture sys
 """
 
 import json
+import os
 import time
 import asyncio
 from pathlib import Path
 from typing import Dict, List, Callable, Any, Optional
 from dataclasses import dataclass, field
 from enum import Enum
+from urllib import request, error
 import logging
 
 # Configure logging
@@ -58,8 +60,15 @@ class AIResponse:
 
 class WorkflowEngine:
     """Main workflow orchestration engine"""
-    
-    def __init__(self, workflow_name: str, agent_system_path: str = "agent_workspaces"):
+
+    def __init__(
+        self,
+        workflow_name: str,
+        agent_system_path: str = "agent_workspaces",
+        devlog_webhook: str | None = None,
+        devlog_username: str = "Agent Devlog",
+        devlog_embed: bool = False,
+    ):
         self.workflow_name = workflow_name
         self.agent_system_path = Path(agent_system_path)
         self.steps: List[WorkflowStep] = []
@@ -70,15 +79,22 @@ class WorkflowEngine:
         self.start_time = time.time()
         self.ai_responses: List[AIResponse] = []
         self.workflow_data: Dict[str, Any] = {}
-        
+
+        # Devlog configuration
+        self.devlog_webhook = devlog_webhook or os.environ.get("DISCORD_WEBHOOK_URL")
+        self.devlog_username = devlog_username or os.environ.get(
+            "DEVLOG_USERNAME", "Agent Devlog"
+        )
+        self.devlog_use_embed = bool(devlog_embed)
+
         # Response monitoring
         self.response_monitor_path = self.agent_system_path / "Agent-5" / "inbox"
         self.last_response_check = time.time()
-        
+
         # Workflow persistence
         self.workflow_state_path = Path(f"workflow_states/{workflow_name}")
         self.workflow_state_path.mkdir(parents=True, exist_ok=True)
-        
+
         logger.info(f"Workflow Engine initialized: {workflow_name}")
 
     def add_step(self, step: WorkflowStep) -> None:
@@ -215,9 +231,12 @@ class WorkflowEngine:
         self.state = WorkflowState.RUNNING
         logger.info(f"Starting workflow: {self.workflow_name}")
         self.save_state()
-        
+
         # Start execution loop
-        asyncio.run(self._execute_workflow())
+        try:
+            asyncio.run(self._execute_workflow())
+        finally:
+            self._send_devlog_summary()
 
     async def _execute_workflow(self) -> None:
         """Main workflow execution loop"""
@@ -427,6 +446,35 @@ class WorkflowEngine:
             "workflow_data": self.workflow_data,
             "execution_time": time.time() - self.start_time
         }
+
+    def _post_discord(self, title: str, description: str) -> None:
+        """Send a devlog message to Discord if configured"""
+        if not self.devlog_webhook:
+            return
+        payload: dict = {"username": self.devlog_username}
+        if self.devlog_use_embed:
+            payload["embeds"] = [{"title": title, "description": description, "color": 5814783}]
+        else:
+            payload["content"] = f"**{title}**\n{description}"
+        try:
+            data = json.dumps(payload).encode("utf-8")
+            req = request.Request(self.devlog_webhook, data=data, headers={"Content-Type": "application/json"})
+            with request.urlopen(req, timeout=6):
+                pass
+        except (error.HTTPError, error.URLError, Exception):
+            pass
+
+    def _send_devlog_summary(self) -> None:
+        """Post a workflow summary to Discord"""
+        progress = self.get_progress()
+        total = progress["progress"]["total_steps"]
+        completed = progress["progress"]["completed"]
+        failed = progress["progress"]["failed"]
+        duration = int(progress["execution_time"])
+        description = f"Completed {completed}/{total} steps in {duration}s"
+        if failed:
+            description += f" with {failed} failed"
+        self._post_discord(f"Workflow {self.workflow_name} {self.state.value}", description)
 
     def pause(self) -> None:
         """Pause workflow execution"""
