@@ -18,7 +18,7 @@ _THIS = Path(__file__).resolve()
 sys.path.insert(0, str(_THIS.parents[1]))
 sys.path.insert(0, str(_THIS.parents[1] / 'src'))
 
-from agent_cell_phone import AgentCellPhone, MsgTag  # type: ignore
+from src.services.agent_cell_phone import AgentCellPhone, MsgTag  # type: ignore
 
 
 @dataclass
