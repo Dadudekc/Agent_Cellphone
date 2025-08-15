@@ -7,5 +7,7 @@ service implementations (local or remote) to be swapped via dependency
 injection.
 """
 
-__all__ = []
+from .prompt_interactor import PromptInteractor
+
+__all__ = ["PromptInteractor"]
 
