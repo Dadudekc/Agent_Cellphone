@@ -6,7 +6,6 @@ Simple launcher for the horizontal 2-agent GUI from project root.
 """
 
 import sys
-import os
 
 def main():
     """Launch the two agent horizontal GUI."""
@@ -30,4 +29,4 @@ def main():
         sys.exit(1)
 
 if __name__ == "__main__":
-    main() 
+    main()

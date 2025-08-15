@@ -106,7 +106,7 @@ python gui/four_agent_horizontal_gui.py
 
 #### Command Line Interface
 ```python
-from src.agent_cell_phone import AgentCellPhone
+from services.agent_cell_phone import AgentCellPhone
 
 # Initialize agent
 acp = AgentCellPhone("agent-1")
@@ -168,29 +168,19 @@ acp.broadcast("Status update: All systems operational")
 
 ```
 Agent_CellPhone/
-├── launch.py                    # 🚀 Main launcher script
 ├── README.md                    # 📖 This file
 ├── requirements.txt             # 📦 Dependencies
-├── .gitignore                   # 🚫 Git ignore rules
 ├── src/                         # 🔧 Core system files
-│   ├── agent_cell_phone.py      # Core messaging system
-│   ├── inter_agent_framework.py # Inter-agent communication
-│   ├── main.py                  # Main system entry point
-│   └── cursor_capture/          # 🚀 NEW: AI Response Capture System
-│       ├── db_reader.py         # Database access & message extraction
-│       ├── watcher.py           # Real-time monitoring & envelope creation
-│       └── export_consumer.py   # Export file fallback processing
-├── gui/                         # 🖥️ GUI interfaces
-│   ├── dream_os_gui.py          # ✅ Modern PyQt GUI (main)
-│   ├── run_gui.py               # ✅ GUI launcher script
-│   └── agent_resume_web_gui.html # ✅ Web-based interface
+│   ├── core/                    # Core engine logic
+│   ├── gui/                     # GUI components
+│   ├── services/                # Background services
+│   └── main.py                  # Main system entry point
 ├── tests/                       # 🧪 Test suite
 │   ├── test_harness.py          # Main test harness
 │   ├── test_8_agent_coordinates.py # 8-agent coordinate testing
 │   ├── test_inter_agent_framework.py # Framework testing
 │   ├── test_special_chars.py    # Special character testing
-│   ├── diagnostic_test.py       # Diagnostic testing tools
-│   └── coordinate_finder.py     # Coordinate mapping utility
+│   └── diagnostic_test.py       # Diagnostic testing tools
 ├── scripts/                     # 🔧 Utility scripts
 │   ├── agent_messenger.py       # Agent messaging utilities (legacy CLI)
 │   ├── consolidated_onboarding.py # Unified onboarding CLI

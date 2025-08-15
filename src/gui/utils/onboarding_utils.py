@@ -9,16 +9,11 @@ import time
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
-import sys
 
-# Add project root to path
-project_root = Path(__file__).parent.parent.parent
-sys.path.append(str(project_root))
+from services.agent_cell_phone import AgentCellPhone, MsgTag
 
-try:
-    from agent_cell_phone import AgentCellPhone, MsgTag
-except ImportError:
-    print("Warning: agent_cell_phone module not found")
+# Determine project root for accessing onboarding resources
+project_root = Path(__file__).resolve().parents[2]
 
 class OnboardingUtils:
     """Utility class for agent onboarding operations"""

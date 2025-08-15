@@ -16,8 +16,8 @@ from pathlib import Path
 
 # Import existing components
 try:
-    from src.gui.utils.unified_broadcast_service import UnifiedBroadcastService, BroadcastType, BroadcastPriority
-    from src.gui.utils.shared_classes import CoordinateFinder, AgentAutonomyFramework
+    from .unified_broadcast_service import UnifiedBroadcastService, BroadcastType, BroadcastPriority
+    from .shared_classes import CoordinateFinder, AgentAutonomyFramework
 except ImportError:
     # Fallback imports
     UnifiedBroadcastService = None

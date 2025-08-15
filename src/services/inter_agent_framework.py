@@ -17,11 +17,12 @@ from pathlib import Path
 from typing import Dict, List, Optional, Callable, Any
 from datetime import datetime
 
-from agent_cell_phone import AgentCellPhone, MsgTag
+from .agent_cell_phone import AgentCellPhone, MsgTag
 
 # ──────────────────────────── Configuration
-REPO_ROOT = Path(__file__).resolve().parent
-CONFIG_DIR = REPO_ROOT / "runtime" / "config"
+# Repository paths
+REPO_ROOT = Path(__file__).resolve().parents[1]
+CONFIG_DIR = REPO_ROOT / "core" / "runtime" / "config"
 
 # ──────────────────────────── Logging
 logging.basicConfig(

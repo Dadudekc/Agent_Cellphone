@@ -83,7 +83,7 @@ def run_coordinate_finder():
     """Run the coordinate finder utility."""
     print("📍 Launching Coordinate Finder...")
     try:
-        subprocess.run([sys.executable, "coordinate_finder.py", "--mode", "find"], check=True)
+        subprocess.run([sys.executable, "core/utils/coordinate_finder.py", "--mode", "find"], check=True)
     except subprocess.CalledProcessError as e:
         print(f"❌ Error running coordinate finder: {e}")
     except KeyboardInterrupt:

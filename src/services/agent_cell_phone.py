@@ -19,20 +19,11 @@ import queue
 try:
     import pyautogui  # mechanical control
 except Exception:
-    pyautogui = None  # tolerates headless tests and missing displays
-
-from core.config_loader import load_config
-
-_CONFIG = load_config()
-_PATHS = _CONFIG.get("paths", {})
-_ENV = _CONFIG.get("environment", {})
-
-_REPO_ROOT = Path(_PATHS.get("repo_root", Path(__file__).resolve().parent.parent))
+    pyautogui = None                          # tolerates headless tests
 
 # ──────────────────────────── config paths
-CONFIG_DIR  = Path(_PATHS.get("runtime_config", "src/runtime/config"))
-if not CONFIG_DIR.is_absolute():
-    CONFIG_DIR = _REPO_ROOT / CONFIG_DIR
+REPO_ROOT   = Path(__file__).resolve().parents[1]
+CONFIG_DIR  = REPO_ROOT / "core" / "runtime" / "config"
 COORD_FILE  = CONFIG_DIR / "cursor_agent_coords.json"
 MODE_FILE   = CONFIG_DIR / "templates" / "agent_modes.json"
 

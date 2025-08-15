@@ -1,87 +1,42 @@
 #!/usr/bin/env python3
 """
-Dream.OS Four-Agent Horizontal GUI
-==================================
-Modern, clean interface for managing four agents in a horizontal layout.
+Dream.OS Two-Agent Horizontal GUI
+=================================
+Modern, clean interface for managing two agents in a horizontal layout.
 Inspired by the v2 GUI design with simplified, focused functionality.
 """
 
 import sys
-import os
 import warnings
-
-# Suppress PyQt5 deprecation warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning, module="PyQt5")
-
-# Import PyQt5 first (before project imports)
-try:
-    import PyQt5
-    from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
-                                QHBoxLayout, QGridLayout, QLabel, QPushButton, 
-                                QComboBox, QTextEdit, QLineEdit, QGroupBox, 
-                                QSplitter, QTabWidget, QCheckBox, QListWidget,
-                                QListWidgetItem, QProgressBar, QFrame, QScrollArea,
-                                QMessageBox, QFileDialog, QSlider, QSpinBox, QInputDialog)
-    from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal, QPropertyAnimation, QEasingCurve
-    from PyQt5.QtGui import QFont, QPixmap, QIcon, QPalette, QColor, QPainter, QBrush, QTextCursor
-    
-    # QTextCursor registration is optional and not needed for basic functionality
-    print("✅ PyQt5 imported successfully")
-except ImportError as e:
-    print(f"PyQt5 import error: {e}")
-    print("PyQt5 not available. Please install: pip install PyQt5")
-    sys.exit(1)
-
-# Add multiple possible paths for imports
-current_dir = os.path.dirname(__file__)
-project_root = os.path.dirname(current_dir)
-sys.path.insert(0, project_root)
-sys.path.insert(0, os.path.join(project_root, 'src'))
-
-try:
-    from src.utils.coordinate_finder import CoordinateFinder
-    from src.framework.agent_autonomy_framework import AgentAutonomyFramework
-except ImportError as e:
-    print(f"Import error: {e}")
-    print("Trying alternative import paths...")
-    
-    # Try direct import
-    try:
-        from utils.coordinate_finder import CoordinateFinder
-        from framework.agent_autonomy_framework import AgentAutonomyFramework
-        print("✅ Imported using direct path")
-    except ImportError:
-        print("Creating fallback classes...")
-        # Import coordinate finder from utils
-        try:
-            from src.utils.coordinate_finder import CoordinateFinder
-        except ImportError:
-            # Create dummy classes for fallback
-            class CoordinateFinder:
-                def __init__(self):
-                    self.coordinates = {}
-                def get_all_coordinates(self):
-                    return {f"agent-{i}": (100 + i*50, 100 + i*50) for i in range(1, 5)}
-                def get_coordinates(self, agent_id):
-                    return (100, 100)
-        
-        try:
-            from src.framework.agent_autonomy_framework import AgentAutonomyFramework
-        except ImportError:
-            class AgentAutonomyFramework:
-                def __init__(self):
-                    pass
-
 import json
 import threading
 import time
 import pyautogui
 from datetime import datetime
 from typing import List, Dict, Optional
-from gui.components.agent_panel import AgentPanel
 
-class FourAgentHorizontalGUI(QMainWindow):
-    """Modern four-agent horizontal GUI."""
+warnings.filterwarnings("ignore", category=DeprecationWarning, module="PyQt5")
+
+try:
+    from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
+                                QHBoxLayout, QGridLayout, QLabel, QPushButton,
+                                QComboBox, QTextEdit, QLineEdit, QGroupBox,
+                                QSplitter, QTabWidget, QCheckBox, QListWidget,
+                                QListWidgetItem, QProgressBar, QFrame, QScrollArea,
+                                QMessageBox, QFileDialog, QSlider, QSpinBox, QInputDialog)
+    from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal, QPropertyAnimation, QEasingCurve
+    from PyQt5.QtGui import QFont, QPixmap, QIcon, QPalette, QColor, QPainter, QBrush, QTextCursor
+except ImportError as e:
+    print(f"PyQt5 import error: {e}")
+    print("PyQt5 not available. Please install: pip install PyQt5")
+    sys.exit(1)
+
+from core.utils.coordinate_finder import CoordinateFinder
+from core.framework.agent_autonomy_framework import AgentAutonomyFramework
+from .components.agent_panel import AgentPanel
+
+class TwoAgentHorizontalGUI(QMainWindow):
+    """Modern two-agent horizontal GUI."""
     
     def __init__(self):
         super().__init__()
@@ -94,8 +49,8 @@ class FourAgentHorizontalGUI(QMainWindow):
     
     def init_ui(self):
         """Initialize the main UI."""
-        self.setWindowTitle("Dream.OS Four-Agent Horizontal GUI")
-        self.setGeometry(100, 100, 1600, 900)  # Larger window for 4 agents
+        self.setWindowTitle("Dream.OS Two-Agent Horizontal GUI")
+        self.setGeometry(100, 100, 1400, 800)
         self.setStyleSheet("""
             QMainWindow {
                 background-color: #1A1A1A;
@@ -114,17 +69,21 @@ class FourAgentHorizontalGUI(QMainWindow):
         # Header
         self.create_header(main_layout)
         
-        # Agent panels (horizontal layout for 4 agents)
+        # Agent panels (horizontal layout)
         agent_layout = QHBoxLayout()
-        agent_layout.setSpacing(15)  # Smaller spacing for 4 panels
+        agent_layout.setSpacing(20)
         
-        # Create 4 agent panels
-        for i in range(1, 5):
-            agent_id = f"agent-{i}"
-            agent_panel = AgentPanel(agent_id, self)
-            agent_panel.main_gui = self  # Direct reference to main GUI
-            self.agent_panels[agent_id] = agent_panel
-            agent_layout.addWidget(agent_panel)
+        # Agent 1 panel
+        agent1_panel = AgentPanel("agent-1", self)
+        agent1_panel.main_gui = self  # Direct reference to main GUI
+        self.agent_panels["agent-1"] = agent1_panel
+        agent_layout.addWidget(agent1_panel)
+        
+        # Agent 2 panel
+        agent2_panel = AgentPanel("agent-2", self)
+        agent2_panel.main_gui = self  # Direct reference to main GUI
+        self.agent_panels["agent-2"] = agent2_panel
+        agent_layout.addWidget(agent2_panel)
         
         main_layout.addLayout(agent_layout)
         
@@ -135,7 +94,7 @@ class FourAgentHorizontalGUI(QMainWindow):
         self.create_log_area(main_layout)
         
         # Status bar
-        self.statusBar().showMessage("Ready - Four-Agent Horizontal GUI")
+        self.statusBar().showMessage("Ready - Two-Agent Horizontal GUI")
     
     def create_header(self, layout):
         """Create the header section."""
@@ -172,7 +131,7 @@ class FourAgentHorizontalGUI(QMainWindow):
         
         # Title text
         title_text_layout = QVBoxLayout()
-        title_label = QLabel("Dream.OS Four-Agent System")
+        title_label = QLabel("Dream.OS Two-Agent System")
         title_label.setStyleSheet("""
             QLabel {
                 font-size: 24px;
@@ -207,7 +166,7 @@ class FourAgentHorizontalGUI(QMainWindow):
         """)
         status_layout.addWidget(self.system_status_label)
         
-        self.agent_count_label = QLabel("4 Agents Connected")
+        self.agent_count_label = QLabel("2 Agents Connected")
         self.agent_count_label.setStyleSheet("""
             QLabel {
                 font-size: 12px;
@@ -250,7 +209,7 @@ class FourAgentHorizontalGUI(QMainWindow):
         
         # Row 1: System controls
         onboard_btn = QPushButton("🚀 Onboard Agents")
-        onboard_btn.setToolTip("Run onboarding sequence for all agents")
+        onboard_btn.setToolTip("Run onboarding sequence for both agents")
         onboard_btn.clicked.connect(self.onboard_agents)
         onboard_btn.setStyleSheet("""
             QPushButton {
@@ -271,7 +230,7 @@ class FourAgentHorizontalGUI(QMainWindow):
         restart_btn.clicked.connect(self.restart_system)
         restart_btn.setStyleSheet("""
             QPushButton {
-                background-color: #E67E22;
+                background-color: #E74C3C;
                 color: white;
                 border-radius: 8px;
                 padding: 12px;
@@ -279,71 +238,14 @@ class FourAgentHorizontalGUI(QMainWindow):
                 font-size: 12px;
             }
             QPushButton:hover {
-                background-color: #D35400;
+                background-color: #C0392B;
             }
         """)
         
-        test_coords_btn = QPushButton("📍 Test Coordinates")
-        test_coords_btn.setToolTip("Test agent coordinates")
-        test_coords_btn.clicked.connect(self.test_coordinates)
-        test_coords_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #9B59B6;
-                color: white;
-                border-radius: 8px;
-                padding: 12px;
-                font-weight: bold;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #8E44AD;
-            }
-        """)
-        
-        get_status_btn = QPushButton("📊 Get System Status")
-        get_status_btn.setToolTip("Get status from all agents")
-        get_status_btn.clicked.connect(self.get_system_status)
-        get_status_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #3498DB;
-                color: white;
-                border-radius: 8px;
-                padding: 12px;
-                font-weight: bold;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #2980B9;
-            }
-        """)
-        
-        controls_grid.addWidget(onboard_btn, 0, 0)
-        controls_grid.addWidget(restart_btn, 0, 1)
-        controls_grid.addWidget(test_coords_btn, 0, 2)
-        controls_grid.addWidget(get_status_btn, 0, 3)
-        
-        # Row 2: Communication controls
-        send_msg_btn = QPushButton("💬 Send Message")
-        send_msg_btn.setToolTip("Send message to all agents")
-        send_msg_btn.clicked.connect(self.send_message)
-        send_msg_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #1ABC9C;
-                color: white;
-                border-radius: 8px;
-                padding: 12px;
-                font-weight: bold;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #16A085;
-            }
-        """)
-        
-        broadcast_btn = QPushButton("📡 Broadcast Command")
-        broadcast_btn.setToolTip("Send broadcast command to all agents")
-        broadcast_btn.clicked.connect(self.broadcast_command)
-        broadcast_btn.setStyleSheet("""
+        coords_btn = QPushButton("🗺️ Coordinate Mapping")
+        coords_btn.setToolTip("Test and manage agent coordinates")
+        coords_btn.clicked.connect(self.test_coordinates)
+        coords_btn.setStyleSheet("""
             QPushButton {
                 background-color: #F39C12;
                 color: white;
@@ -357,8 +259,65 @@ class FourAgentHorizontalGUI(QMainWindow):
             }
         """)
         
+        controls_grid.addWidget(onboard_btn, 0, 0)
+        controls_grid.addWidget(restart_btn, 0, 1)
+        controls_grid.addWidget(coords_btn, 0, 2)
+        
+        # Row 2: Communication controls
+        send_msg_btn = QPushButton("📤 Send Message")
+        send_msg_btn.setToolTip("Send a message to both agents")
+        send_msg_btn.clicked.connect(self.send_message)
+        send_msg_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #3498DB;
+                color: white;
+                border-radius: 8px;
+                padding: 12px;
+                font-weight: bold;
+                font-size: 12px;
+            }
+            QPushButton:hover {
+                background-color: #2980B9;
+            }
+        """)
+        
+        broadcast_btn = QPushButton("📢 Broadcast")
+        broadcast_btn.setToolTip("Send broadcast command to both agents")
+        broadcast_btn.clicked.connect(self.broadcast_command)
+        broadcast_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #8E44AD;
+                color: white;
+                border-radius: 8px;
+                padding: 12px;
+                font-weight: bold;
+                font-size: 12px;
+            }
+            QPushButton:hover {
+                background-color: #7D3C98;
+            }
+        """)
+        
+        status_btn = QPushButton("📊 System Status")
+        status_btn.setToolTip("Get status from both agents")
+        status_btn.clicked.connect(self.get_system_status)
+        status_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #34495E;
+                color: white;
+                border-radius: 8px;
+                padding: 12px;
+                font-weight: bold;
+                font-size: 12px;
+            }
+            QPushButton:hover {
+                background-color: #2C3E50;
+            }
+        """)
+        
         controls_grid.addWidget(send_msg_btn, 1, 0)
         controls_grid.addWidget(broadcast_btn, 1, 1)
+        controls_grid.addWidget(status_btn, 1, 2)
         
         controls_layout.addLayout(controls_grid)
         layout.addWidget(controls_frame)
@@ -377,13 +336,13 @@ class FourAgentHorizontalGUI(QMainWindow):
         log_layout = QVBoxLayout(log_frame)
         
         # Log title
-        log_title = QLabel("System Log")
+        log_title = QLabel("System Activity Log")
         log_title.setStyleSheet("""
             QLabel {
                 font-size: 14px;
                 font-weight: bold;
                 color: white;
-                padding: 8px;
+                padding: 5px;
             }
         """)
         log_layout.addWidget(log_title)
@@ -393,13 +352,14 @@ class FourAgentHorizontalGUI(QMainWindow):
         self.log_display.setStyleSheet("""
             QTextEdit {
                 background-color: #1A1A1A;
-                color: #BDC3C7;
+                color: #ECF0F1;
                 border: 1px solid #34495E;
                 border-radius: 5px;
                 font-family: 'Consolas', 'Monaco', monospace;
-                font-size: 10px;
+                font-size: 11px;
             }
         """)
+        self.log_display.setReadOnly(True)
         self.log_display.setMaximumHeight(200)
         log_layout.addWidget(self.log_display)
         
@@ -452,7 +412,7 @@ class FourAgentHorizontalGUI(QMainWindow):
         self.status_timer.start(5000)  # Update every 5 seconds
         
         # Initial log message
-        self.log_message("System", "Four-Agent Horizontal GUI initialized")
+        self.log_message("System", "Two-Agent Horizontal GUI initialized")
         self.log_message("System", "Modern interface loaded successfully")
     
     def log_message(self, sender: str, message: str):
@@ -467,7 +427,7 @@ class FourAgentHorizontalGUI(QMainWindow):
     
     def update_agent_statuses(self):
         """Update agent statuses periodically."""
-        for agent_id in ["agent-1", "agent-2", "agent-3", "agent-4"]:
+        for agent_id in ["agent-1", "agent-2"]:
             try:
                 # Check agent's status.json file
                 status_file = os.path.join("agent_workspaces", agent_id, "status.json")
@@ -487,47 +447,33 @@ class FourAgentHorizontalGUI(QMainWindow):
     
     # Shared control methods
     def onboard_agents(self):
-        """Onboard all agents."""
-        self.log_message("System", "Starting agent onboarding...")
+        """Onboard agents via ACP new-chat prompts (5-agent layout)."""
+        self.log_message("System", "Starting ACP new-chat onboarding...")
         try:
-            # Import and run the onboarding sequence
-            import subprocess
-            import sys
-            
-            # Run the consolidated onboarding script for all agents
-            onboarding_script = os.path.join(os.getcwd(), "scripts", "consolidated_onboarding.py")
-            if os.path.exists(onboarding_script):
-                self.log_message("System", "Running onboarding sequence...")
-                
-                # Run onboarding in a separate thread to avoid blocking the GUI
-                def run_onboarding():
-                    try:
-                        result = subprocess.run(
-                            [sys.executable, onboarding_script, "--all", "--style", "full"],
-                            capture_output=True,
-                            text=True,
-                            cwd=os.getcwd()
-                        )
-                        
-                        if result.returncode == 0:
-                            self.log_message("System", "Onboarding completed successfully")
-                            # Update agent statuses after onboarding
-                            self.update_agent_statuses()
-                        else:
-                            self.log_message("Error", f"Onboarding failed: {result.stderr}")
-                    except Exception as e:
-                        self.log_message("Error", f"Onboarding error: {e}")
-                
-                # Start onboarding in background thread
-                onboarding_thread = threading.Thread(target=run_onboarding)
-                onboarding_thread.daemon = True
-                onboarding_thread.start()
-                
-            else:
-                self.log_message("Error", f"Onboarding script not found: {onboarding_script}")
-                
+            import subprocess, sys
+            tool = os.path.join(os.getcwd(), "overnight_runner", "tools", "onboard_via_acp.py")
+            if not os.path.exists(tool):
+                self.log_message("Error", f"Onboarding tool not found: {tool}")
+                return
+            def run_tool():
+                try:
+                    result = subprocess.run(
+                        [sys.executable, tool, "--layout", "5-agent"],
+                        capture_output=True,
+                        text=True,
+                        cwd=os.getcwd()
+                    )
+                    if result.returncode == 0:
+                        self.log_message("System", "ACP onboarding prompts sent.")
+                    else:
+                        self.log_message("Error", f"ACP onboarding failed: {result.stderr}")
+                except Exception as e:
+                    self.log_message("Error", f"ACP onboarding error: {e}")
+            t = threading.Thread(target=run_tool)
+            t.daemon = True
+            t.start()
         except Exception as e:
-            self.log_message("Error", f"Failed to start onboarding: {e}")
+            self.log_message("Error", f"Failed to start ACP onboarding: {e}")
     
     def restart_system(self):
         """Restart the system."""
@@ -538,7 +484,7 @@ class FourAgentHorizontalGUI(QMainWindow):
     def test_coordinates(self):
         """Test agent coordinates."""
         self.log_message("System", "Testing coordinates...")
-        for agent_id in ["agent-1", "agent-2", "agent-3", "agent-4"]:
+        for agent_id in ["agent-1", "agent-2"]:
             coords = self.coordinate_finder.get_coordinates(agent_id)
             if coords:
                 x, y = coords
@@ -548,11 +494,11 @@ class FourAgentHorizontalGUI(QMainWindow):
         self.log_message("System", "Coordinate test completed")
     
     def send_message(self):
-        """Send message to all agents."""
+        """Send message to both agents."""
         message, ok = QInputDialog.getText(
             self, 
             "Send Message", 
-            "Enter message to send to all agents:",
+            "Enter message to send to both agents:",
             text="Hello from GUI"
         )
         
@@ -561,7 +507,7 @@ class FourAgentHorizontalGUI(QMainWindow):
             return
         
         self.log_message("Message", f"Sending message: {message}")
-        for agent_id in ["agent-1", "agent-2", "agent-3", "agent-4"]:
+        for agent_id in ["agent-1", "agent-2"]:
             try:
                 coords = self.coordinate_finder.get_coordinates(agent_id)
                 if coords:
@@ -575,7 +521,7 @@ class FourAgentHorizontalGUI(QMainWindow):
                 self.log_message("Error", f"Failed to send message to {agent_id}: {e}")
     
     def broadcast_command(self):
-        """Send broadcast command to all agents."""
+        """Send broadcast command to both agents."""
         command, ok = QInputDialog.getText(
             self, 
             "Broadcast Command", 
@@ -588,7 +534,7 @@ class FourAgentHorizontalGUI(QMainWindow):
             return
         
         self.log_message("Broadcast", f"Broadcasting command: {command}")
-        for agent_id in ["agent-1", "agent-2", "agent-3", "agent-4"]:
+        for agent_id in ["agent-1", "agent-2"]:
             try:
                 coords = self.coordinate_finder.get_coordinates(agent_id)
                 if coords:
@@ -602,9 +548,9 @@ class FourAgentHorizontalGUI(QMainWindow):
                 self.log_message("Error", f"Failed to broadcast to {agent_id}: {e}")
     
     def get_system_status(self):
-        """Get status from all agents."""
+        """Get status from both agents."""
         self.log_message("System", "Getting system status...")
-        for agent_id in ["agent-1", "agent-2", "agent-3", "agent-4"]:
+        for agent_id in ["agent-1", "agent-2"]:
             try:
                 status_file = os.path.join("agent_workspaces", agent_id, "status.json")
                 if os.path.exists(status_file):
@@ -645,7 +591,7 @@ def main():
     app.setStyle('Fusion')
     
     # Create and show main window
-    main_window = FourAgentHorizontalGUI()
+    main_window = TwoAgentHorizontalGUI()
     main_window.show()
     
     # Start the application

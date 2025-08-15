@@ -4,8 +4,13 @@ Basic diagnostic test to validate core imports and minimal flows without GUI.
 Run via: python tests/diagnostic_test.py
 """
 
+import time
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
+
+from services.agent_cell_phone import AgentCellPhone, MsgTag
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
@@ -37,6 +42,4 @@ def main() -> int:
     return 0
 
 if __name__ == "__main__":
-    raise SystemExit(main())
-
-
+    test_broadcast_with_delays()

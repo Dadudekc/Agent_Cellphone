@@ -24,7 +24,7 @@ class CoordinateFinder:
         """Load coordinates from configuration files."""
         try:
             # Try to load from runtime config
-            config_path = os.path.join("runtime", "config", "cursor_agent_coords.json")
+            config_path = os.path.join("core", "runtime", "config", "cursor_agent_coords.json")
             if os.path.exists(config_path):
                 with open(config_path, 'r') as f:
                     self.coordinates = json.load(f)
@@ -54,7 +54,7 @@ class CoordinateFinder:
     def save_coordinates(self):
         """Save coordinates to configuration file."""
         try:
-            config_dir = os.path.join("runtime", "config")
+            config_dir = os.path.join("core", "runtime", "config")
             os.makedirs(config_dir, exist_ok=True)
             config_path = os.path.join(config_dir, "cursor_agent_coords.json")
             

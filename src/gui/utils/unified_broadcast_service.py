@@ -17,9 +17,9 @@ from dataclasses import dataclass, field
 
 # Import existing components
 try:
-    from src.agent_cell_phone import AgentCellPhone
-    from src.inter_agent_framework import InterAgentFramework, Message, MessageType
-    from src.framework.agent_autonomy_framework import AgentAutonomyFramework
+    from services.agent_cell_phone import AgentCellPhone
+    from services.inter_agent_framework import InterAgentFramework, Message, MessageType
+    from core.framework.agent_autonomy_framework import AgentAutonomyFramework
 except ImportError:
     # Fallback imports for when main modules aren't available
     AgentCellPhone = None

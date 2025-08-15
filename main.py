@@ -131,8 +131,8 @@ def show_project_status():
         ("📄 Main Launcher", "main.py"),
         ("📄 Requirements", "requirements.txt"),
         ("📄 README", "README.md"),
-        ("📄 Coordinate Finder", "src/utils/coordinate_finder.py"),
-        ("📄 Agent Framework", "src/framework/agent_autonomy_framework.py"),
+        ("📄 Coordinate Finder", "src/core/utils/coordinate_finder.py"),
+        ("📄 Agent Framework", "src/core/framework/agent_autonomy_framework.py"),
     ]
     
     print("\n📄 KEY FILES:")

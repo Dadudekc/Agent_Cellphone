@@ -14,19 +14,16 @@ import time
 from datetime import datetime
 from typing import List, Dict, Optional
 
-# Add src to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-
 try:
-    from src.utils.coordinate_finder import CoordinateFinder
-    from src.framework.agent_autonomy_framework import AgentAutonomyFramework
-    from src.gui.utils.base_gui_controller import BaseGUIController
+    from core.utils.coordinate_finder import CoordinateFinder
+    from core.framework.agent_autonomy_framework import AgentAutonomyFramework
+    from gui.utils.base_gui_controller import BaseGUIController
 except ImportError as e:
     print(f"Import error: {e}")
     print("Please run from the project root directory: python main.py")
     # Use shared classes as fallback
     try:
-        from src.gui.utils.shared_classes import CoordinateFinder, AgentAutonomyFramework
+        from gui.utils.shared_classes import CoordinateFinder, AgentAutonomyFramework
     except ImportError:
         # Create minimal fallback classes
         class CoordinateFinder:
@@ -76,8 +73,8 @@ except ImportError:
     print("PyQt5 not available. Please install: pip install PyQt5")
     sys.exit(1)
 
-from gui.components.splash_screen import SplashScreen
-from gui.components.agent_panel import AgentStatusWidget
+from .components.splash_screen import SplashScreen
+from .components.agent_panel import AgentStatusWidget
 
 class DreamOSCellPhoneGUIv2(QMainWindow, BaseGUIController):
     """Modern Dream.OS Cell Phone GUI v2.0."""

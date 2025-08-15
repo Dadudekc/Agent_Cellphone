@@ -8,12 +8,13 @@ import argparse
 import sys
 from pathlib import Path
 
-# Add project root to path
+# Add src directory to path
 project_root = Path(__file__).parent
 sys.path.append(str(project_root))
+sys.path.append(str(project_root / "src"))
 
 try:
-    from src.agent_cell_phone import AgentCellPhone, MsgTag
+    from src.services.agent_cell_phone import AgentCellPhone, MsgTag
 except ImportError:
     print("Error: Could not import AgentCellPhone")
     sys.exit(1)
@@ -76,4 +77,4 @@ def main():
         sys.exit(1)
 
 if __name__ == "__main__":
-    main() 
+    main()

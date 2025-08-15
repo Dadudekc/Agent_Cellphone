@@ -7,11 +7,14 @@ Actually sends messages between agents using the agent cell phone system
 import subprocess
 import time
 import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 
 def send_message(agent_id: str, message: str, layout_mode: str = "8-agent", test: bool = True):
     """Send a message to a specific agent using the agent cell phone"""
     cmd = [
-        "python", "agent_cell_phone.py",
+        "python", "src/services/agent_cell_phone.py",
         "--agent", agent_id,
         "--msg", message,
         "--layout", layout_mode
@@ -143,4 +146,4 @@ def main():
     print("📱 Method: Actual Agent Cell Phone System")
 
 if __name__ == "__main__":
-    main() 
+    main()
