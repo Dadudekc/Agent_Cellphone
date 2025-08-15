@@ -1,164 +1,104 @@
 {
-  "2-agent": {
+  "1920x1080": {
     "Agent-1": {
-      "starter_position": {
-        "x": -1283,
-        "y": 176
-      },
-      "input_box": {
-        "x": -1049,
-        "y": 727
-      }
+      "input_area": {"x": 100, "y": 200, "width": 800, "height": 100},
+      "output_area": {"x": 100, "y": 350, "width": 800, "height": 300}
     },
     "Agent-2": {
-      "starter_position": {
-        "x": -332,
-        "y": 173
-      },
-      "input_box": {
-        "x": -374,
-        "y": 465
-      }
-    }
-  },
-  "4-agent": {
-    "Agent-1": {
-      "input_box": {
-        "x": -1266,
-        "y": 490
-      },
-      "starter_location_box": {
-        "x": -1266,
-        "y": 490
-      }
-    },
-    "Agent-2": {
-      "input_box": {
-        "x": -267,
-        "y": 500
-      }
+      "input_area": {"x": 1000, "y": 200, "width": 800, "height": 100},
+      "output_area": {"x": 1000, "y": 350, "width": 800, "height": 300}
     },
     "Agent-3": {
-      "input_box": {
-        "x": -1283,
-        "y": 1012
-      }
+      "input_area": {"x": 100, "y": 700, "width": 800, "height": 100},
+      "output_area": {"x": 100, "y": 850, "width": 800, "height": 300}
     },
     "Agent-4": {
-      "input_box": {
-        "x": -401,
-        "y": 1004
-      },
-      "starter_location_box": {
-        "x": -401,
-        "y": 1004
-      }
-    }
-  },
-  "8-agent": {
-    "Agent-1": {
-      "input_box": {
-        "x": -1298,
-        "y": 496
-      }
-    },
-    "Agent-2": {
-      "input_box": {
-        "x": -263,
-        "y": 493
-      }
-    },
-    "Agent-3": {
-      "input_box": {
-        "x": -1282,
-        "y": 1013
-      }
-    },
-    "Agent-4": {
-      "input_box": {
-        "x": -326,
-        "y": 1017
-      }
+      "input_area": {"x": 1000, "y": 700, "width": 800, "height": 100},
+      "output_area": {"x": 1000, "y": 850, "width": 800, "height": 300}
     },
     "Agent-5": {
-      "input_box": {
-        "x": 1514,
-        "y": 945
-      },
-      "starter_location_box": {
-        "x": 1514,
-        "y": 945
-      }
+      "input_area": {"x": 550, "y": 400, "width": 800, "height": 100},
+      "output_area": {"x": 550, "y": 550, "width": 800, "height": 300}
     },
     "Agent-6": {
-      "input_box": {
-        "x": 1576,
-        "y": 435
-      }
+      "input_area": {"x": 550, "y": 800, "width": 800, "height": 100},
+      "output_area": {"x": 550, "y": 950, "width": 800, "height": 300}
     },
     "Agent-7": {
-      "input_box": {
-        "x": 623,
-        "y": 953
-      }
+      "input_area": {"x": 100, "y": 500, "width": 800, "height": 100},
+      "output_area": {"x": 100, "y": 650, "width": 800, "height": 300}
     },
     "Agent-8": {
-      "input_box": {
-        "x": 1594,
-        "y": 959
-      }
+      "input_area": {"x": 1000, "y": 500, "width": 800, "height": 100},
+      "output_area": {"x": 1000, "y": 650, "width": 800, "height": 300}
     }
   },
-  "5-agent": {
+  "1366x768": {
     "Agent-1": {
-      "input_box": {
-        "x": -1395,
-        "y": 480
-      },
-      "starter_location_box": {
-        "x": -1319,
-        "y": 173
-      }
+      "input_area": {"x": 50, "y": 150, "width": 600, "height": 80},
+      "output_area": {"x": 50, "y": 250, "width": 600, "height": 200}
     },
     "Agent-2": {
-      "input_box": {
-        "x": -313,
-        "y": 488
-      },
-      "starter_location_box": {
-        "x": -352,
-        "y": 175
-      }
+      "input_area": {"x": 700, "y": 150, "width": 600, "height": 80},
+      "output_area": {"x": 700, "y": 250, "width": 600, "height": 200}
     },
     "Agent-3": {
-      "input_box": {
-        "x": -1300,
-        "y": 1010
-      },
-      "starter_location_box": {
-        "x": -1309,
-        "y": 696
-      }
+      "input_area": {"x": 50, "y": 500, "width": 600, "height": 80},
+      "output_area": {"x": 50, "y": 600, "width": 600, "height": 200}
     },
     "Agent-4": {
-      "input_box": {
-        "x": -358,
-        "y": 1004
-      },
-      "starter_location_box": {
-        "x": -422,
-        "y": 699
-      }
+      "input_area": {"x": 700, "y": 500, "width": 600, "height": 80},
+      "output_area": {"x": 700, "y": 600, "width": 600, "height": 200}
     },
     "Agent-5": {
-      "input_box": {
-        "x": 1512,
-        "y": 943
-      },
-      "starter_location_box": {
-        "x": 1563,
-        "y": 116
-      }
+      "input_area": {"x": 375, "y": 325, "width": 600, "height": 80},
+      "output_area": {"x": 375, "y": 425, "width": 600, "height": 200}
+    },
+    "Agent-6": {
+      "input_area": {"x": 375, "y": 575, "width": 600, "height": 80},
+      "output_area": {"x": 375, "y": 675, "width": 600, "height": 200}
+    },
+    "Agent-7": {
+      "input_area": {"x": 50, "y": 375, "width": 600, "height": 80},
+      "output_area": {"x": 50, "y": 475, "width": 600, "height": 200}
+    },
+    "Agent-8": {
+      "input_area": {"x": 700, "y": 375, "width": 600, "height": 80},
+      "output_area": {"x": 700, "y": 475, "width": 600, "height": 200}
+    }
+  },
+  "2560x1440": {
+    "Agent-1": {
+      "input_area": {"x": 150, "y": 300, "width": 1000, "height": 120},
+      "output_area": {"x": 150, "y": 450, "width": 1000, "height": 400}
+    },
+    "Agent-2": {
+      "input_area": {"x": 1300, "y": 300, "width": 1000, "height": 120},
+      "output_area": {"x": 1300, "y": 450, "width": 1000, "height": 400}
+    },
+    "Agent-3": {
+      "input_area": {"x": 150, "y": 1000, "width": 1000, "height": 120},
+      "output_area": {"x": 150, "y": 1150, "width": 1000, "height": 400}
+    },
+    "Agent-4": {
+      "input_area": {"x": 1300, "y": 1000, "width": 1000, "height": 120},
+      "output_area": {"x": 1300, "y": 1150, "width": 1000, "height": 400}
+    },
+    "Agent-5": {
+      "input_area": {"x": 725, "y": 650, "width": 1000, "height": 120},
+      "output_area": {"x": 725, "y": 800, "width": 1000, "height": 400}
+    },
+    "Agent-6": {
+      "input_area": {"x": 725, "y": 1100, "width": 1000, "height": 120},
+      "output_area": {"x": 725, "y": 1250, "width": 1000, "height": 400}
+    },
+    "Agent-7": {
+      "input_area": {"x": 150, "y": 800, "width": 1000, "height": 120},
+      "output_area": {"x": 150, "y": 950, "width": 1000, "height": 400}
+    },
+    "Agent-8": {
+      "input_area": {"x": 1300, "y": 800, "width": 1000, "height": 120},
+      "output_area": {"x": 1300, "y": 950, "width": 1000, "height": 400}
     }
   }
 }

@@ -11,10 +11,12 @@ Workflow: `Development Workflow` (state: IN_PROGRESS)
   - Deliverable: `docs/FSM_STRUCTURE.md`
   - Evidence: Document authored; lints clean
 
-- [ ] Implement FSM Logic (state: PENDING)
+- [ ] Implement FSM Logic (state: IN_PROGRESS)
   - Description: Implement the FSM logic and state transitions
   - Priority: HIGH
   - Depends on: Design FSM Structure
+  - Evidence: `tests/unit/test_fsm_bridge.py` added; `pytest_fsm_bridge_output.txt` shows 2/2 passing
+  - Next step: Wire runner/orchestrator consumption of inbox fsm_update to update central task state and emit verification
 
 - [ ] Test FSM System (state: PENDING)
   - Description: Test the FSM system with various scenarios

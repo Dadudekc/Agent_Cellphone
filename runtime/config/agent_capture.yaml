@@ -1,0 +1,13 @@
+default_strategy: file   # one of: file | clipboard | ocr
+file:
+  watch_root: "agent_workspaces"
+  response_filename: "response.txt"
+clipboard:
+  poll_ms: 500
+ocr:
+  tesseract_cmd: "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+  lang: "eng"
+  psm: 6
+routing:
+  inbox_root: "runtime/agent_comms/inbox"   # where JSON envelopes are written
+  agent5_fsm_bridge_enabled: true

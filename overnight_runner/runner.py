@@ -13,8 +13,10 @@ from typing import Dict, Iterable, List
 import datetime as _dt
 from urllib import request, error
 
-# Ensure src/ is on path
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
+# Ensure package root and src/ are on path for direct script execution
+_THIS = Path(__file__).resolve()
+sys.path.insert(0, str(_THIS.parents[1]))
+sys.path.insert(0, str(_THIS.parents[1] / 'src'))
 
 from agent_cell_phone import AgentCellPhone, MsgTag  # type: ignore
 
@@ -86,6 +88,23 @@ def build_message_plan(plan: str) -> List[PlannedMessage]:
             PlannedMessage(MsgTag.SYNC,   "{agent} 10-min sync: per-repo status (origin set? branch? conflicts?), next step, risks."),
             PlannedMessage(MsgTag.VERIFY, "{agent} verify: attach git_setup_report.json path and any push logs for assigned repos."),
         ]
+    if plan == "prd-creation":
+        return [
+            PlannedMessage(MsgTag.RESUME,
+                "{agent} resume: pick 2-3 repos from D:\\repos\\Dadudekc for PRD analysis. "
+                "Open each repo and understand its purpose."),
+            PlannedMessage(MsgTag.TASK,
+                "{agent} create hand-crafted PRD.md for one repo based on manual inspection "
+                "(README, code, docs). Follow AGENT_PRD_PROTOCOL.md - no boilerplate!"),
+            PlannedMessage(MsgTag.COORDINATE,
+                "{agent} coordinate: declare which repos you're analyzing to avoid duplication. "
+                "Share insights on project types found."),
+            PlannedMessage(MsgTag.SYNC,
+                "{agent} 10-min sync: PRD progress, insights on project complexity, next repo to tackle."),
+            PlannedMessage(MsgTag.VERIFY,
+                "{agent} verify: commit PRD.md with evidence of manual inspection. "
+                "Show it's not a template - it reflects real project understanding."),
+        ]
     return build_message_plan("resume-task-sync")
 
 
@@ -99,16 +118,16 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--interval-sec", type=int, default=600, help="seconds between cycles (default 600=10m)")
     p.add_argument("--duration-min", type=int, help="total minutes to run; alternative to --iterations")
     p.add_argument("--iterations", type=int, help="number of cycles to run; overrides duration if provided")
-    p.add_argument("--plan", choices=["resume-only", "resume-task-sync", "aggressive", "autonomous-dev", "contracts", "single-repo-beta", "prd-milestones"], default="autonomous-dev", help="message plan to rotate through")
+    p.add_argument("--plan", choices=["resume-only", "resume-task-sync", "aggressive", "autonomous-dev", "contracts", "single-repo-beta", "prd-milestones", "prd-creation"], default="autonomous-dev", help="message plan to rotate through")
     p.add_argument("--test", action="store_true", help="dry-run; do not move mouse/keyboard")
     p.add_argument("--stagger-ms", type=int, default=2000, help="delay between sends per agent within a cycle (ms)")
     p.add_argument("--jitter-ms", type=int, default=500, help="random +/- jitter added to stagger (ms)")
     p.add_argument("--initial-wait-sec", type=int, default=60, help="wait before first cycle to let preamble/assignments settle")
     p.add_argument("--phase-wait-sec", type=int, default=15, help="wait between preamble, assignments, and captain kickoff")
     p.add_argument("--preamble", action="store_true", help="send anti-duplication coordination preamble at start")
-    p.add_argument("--assign-root", default="D:/repositories", help="root folder to assign repositories from")
+    p.add_argument("--assign-root", default="D:/repos/Dadudekc", help="root folder to assign repositories from")
     p.add_argument("--max-repos-per-agent", type=int, default=5, help="limit of repos per agent in assignment")
-    p.add_argument("--comm-root", default="D:/repositories/_agent_communications", help="central communications root (non-invasive)")
+    p.add_argument("--comm-root", default="D:/repos/Dadudekc/communications", help="central communications root (non-invasive)")
     p.add_argument("--create-comm-folders", action="store_true", help="create central communications folders and kickoff notes")
     # Agent workspace root for inbox/outbox and per-agent prompts
     p.add_argument("--workspace-root", default="agent_workspaces", help="root folder for agent workspaces")
@@ -146,6 +165,15 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--devlog-username", default=os.environ.get("DEVLOG_USERNAME", "Agent Devlog"))
     p.add_argument("--devlog-embed", action="store_true", help="Send embed payloads instead of plain content")
     p.add_argument("--devlog-sends", action="store_true", help="Post a devlog message for each agent send from the runner")
+    
+    # Response capture arguments
+    p.add_argument("--capture-enabled", action="store_true", help="Enable bi-directional response capture from agents")
+    p.add_argument("--capture-config", default="src/runtime/config/agent_capture.yaml", help="Path to capture configuration file")
+    p.add_argument("--coords-json", default="src/runtime/config/cursor_agent_coords.json", help="Path to agent coordinates file")
+    
+    # Cursor DB capture arguments
+    p.add_argument("--cursor-db-capture-enabled", action="store_true", help="Enable Cursor database capture for AI assistant responses")
+    p.add_argument("--agent-workspace-map", default="src/runtime/config/agent_workspace_map.json", help="Path to agent workspace mapping file")
     args = p.parse_args()
     # Propagate ACP throttling to environment so AgentCellPhone honors it
     if args.default_new_chat:
@@ -285,10 +313,15 @@ def build_tailored_message(agent: str, tag: MsgTag, contracts: List[dict]) -> st
 
     if tag == MsgTag.RESUME:
         ac_line = ("; ".join(ac)) if isinstance(ac, list) else str(ac)
+        # stringify evidence elements safely (can be dicts)
+        if isinstance(ev, list):
+            ev_line = ", ".join([e if isinstance(e, str) else str(e) for e in ev])
+        else:
+            ev_line = str(ev)
         return (
             f"{agent} resume: {task_id} — {title} ({repo}).\n"
             f"Acceptance: {ac_line}.\n"
-            f"Evidence: {', '.join(ev) if isinstance(ev, list) else ev}.\n"
+            f"Evidence: {ev_line}.\n"
             f"Path: {repo_path}. After progress, send fsm_update to Agent-5 (task_id,state,summary,evidence)."
         )
     if tag == MsgTag.TASK:
@@ -376,8 +409,68 @@ def main() -> int:
             args.plan = "single-repo-beta"
 
     acp = AgentCellPhone(agent_id=args.sender, layout_mode=args.layout, test=args.test)
+    
     available = acp.get_available_agents()
+    
+    # Determine kickoff target(s) and cycle targets
+    captain = args.captain
+    if captain:
+        kickoff_targets = [captain]
+        # For cycles, use provided resume-agents list (defaults to 1,2,4)
+        resume_agents = [a.strip() for a in args.resume_agents.split(',') if a.strip()]
+        cycle_targets = [a for a in resume_agents if a in available]
+        if not cycle_targets:
+            # Fallback: all except captain
+            cycle_targets = [a for a in available if a != captain]
+    else:
+        if args.agents:
+            kickoff_targets = [a.strip() for a in args.agents.split(',') if a.strip()]
+        else:
+            kickoff_targets = available
+        cycle_targets = kickoff_targets
 
+    if not cycle_targets:
+        print(f"No valid cycle targets in layout {args.layout}. Available: {available}")
+        return 2
+    
+    # Initialize response capture if enabled
+    if args.capture_enabled:
+        if acp.is_capture_enabled():
+            print("Response capture enabled - will monitor agent responses")
+            # Start capture for cycle targets
+            acp.start_capture_for_agents(cycle_targets)
+        else:
+            print("Warning: Response capture requested but not available")
+            print("Ensure agent_capture.yaml exists and dependencies are installed")
+    
+    # Initialize cursor DB capture if enabled
+    db_watcher = None
+    if args.cursor_db_capture_enabled:
+        try:
+            from cursor_capture.watcher import CursorDBWatcher
+            import json
+            
+            # Load agent workspace mapping
+            workspace_map_path = Path(args.agent_workspace_map)
+            if workspace_map_path.exists():
+                agent_workspace_map = json.loads(workspace_map_path.read_text(encoding="utf-8"))
+                # Limit to actually running agents
+                agent_workspace_map = {a: agent_workspace_map.get(a, {}) for a in available if a in agent_workspace_map}
+                
+                if agent_workspace_map:
+                    db_watcher = CursorDBWatcher(agent_map=agent_workspace_map)
+                    import threading
+                    t = threading.Thread(target=db_watcher.run, daemon=True)
+                    t.start()
+                    print(f"Cursor DB capture enabled - watching {len(agent_workspace_map)} agent workspaces")
+                else:
+                    print("Warning: No agent workspaces found in mapping file")
+            else:
+                print(f"Warning: Agent workspace map not found: {workspace_map_path}")
+        except Exception as e:
+            print(f"Warning: Failed to initialize cursor DB capture: {e}")
+            print("Ensure cursor_capture module is available")
+    
     # Determine kickoff target(s) and cycle targets
     captain = args.captain
     if captain:
@@ -658,8 +751,12 @@ def main() -> int:
             if (time.time() - last_any_sent.get(agent, 0.0)) < float(args.per_agent_cooldown_sec):
                 continue
             # 4) resume cooldown: limit RESUME frequency (unless force or stalled rescue)
-            if planned.tag == MsgTag.RESUME and not (force_resume or stalled) and (args.suppress_resume or (time.time() - last_sent.get(agent, {}).get("RESUME", 0.0) < args.resume_cooldown_sec)):
-                continue
+            if planned.tag == MsgTag.RESUME and not (force_resume or stalled):
+                if args.suppress_resume:
+                    continue
+                last_resume_ts = last_sent.get(agent, {}).get("RESUME")
+                if last_resume_ts is not None and (time.time() - last_resume_ts) < args.resume_cooldown_sec:
+                    continue
 
             # Build content (tailored when available)
             if contracts_map:
@@ -714,12 +811,8 @@ def main() -> int:
                     else:
                         content = planned.template.format(agent=agent)
             # Decide whether to request new-chat (Ctrl+T) for this send.
-            # Only open a new tab when recovering from a stall or when focus repo changes.
-            use_new_chat = False
-            if planned.tag == MsgTag.RESUME and force_resume:
-                use_new_chat = True
-            elif args.single_repo_mode and focus_repo and last_focus_repo_sent.get(agent) != focus_repo:
-                use_new_chat = True
+            # Stricter policy: only when explicitly recovering (force_resume). Avoid opening new tabs otherwise.
+            use_new_chat = planned.tag == MsgTag.RESUME and force_resume
             try:
                 acp.send(agent, content, planned.tag, new_chat=use_new_chat)
                 if args.devlog_sends:
@@ -747,6 +840,19 @@ def main() -> int:
             while remaining > 0 and not stop_flag["stop"]:
                 time.sleep(min(1.0, remaining))
                 remaining -= 1
+
+    # Cleanup response capture if enabled
+    if args.capture_enabled and acp.is_capture_enabled():
+        print("Stopping response capture...")
+        acp.stop_capture()
+    
+    # Cleanup cursor DB watcher if enabled
+    if db_watcher:
+        print("Stopping cursor DB watcher...")
+        try:
+            db_watcher.stop()
+        except Exception as e:
+            print(f"Error stopping cursor DB watcher: {e}")
 
     print("\nOvernight Runner finished")
     try:

@@ -1,0 +1,10 @@
+{
+  "Agent-1": {"workspace_root": "D:/Agent_Cellphone"},
+  "Agent-2": {"workspace_root": "D:/repos/project-B"},
+  "Agent-3": {"workspace_root": "D:/repos/project-C"},
+  "Agent-4": {"workspace_root": "D:/repos/project-D"},
+  "Agent-5": {"workspace_root": "D:/repos/ops"},
+  "Agent-6": {"workspace_root": "D:/repos/project-E"},
+  "Agent-7": {"workspace_root": "D:/repos/project-F"},
+  "Agent-8": {"workspace_root": "D:/repos/project-G"}
+}

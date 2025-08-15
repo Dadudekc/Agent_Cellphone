@@ -1,0 +1,58 @@
+# Agent Response Capture Configuration
+# This file configures how the system captures agent responses
+
+# Capture strategy priority (first available will be used)
+capture_strategies:
+  - "cursor_db"      # Primary: Cursor state.vscdb monitoring
+  - "export_chat"    # Fallback: Monitor exported chat files
+  - "copy_response"  # Fallback: UI automation to copy responses
+  - "file"           # Fallback: Monitor response.txt files
+
+# Cursor DB capture settings
+cursor_db:
+  enabled: true
+  poll_interval: 2.0  # seconds
+  max_message_age: 300  # seconds (5 minutes)
+  deduplication_window: 60  # seconds
+
+# Export chat fallback
+export_chat:
+  enabled: true
+  monitor_directory: "agent_workspaces/exports"
+  file_patterns:
+    - "*.json"
+    - "*.md"
+    - "*.txt"
+  poll_interval: 5.0  # seconds
+
+# Copy response fallback (UI automation)
+copy_response:
+  enabled: true
+  copy_delay: 0.5  # seconds
+  paste_delay: 0.3  # seconds
+  max_retries: 3
+
+# File monitoring fallback
+file:
+  enabled: true
+  response_file: "response.txt"
+  poll_interval: 1.0  # seconds
+  clear_after_read: true
+
+# Output configuration
+output:
+  target_inbox: "Agent-5"  # Default inbox for captured responses
+  envelope_format: "ai_response"
+  include_metadata: true
+  include_timestamp: true
+  include_agent_mapping: true
+
+# Agent workspace mapping
+agent_workspace_map: "src/runtime/config/agent_workspace_map.json"
+
+# Logging
+logging:
+  level: "INFO"
+  capture_events: true
+  performance_metrics: true
+

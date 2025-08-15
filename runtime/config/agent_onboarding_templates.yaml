@@ -1,0 +1,339 @@
+# Agent Onboarding Templates for Autonomous Development Workflow
+# These templates guide agents through efficient repo-to-beta transformation
+
+onboarding:
+  initial_assignment:
+    title: "Autonomous Development Workflow Assignment"
+    template: |
+      {agent}, you are assigned to the Autonomous Development Workflow.
+      
+      **MISSION**: Transform repositories in D:\repos\Dadudekc to beta-ready state
+      
+      **YOUR ROLE**: {role_description}
+      
+      **WORKFLOW PHASES**:
+      1. Assessment & Planning (Cycle 1)
+      2. Implementation Start (Cycle 2) 
+      3. Progress Check (Cycle 3)
+      4. Implementation Continue (Cycle 4)
+      5. Mid-course Correction (Cycle 5)
+      6. Implementation Final (Cycle 6)
+      7. Testing & Validation (Cycle 7)
+      8. Documentation & Deployment (Cycle 8)
+      
+      **CTRL+T STRATEGY**:
+      - Phase Start: Use Ctrl+T for fresh context
+      - Phase Continuation: No Ctrl+T, maintain context
+      - Phase Transition: Use Ctrl+T for new phase
+      - Error Recovery: Use Ctrl+T if confused
+      
+      **PROGRESS REPORTING**: Update response.txt after each cycle with:
+      - Current phase and progress %
+      - Completed tasks
+      - Blockers encountered
+      - Next steps planned
+      
+      **BETA-READINESS CHECKLIST**:
+      - [ ] Tests (coverage >80%)
+      - [ ] Build (clean, no errors)
+      - [ ] Deploy (pipeline working)
+      - [ ] Docs (complete)
+      - [ ] UI (functional)
+      - [ ] Monitoring (logging, metrics)
+      - [ ] Security (auth, validation)
+      - [ ] Performance (optimized)
+      
+      Begin with repository assessment. Report progress via response.txt.
+
+  repository_assessment:
+    title: "Repository Assessment Phase"
+    template: |
+      {agent}, begin Repository Assessment Phase.
+      
+      **TASK**: Assess assigned repositories for beta-readiness
+      
+      **STEPS**:
+      1. Scan D:\repos\Dadudekc for repositories
+      2. Evaluate each repo against beta-readiness checklist
+      3. Create priority matrix (High/Low Impact vs Effort)
+      4. Identify quick wins and strategic projects
+      5. Report findings via response.txt
+      
+      **ASSESSMENT CRITERIA**:
+      - Current development state
+      - Missing components
+      - Technical debt
+      - Business impact
+      - Estimated effort to beta
+      
+      **PRIORITY MATRIX**:
+      - Priority 1: High Impact, Low Effort (Quick Wins)
+      - Priority 2: High Impact, High Effort (Strategic)
+      - Priority 3: Low Impact, Low Effort (Maintenance)
+      - Priority 4: Low Impact, High Effort (Defer)
+      
+      Complete assessment within this cycle. Report results.
+
+  implementation_start:
+    title: "Implementation Start Phase"
+    template: |
+      {agent}, begin Implementation Phase for priority repositories.
+      
+      **TASK**: Start implementing missing components for beta-readiness
+      
+      **IMPLEMENTATION PATTERN**:
+      1. Clone/Update Repository
+      2. Install Dependencies
+      3. Run Existing Tests
+      4. Identify Missing Components
+      5. Implement Missing Features
+      6. Add/Update Tests
+      7. Update Documentation
+      8. Test Build Process
+      9. Validate Deployment
+      10. Mark as Beta-Ready
+      
+      **EFFICIENCY PRACTICES**:
+      - Work on multiple repos in parallel
+      - Reuse successful patterns from other repos
+      - Implement automated testing where possible
+      - Write documentation as you develop
+      - Make small, verifiable improvements each cycle
+      
+      **PROGRESS TRACKING**: Update response.txt with:
+      - Repositories being worked on
+      - Current implementation status
+      - Blockers encountered
+      - Next implementation steps
+      
+      Begin implementation. Report progress after each major step.
+
+  progress_check:
+    title: "Progress Check Phase"
+    template: |
+      {agent}, conduct Progress Check for active repositories.
+      
+      **TASK**: Evaluate implementation progress and identify blockers
+      
+      **CHECK ITEMS**:
+      1. Implementation status for each repo
+      2. Test results and coverage
+      3. Build success/failure status
+      4. Documentation completeness
+      5. Deployment readiness
+      6. Blockers and issues
+      
+      **PROGRESS REPORTING FORMAT**:
+      ```json
+      {
+        "repo": "Repository Name",
+        "agent": "{agent}",
+        "phase": "implementation",
+        "progress": "X%",
+        "current_task": "Description",
+        "blockers": ["List of blockers"],
+        "next_steps": ["Next actions"],
+        "estimated_completion": "X cycles"
+      }
+      ```
+      
+      **BLOCKER RESOLUTION**:
+      - Technical issues: Attempt to resolve
+      - Resource conflicts: Coordinate with other agents
+      - Complex problems: Escalate to Agent-5
+      - Agent confusion: Use Ctrl+T for fresh context
+      
+      Complete progress check. Report findings and update plans.
+
+  mid_course_correction:
+    title: "Mid-Course Correction Phase"
+    template: |
+      {agent}, conduct Mid-Course Correction for active repositories.
+      
+      **TASK**: Review progress, adjust strategy, and optimize workflow
+      
+      **CORRECTION ACTIONS**:
+      1. Analyze implementation efficiency
+      2. Identify bottlenecks and blockers
+      3. Reallocate resources if needed
+      4. Adjust repository priorities
+      5. Optimize development approach
+      6. Coordinate with other agents
+      
+      **STRATEGY ADJUSTMENTS**:
+      - Repository reassignment if needed
+      - Approach changes for stuck projects
+      - Resource reallocation for high-priority items
+      - Workflow optimization based on learnings
+      
+      **COORDINATION WITH AGENT-5**:
+      - Report major blockers
+      - Request resource reallocation
+      - Suggest priority changes
+      - Coordinate multi-agent efforts
+      
+      **CTRL+T USAGE**: Use Ctrl+T for fresh context on new strategies
+      
+      Complete correction phase. Report adjustments and new plans.
+
+  testing_validation:
+    title: "Testing & Validation Phase"
+    template: |
+      {agent}, begin Testing & Validation Phase for near-complete repositories.
+      
+      **TASK**: Validate beta-readiness through comprehensive testing
+      
+      **VALIDATION CHECKLIST**:
+      - [ ] Code Quality: Linting passes, no critical issues
+      - [ ] Test Coverage: >80% coverage, all tests passing
+      - [ ] Build Success: Clean build in CI/CD environment
+      - [ ] Deployment Test: Successfully deployed to staging
+      - [ ] User Acceptance: Basic user workflows tested
+      - [ ] Performance: Meets performance requirements
+      - [ ] Security: Security scan passes
+      - [ ] Documentation: Complete and accurate
+      
+      **TESTING APPROACH**:
+      1. Run full test suite
+      2. Execute integration tests
+      3. Test deployment pipeline
+      4. Validate user workflows
+      5. Performance testing
+      6. Security validation
+      
+      **VALIDATION REPORTING**:
+      - Test results and coverage
+      - Build/deployment status
+      - User acceptance results
+      - Performance metrics
+      - Security scan results
+      - Documentation completeness
+      
+      Complete validation. Report results and beta-readiness status.
+
+  documentation_deployment:
+    title: "Documentation & Deployment Phase"
+    template: |
+      {agent}, complete Documentation & Deployment Phase for beta-ready repositories.
+      
+      **TASK**: Finalize documentation and deploy to production
+      
+      **DOCUMENTATION REQUIREMENTS**:
+      - README.md with project overview
+      - API documentation
+      - User guides and tutorials
+      - Deployment instructions
+      - Troubleshooting guides
+      - Contributing guidelines
+      
+      **DEPLOYMENT STEPS**:
+      1. Final testing in staging
+      2. Production deployment
+      3. Health checks and monitoring
+      4. User notification
+      5. Beta-readiness declaration
+      
+      **BETA-READINESS DECLARATION**:
+      ```markdown
+      ## Beta-Readiness Declaration
+      **Repository**: [Repo Name]
+      **Date**: [Date]
+      **Agent**: {agent}
+      **Validation**: [List of completed validations]
+      **Notes**: [Any special considerations]
+      **Status**: ✅ BETA-READY
+      ```
+      
+      **FINAL REPORTING**: Update response.txt with:
+      - Completed documentation
+      - Deployment status
+      - Beta-readiness declaration
+      - Lessons learned
+      - Recommendations for future repos
+      
+      Complete final phase. Declare beta-readiness and report completion.
+
+  error_recovery:
+    title: "Error Recovery & Context Reset"
+    template: |
+      {agent}, you appear to be experiencing confusion or errors.
+      
+      **RECOVERY PROCEDURE**:
+      1. Use Ctrl+T to open fresh chat context
+      2. Review your current assignment
+      3. Check response.txt for recent progress
+      4. Identify the last successful action
+      5. Resume from last known good state
+      
+      **COMMON RECOVERY SCENARIOS**:
+      - Build failures: Check dependencies, environment
+      - Test failures: Fix tests, update test data
+      - Deployment issues: Verify config, check permissions
+      - Agent confusion: Use Ctrl+T for fresh context
+      - Repository conflicts: Coordinate with other agents
+      
+      **ESCALATION**:
+      - If recovery fails, escalate to Agent-5
+      - Report specific error messages
+      - Describe attempted recovery steps
+      - Request assistance or task reassignment
+      
+      **CONTEXT RESET**: Use Ctrl+T now for fresh start
+      
+      Recover from error. Report recovery status and resume work.
+
+  coordination_request:
+    title: "Coordination Request to Agent-5"
+    template: |
+      {agent}, you need coordination assistance from Agent-5.
+      
+      **COORDINATION REQUEST**:
+      - **Issue Type**: [Technical/Resource/Strategy/Other]
+      - **Description**: [Detailed description of the issue]
+      - **Impact**: [How this affects progress]
+      - **Attempted Solutions**: [What you've tried]
+      - **Requested Action**: [What you need from Agent-5]
+      
+      **COMMON COORDINATION NEEDS**:
+      - Resource reallocation
+      - Repository reassignment
+      - Multi-agent coordination
+      - Priority adjustments
+      - Blocker resolution
+      - Strategy changes
+      
+      **URGENCY LEVEL**:
+      - High: Blocking multiple repositories
+      - Medium: Slowing progress on one repo
+      - Low: Minor optimization opportunity
+      
+      Submit coordination request. Wait for Agent-5 response before proceeding.
+
+  success_celebration:
+    title: "Beta-Readiness Achievement Celebration"
+    template: |
+      🎉 CONGRATULATIONS {agent}! 🎉
+      
+      You have successfully brought a repository to BETA-READY status!
+      
+      **ACHIEVEMENT DETAILS**:
+      - **Repository**: [Repo Name]
+      - **Completion Date**: [Date]
+      - **Final Status**: ✅ BETA-READY
+      - **Key Accomplishments**: [List major achievements]
+      
+      **IMPACT**:
+      - One more repo ready for production use
+      - Improved development workflow established
+      - Valuable patterns identified for reuse
+      - Team capability enhanced
+      
+      **NEXT STEPS**:
+      1. Document lessons learned
+      2. Identify reusable patterns
+      3. Move to next priority repository
+      4. Share best practices with team
+      
+      **RECOGNITION**: Your systematic approach and attention to quality have delivered results!
+      
+      Celebrate this achievement, then continue with the next repository. You're making excellent progress toward the mission!

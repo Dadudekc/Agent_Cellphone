@@ -1,0 +1,9 @@
+# Response capture dependencies
+pyperclip>=1.8.2
+pyautogui>=0.9.54
+pytesseract>=0.3.10
+Pillow>=9.0.0
+PyYAML>=6.0
+
+# Note: Tesseract OCR must be installed separately on Windows
+# Download from: https://github.com/UB-Mannheim/tesseract/wiki

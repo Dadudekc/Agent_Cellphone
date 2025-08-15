@@ -1,21 +1,51 @@
 # 📱 Agent Cell Phone (ACP)
 
 **Project Codename:** `agent_cell_phone`  
-**Version:** 2.0.0  
-**Status:** Autonomous Orchestration Enabled  
-**Current Task List:** see [TASK_LIST.md](./TASK_LIST.md)
-**Purpose:** Enable fast, deterministic inter-agent messaging across Cursor instances via PyAutoGUI using pre-mapped input box coordinates, with a modern GUI interface for seamless agent management.
+**Version:** 1.0.0 - "CURSOR BRIDGE"  
+**Status:** 🚀 **BREAKTHROUGH ACHIEVED - BI-DIRECTIONAL AI COMMUNICATION UNLOCKED!** 🚀  
+**Current Task List:** see [TASK_LIST.md](./TASK_LIST.md)  
+**🚀 BREAKTHROUGH v1.0.0:** see [BREAKTHROUGH_v1.0.0_CURSOR_BRIDGE.md](./BREAKTHROUGH_v1.0.0_CURSOR_BRIDGE.md)  
+**Purpose:** Enable fast, deterministic inter-agent messaging across Cursor instances via PyAutoGUI using pre-mapped input box coordinates, with a modern GUI interface for seamless agent management. **🚨 NEW: Full bi-directional AI communication unlocked!**
 
 ## 🎯 Overview
 
-Agent Cell Phone enables agents to:
+**🚨 BREAKTHROUGH ACHIEVED! 🚨** Agent Cell Phone now enables **FULL BI-DIRECTIONAL AI COMMUNICATION** - the missing piece that was blocking the entire system!
+
+### **What We Just Unlocked:**
+- ✅ **Real-time AI response capture** from Cursor's database
+- ✅ **Complete communication loop** (System ↔ Agent)
+- ✅ **Automatic workflow orchestration** via FSM integration
+- ✅ **Production-ready bi-directional system**
+
+### **Core Capabilities:**
 - Programmatically "text" each other via terminal input
+- **AUTOMATICALLY CAPTURE AI RESPONSES** in real-time
 - Parse, route, and act on messages using a custom protocol
 - Operate in 2, 4, or 8-agent layouts with pre-defined screen coordinates
 - Manage agents through an intuitive GUI interface
+- **FSM workflow automation** triggered by AI responses
 - Skip all human-like behavior; pure mechanical precision
 
 ## 🚀 Quick Start
+
+### **🎯 NEW: Bi-Directional AI Communication (v1.0.0)**
+
+**This is the breakthrough you've been waiting for!** Enable real-time AI response capture and complete the communication loop:
+
+```bash
+python overnight_runner/runner.py \
+  --layout 5-agent \
+  --agents Agent-1,Agent-2,Agent-3,Agent-4 \
+  --plan contracts \
+  --cursor-db-capture-enabled \
+  --agent-workspace-map src/runtime/config/agent_workspace_map.json
+```
+
+### **What This Unlocks:**
+- 🚀 **Real-time AI response capture** from Cursor
+- 🔄 **Complete bi-directional communication loop**
+- 🤖 **Automatic workflow orchestration** via FSM
+- 📊 **Full conversation visibility** and analytics
 
 ### Installation
 
@@ -30,7 +60,7 @@ cd Agent_CellPhone
 pip install -r requirements.txt
 ```
 
-3. **Launch the system (autonomous 5‑agent mode):**
+3. **Launch the system (autonomous 5‑agent mode with AI capture):**
 ```powershell
 $env:ACP_DEFAULT_NEW_CHAT=1; $env:ACP_AUTO_ONBOARD=1; $env:ACP_SINGLE_MESSAGE=1; `
   $env:ACP_MESSAGE_VERBOSITY=extensive; $env:ACP_NEW_CHAT_INTERVAL_SEC=1800
@@ -126,6 +156,14 @@ acp.broadcast("Status update: All systems operational")
 - Drops `fsm_request_YYYYMMDD_HHMMSS.json` into Agent‑5 inbox each cycle when `--fsm-enabled`.
 - Optional contracts tailoring via `--contracts-file`.
 
+### 7. 🚀 **NEW: Bi-Directional AI Response Capture (v1.0.0)**
+- **Real-time database access** to Cursor's `state.vscdb` for instant AI response detection
+- **1-second polling** ensures responses captured within 1 second
+- **Automatic envelope creation** for FSM workflow integration
+- **Multiple fallback strategies** including Export Chat processing
+- **Cross-platform support** (Windows, macOS, Linux)
+- **Zero UI interaction** - completely headless operation
+
 ## 📁 Project Structure
 
 ```
@@ -137,7 +175,11 @@ Agent_CellPhone/
 ├── src/                         # 🔧 Core system files
 │   ├── agent_cell_phone.py      # Core messaging system
 │   ├── inter_agent_framework.py # Inter-agent communication
-│   └── main.py                  # Main system entry point
+│   ├── main.py                  # Main system entry point
+│   └── cursor_capture/          # 🚀 NEW: AI Response Capture System
+│       ├── db_reader.py         # Database access & message extraction
+│       ├── watcher.py           # Real-time monitoring & envelope creation
+│       └── export_consumer.py   # Export file fallback processing
 ├── gui/                         # 🖥️ GUI interfaces
 │   ├── dream_os_gui.py          # ✅ Modern PyQt GUI (main)
 │   ├── run_gui.py               # ✅ GUI launcher script
@@ -150,13 +192,12 @@ Agent_CellPhone/
 │   ├── diagnostic_test.py       # Diagnostic testing tools
 │   └── coordinate_finder.py     # Coordinate mapping utility
 ├── scripts/                     # 🔧 Utility scripts
-│   ├── agent_messenger.py       # Agent messaging utilities
-│   ├── agent_onboarding_sequence.py # Onboarding system
-│   ├── send_onboarding.py       # Onboarding sender
-│   ├── send_single_onboarding.py # Single agent onboarding
-│   ├── send_specific_onboarding.py # Specific onboarding
-│   ├── send_to_agents.py        # Agent communication
-│   └── onboarding_messages.py   # Onboarding message templates
+│   ├── agent_messenger.py       # Agent messaging utilities (legacy CLI)
+│   ├── consolidated_onboarding.py # Unified onboarding CLI
+│   ├── start_inbox_listener.py  # File inbox listener starter
+│   ├── overnight_runner.py      # Overnight cadence runner
+│   ├── commit_changes.py        # Git commit helper
+│   └── start_jarvis.bat         # Jarvis startup script
 ├── examples/                    # 🎯 Example code
 │   ├── agent_conversation_demo.py # Conversation examples
 │   ├── coordination_demo.py     # Coordination examples
@@ -176,9 +217,39 @@ Agent_CellPhone/
 │   └── cell_phone_gui.py        # Legacy PyQt GUI
 ├── runtime/                     # ⚙️ Runtime configuration
 │   └── config/                  # Configuration files
-│       └── cursor_agent_coords.json # Cursor agent coordinates
+│       ├── cursor_agent_coords.json # Cursor agent coordinates
+│       └── agent_workspace_map.json # 🚀 NEW: Agent-to-workspace mapping
 └── agent-*/                     # 🤖 Agent-specific logs
     └── devlog.md                # Message logs
+```
+
+## 🚀 **NEW: Bi-Directional AI Communication Features (v1.0.0)**
+
+### **🎯 What This Breakthrough Enables:**
+
+#### **Immediate Benefits:**
+- **Complete Communication Loop** - System can now prompt AND capture AI responses
+- **Real-Time Response Processing** - AI responses captured within 1 second
+- **FSM Integration** - Responses automatically feed into workflow system
+- **Production Ready** - Tested and integrated for immediate use
+
+#### **Strategic Advantages:**
+- **Unlocked Bottleneck** - No more manual response copying
+- **Scalable Architecture** - Works with any number of agents
+- **Future-Proof Design** - Multiple fallback strategies
+- **Foundation for AI Orchestration** - Ready for advanced workflows
+
+### **🧪 Testing the New System:**
+
+```bash
+# Test the cursor capture system
+python test_cursor_capture.py
+
+# Run the full bi-directional demo
+python demo_cursor_capture.py
+
+# Validate system integration
+python overnight_runner/runner.py --cursor-db-capture-enabled --test
 ```
 
 ## 🛠️ Testing

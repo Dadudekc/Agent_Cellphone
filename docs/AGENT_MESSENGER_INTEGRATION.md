@@ -127,11 +127,9 @@ python agent_messenger.py --target Agent-2 --command status
 - `gui/dream_os_gui.py` - Main GUI application with integrated messaging
 - `gui/run_gui.py` - GUI launcher script
 
-### **Script Files** (Still Available for CLI Use)
+### **Script Files** (CLI Utilities)
 - `scripts/agent_messenger.py` - Original CLI script (legacy)
-- `scripts/send_onboarding_message.py` - Simple onboarding messages
-- `scripts/onboard_all_agents.py` - Full onboarding sequence
-- `scripts/run_onboarding.py` - Onboarding wrapper
+- `scripts/consolidated_onboarding.py` - Unified onboarding CLI (replaces legacy variants)
 
 ## 🔧 Migration Guide
 

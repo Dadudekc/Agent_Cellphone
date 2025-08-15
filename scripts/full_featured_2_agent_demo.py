@@ -136,10 +136,10 @@ def main():
     # 5. Onboarding
     section("ONBOARDING", "Showcase onboarding protocols: chunked vs comprehensive.")
     print("Sending comprehensive onboarding message to Agent-1...")
-    run_cmd("python consolidated_onboarding.py --agent Agent-1 --style full", "Comprehensive onboarding (Agent-1)")
+    run_cmd("python scripts/consolidated_onboarding.py --agent Agent-1 --style full", "Comprehensive onboarding (Agent-1)")
     print_agent_status("Agent-1")
     print("Sending chunked onboarding messages to Agent-2...")
-    run_cmd("python consolidated_onboarding.py --agent Agent-2 --style ascii", "Chunked/ASCII onboarding (Agent-2)")
+    run_cmd("python scripts/consolidated_onboarding.py --agent Agent-2 --style ascii", "Chunked/ASCII onboarding (Agent-2)")
     print_agent_status("Agent-2")
     print("You can compare onboarding progress in the GUI and logs.")
     input("(Observe onboarding status, then press Enter)")

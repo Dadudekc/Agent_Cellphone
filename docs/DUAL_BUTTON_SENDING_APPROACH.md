@@ -28,8 +28,8 @@ The Dream.OS GUI now features a **dual-button approach** for sending messages, g
 
 ### **2. Demo Application**
 
-#### **Interactive Demo** (`scripts/demo_chunk_vs_comprehensive_gui.py`)
-- **Shows both approaches** side by side
+#### **Comparison Mode** (`scripts/consolidated_onboarding.py --compare`)
+- **Shows both approaches** side by side in terminal output
 - **Demonstrates the differences** between chunked and comprehensive
 - **Provides comparison** of benefits and drawbacks
 - **Launches full GUI** for testing
@@ -129,8 +129,8 @@ def handle_send_result(self, success: bool, result: str, send_type: str = "Messa
 
 #### **1. Testing Both Approaches:**
 ```bash
-# Run the demo
-python scripts/demo_chunk_vs_comprehensive_gui.py
+# Show comparison
+python scripts/consolidated_onboarding.py --compare
 
 # Launch full GUI
 python src/main.py
@@ -171,7 +171,7 @@ python src/main.py
 - `src/gui/components/custom_message_widget_qt.py` - PyQt5 widget
 
 #### **Demo and Documentation:**
-- `scripts/demo_chunk_vs_comprehensive_gui.py` - Interactive demo
+- `scripts/consolidated_onboarding.py --compare` - Comparison output
 - `docs/DUAL_BUTTON_SENDING_APPROACH.md` - This documentation
 
 ### **Key Changes:**

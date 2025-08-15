@@ -50,13 +50,12 @@ D:\Agent_CellPhone\
 │   ├── coordinate_finder.py   # Test coordinate finder
 │   └── diagnostic_test.py     # Diagnostic tests
 ├── scripts/                   # Utility scripts
-│   ├── agent_messenger.py     # Agent messaging script
-│   ├── agent_onboarding_sequence.py
-│   ├── onboarding_messages.py
-│   ├── send_onboarding.py
-│   ├── send_single_onboarding.py
-│   ├── send_specific_onboarding.py
-│   └── send_to_agents.py
+│   ├── agent_messenger.py     # Agent messaging script (legacy CLI)
+│   ├── consolidated_onboarding.py # Unified onboarding CLI
+│   ├── start_inbox_listener.py
+│   ├── overnight_runner.py
+│   ├── commit_changes.py
+│   └── start_jarvis.bat
 ├── examples/                  # Example code
 │   ├── agent_conversation_demo.py
 │   ├── coordination_demo.py

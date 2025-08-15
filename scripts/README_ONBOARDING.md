@@ -1,82 +1,54 @@
 # 🎯 Dream.OS PyAutoGUI Onboarding System
 
+## 🚨 **BREAKTHROUGH ACHIEVED - v1.0.0 "CURSOR BRIDGE"** 🚨
+
+**🎯 What We Just Unlocked:** **FULL BI-DIRECTIONAL AI COMMUNICATION** - the missing piece that was blocking the entire system!
+
+### **🔥 New Capabilities:**
+- ✅ **Real-time AI response capture** from Cursor's database
+- ✅ **Complete communication loop** (System ↔ Agent)
+- ✅ **Automatic workflow orchestration** via FSM integration
+- ✅ **Production-ready bi-directional system**
+
+### **🚀 Enhanced Onboarding:**
+The onboarding system now works with the new **bi-directional AI communication** system, enabling:
+- **Real-time response capture** during onboarding
+- **Automatic workflow triggers** based on AI responses
+- **Complete conversation visibility** and analytics
+- **Seamless FSM integration** for advanced workflows
+
+---
+
 ## Overview
 
 This directory contains scripts for automated agent onboarding using PyAutoGUI. These scripts will automatically identify agents by their screen positions and send them personalized onboarding messages with links to their specific training materials.
 
-## 📁 Available Scripts
+**🚀 NEW:** Onboarding now integrates with the **bi-directional AI response capture system** for complete communication loops!
 
-### 1. `agent_onboarding_sequence.py`
-**Full-featured onboarding system with comprehensive messages**
+## 📁 Available Script
 
-- **Purpose**: Complete onboarding system with detailed personalized messages
-- **Features**: 
-  - Loads agent coordinates automatically
-  - Sends comprehensive onboarding messages
-  - Includes role-specific training materials
-  - Handles errors gracefully
+### `consolidated_onboarding.py`
+**Single entry point for all onboarding flows**
+
+- **Purpose**: Replaces legacy scripts with one comprehensive CLI
+- **Features**:
+  - Onboard all agents or a specific agent
+  - Styles: full, ascii, simple
+  - Help, preview, list-agents, compare modes
 
 **Usage**:
 ```bash
+# Help
+python scripts/consolidated_onboarding.py --help
+
 # Onboard all agents
-python agent_onboarding_sequence.py
+python scripts/consolidated_onboarding.py --all --style full
 
 # Onboard specific agent
-python agent_onboarding_sequence.py Agent-1
-```
+python scripts/consolidated_onboarding.py --agent Agent-1 --style full
 
-### 2. `onboard_all_agents.py`
-**Simplified script for onboarding all agents at once**
-
-- **Purpose**: Quick onboarding of all agents with personalized messages
-- **Features**:
-  - Personalized messages for each agent role
-  - Links to specific training materials
-  - Progress tracking and reporting
-
-**Usage**:
-```bash
-# Onboard all agents
-python onboard_all_agents.py
-
-# Show help
-python onboard_all_agents.py --help
-```
-
-### 3. `send_onboarding_message.py`
-**Simple script for sending individual onboarding messages**
-
-- **Purpose**: Send onboarding messages to specific agents
-- **Features**:
-  - Quick message sending
-  - Custom message support
-  - Simple command-line interface
-
-**Usage**:
-```bash
-# Send default onboarding message
-python send_onboarding_message.py Agent-1
-
-# Send custom message
-python send_onboarding_message.py Agent-2 "Custom welcome message"
-```
-
-### 4. `run_onboarding.py`
-**Wrapper script for easy onboarding execution**
-
-- **Purpose**: Simple interface to run onboarding sequences
-- **Features**:
-  - Easy-to-use interface
-  - Supports both full and individual onboarding
-  - Error handling and reporting
-
-**Usage**:
-```bash
-# Run full onboarding
-python run_onboarding.py
-
-# Onboard specific agent
-python run_onboarding.py Agent-1
+# Compare chunked vs comprehensive
+python scripts/consolidated_onboarding.py --compare
 ```
 
 ## 🚀 Quick Start
@@ -99,14 +71,7 @@ python coordinate_finder.py
 
 ### Step 2: Run Onboarding
 ```bash
-# Option 1: Use the comprehensive system
-python agent_onboarding_sequence.py
-
-# Option 2: Use the simplified system
-python onboard_all_agents.py
-
-# Option 3: Use the wrapper script
-python run_onboarding.py
+python scripts/consolidated_onboarding.py --all --style full
 ```
 
 ### Step 3: Verify Onboarding
@@ -234,4 +199,4 @@ After successful onboarding, each agent will:
 
 ---
 
-**Ready to onboard your Dream.OS agents? Start with `python onboard_all_agents.py`!** 🚀 
+**Ready to onboard your Dream.OS agents? Start with `python scripts/consolidated_onboarding.py --all --style full`!** 🚀

@@ -182,7 +182,7 @@ Let's build something amazing together! 🚀
   python scripts/comprehensive_onboarding_message.py Agent-1
   ```
 
-#### **2. `onboarding_approach_comparison.py`**
+#### **2. `consolidated_onboarding.py --compare`**
 - **Purpose**: Demonstrate the difference between approaches
 - **Features**:
   - Shows chunked approach problems
@@ -190,7 +190,7 @@ Let's build something amazing together! 🚀
   - Side-by-side comparison
 - **Usage**:
   ```bash
-  python scripts/onboarding_approach_comparison.py
+  python scripts/consolidated_onboarding.py --compare
   ```
 
 ### **Key Features of Comprehensive Messages:**

@@ -135,6 +135,9 @@ def main() -> int:
         elif msg_type in ("verify", "resume"):
             # if such types are used via inbox
             next_state = "verifying" if msg_type == "verify" else "ready"
+        elif msg_type == "ui_request":
+            # UI coordination messages should not forcibly change the agent state
+            next_state = st.get("state", "idle")
 
         st.update({
             "last_message": data,
@@ -152,6 +155,24 @@ def main() -> int:
                 signal_root = _P("D:/repositories/communications/_signals")
                 signal_root.mkdir(parents=True, exist_ok=True)
                 (signal_root / f"resume_now_{agent}.signal").write_text(_now(), encoding="utf-8")
+        except Exception:
+            pass
+
+        # Emit a UI request signal for Agent GUIs to react (e.g., ctrl+T + inbox check)
+        try:
+            if msg_type == "ui_request":
+                from pathlib import Path as _P
+                signal_root = _P("D:/repositories/communications/_signals")
+                signal_root.mkdir(parents=True, exist_ok=True)
+                # Persist full payload for richer UI actions
+                ui_sig = {
+                    "agent": agent,
+                    "intent": data.get("intent") or "open_new_chat_and_check_inbox",
+                    "task_id": data.get("task_id"),
+                    "message": data.get("payload", {}).get("message") if isinstance(data.get("payload"), dict) else data.get("message"),
+                    "created_at": _now(),
+                }
+                (signal_root / f"ui_request_{agent}.json").write_text(json.dumps(ui_sig, ensure_ascii=False, indent=2), encoding="utf-8")
         except Exception:
             pass
 

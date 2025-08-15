@@ -3,7 +3,7 @@
 Unified inbox schema (recommended)
 ```json
 {
-  "type": "sync|ping|resume|verify|task|note|fsm_request|fsm_update",
+  "type": "sync|ping|resume|verify|task|note|fsm_request|fsm_update|ui_request",
   "from": "Agent-3",
   "to": "Agent-2",
   "timestamp": "2025-08-11T08:00:00",
@@ -35,6 +35,18 @@ FSM update
   "summary": "brief result",
   "evidence": { "commit": "...", "tests": "..." },
   "captain": "Agent-3"
+}
+```
+
+UI request (Agent-5 UI orchestration)
+```json
+{
+  "type": "ui_request",
+  "from": "Agent-3",
+  "to": "Agent-5",
+  "intent": "open_new_chat_and_check_inbox",
+  "task_id": "task-123",
+  "payload": { "message": "New fsm_update posted.", "post_transition": "completed" }
 }
 ```
 

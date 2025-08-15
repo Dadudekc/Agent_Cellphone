@@ -80,9 +80,7 @@ gui/
 
 scripts/
 ├── agent_messenger.py       # Original CLI script (legacy)
-├── send_onboarding_message.py
-├── onboard_all_agents.py
-└── run_onboarding.py
+└── consolidated_onboarding.py # Unified onboarding CLI
 
 docs/
 └── AGENT_MESSENGER_INTEGRATION.md  # Detailed integration guide

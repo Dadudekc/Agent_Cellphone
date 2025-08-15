@@ -112,7 +112,7 @@ The comprehensive onboarding message was successfully sent to Agent-1 with the f
   - Side-by-side comparison
 - **Usage**:
   ```bash
-  python scripts/onboarding_approach_comparison.py
+  python scripts/consolidated_onboarding.py --compare
   ```
 
 #### **3. `IMPROVED_ONBOARDING_APPROACH.md`**

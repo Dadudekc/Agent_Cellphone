@@ -229,22 +229,15 @@ def main():
                 # Run Scripts
                 print("\nSCRIPTS")
                 print("-" * 40)
-                scripts = [
-                    ("Agent Messenger", "scripts/agent_messenger.py"),
-                    ("Agent Onboarding", "scripts/agent_onboarding_sequence.py"),
-                    ("Onboard All Agents", "scripts/onboard_all_agents.py"),
-                    ("Send Onboarding", "scripts/send_onboarding.py"),
+                commands = [
+                    ("Agent Messenger (CLI)", f"{sys.executable} scripts/agent_messenger.py --help"),
+                    ("Onboarding: Help (Consolidated)", f"{sys.executable} scripts/consolidated_onboarding.py --help"),
+                    ("Onboarding: All Agents (Full)", f"{sys.executable} scripts/consolidated_onboarding.py --all --style full"),
+                    ("Onboarding: Compare Approaches", f"{sys.executable} scripts/consolidated_onboarding.py --compare"),
                 ]
-                
-                for name, script_path in scripts:
-                    if os.path.exists(script_path):
-                        print(f"OK {name}: {script_path}")
-                        try:
-                            subprocess.run([sys.executable, script_path], check=True)
-                        except Exception as e:
-                            print(f"Error running {name}: {e}")
-                    else:
-                        print(f"Missing {name}: {script_path}")
+
+                for name, cmd in commands:
+                    run_command(cmd, f"Running {name}")
                 
             elif choice == "9":
                 # Show Project Status

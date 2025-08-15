@@ -27,11 +27,29 @@ try:
 except Exception:  # pragma: no cover - depends on system display
     pyautogui = None  # tolerate headless or missing dependencies
 
+# Response capture integration
+try:
+    import yaml
+    # Try to import response_capture
+    try:
+        import sys
+        response_capture_path = str(Path(__file__).parent / "agent_cell_phone")
+        sys.path.insert(0, response_capture_path)
+        from response_capture import ResponseCapture, CaptureConfig
+    except ImportError:
+        ResponseCapture = None
+        CaptureConfig = None
+except ImportError:
+    ResponseCapture = None
+    CaptureConfig = None
+    yaml = None
+
 # ──────────────────────────── config paths
-REPO_ROOT   = Path(__file__).resolve().parent    # Current directory
+REPO_ROOT   = Path(__file__).resolve().parent.parent    # Go up to project root
 CONFIG_DIR  = REPO_ROOT / "runtime" / "config"
-COORD_FILE  = CONFIG_DIR / "cursor_agent_coords.json"
-MODE_FILE   = CONFIG_DIR / "templates" / "agent_modes.json"
+COORD_FILE  = REPO_ROOT / "runtime" / "agent_comms" / "cursor_agent_coords.json"
+MODE_FILE   = REPO_ROOT / "config" / "templates" / "agent_modes.json"
+CAPTURE_CONFIG_FILE = CONFIG_DIR / "agent_capture.yaml"
 
 # ──────────────────────────── logging
 logging.basicConfig(
@@ -92,6 +110,12 @@ class AgentCellPhone:
         except Exception:
             self._new_chat_interval_sec = 0
         self._last_new_chat_ts: Dict[str, float] = {}
+        # Cap how many new chats (Ctrl+T) we open per agent in a run (-1 for unlimited)
+        try:
+            self._max_new_chats_per_agent = int(os.environ.get("ACP_MAX_NEW_CHATS_PER_AGENT", "6") or 6)
+        except Exception:
+            self._max_new_chats_per_agent = 6
+        self._new_chat_count: Dict[str, int] = {}
         # Auto-onboard pointer to be included in the same message (no chunking)
         self._auto_onboard_enabled = os.environ.get("ACP_AUTO_ONBOARD", "1").strip() not in ("0", "", "false", "False")
         self._onboard_style = os.environ.get("ACP_ONBOARD_STYLE", "simple").strip().lower()
@@ -106,6 +130,31 @@ class AgentCellPhone:
         self._message_handlers: Dict[str, Callable[[AgentMessage], None]] = {}
         self._listening = False
         self._listener_thread: Optional[threading.Thread] = None
+        
+        # Response capture system
+        self._response_capture: Optional[ResponseCapture] = None
+        if ResponseCapture and yaml and CAPTURE_CONFIG_FILE.exists():
+            try:
+                cfg = yaml.safe_load(CAPTURE_CONFIG_FILE.read_text(encoding="utf-8"))
+                self._response_capture = ResponseCapture(
+                    coords=self._coords,
+                    cfg=CaptureConfig(
+                        strategy=cfg.get("default_strategy", "file"),
+                        file_watch_root=cfg.get("file", {}).get("watch_root", "agent_workspaces"),
+                        file_response_name=cfg.get("file", {}).get("response_filename", "response.txt"),
+                        clipboard_poll_ms=int(cfg.get("clipboard", {}).get("poll_ms", 500)),
+                        ocr_tesseract_cmd=cfg.get("ocr", {}).get("tesseract_cmd"),
+                        ocr_lang=cfg.get("ocr", {}).get("lang", "eng"),
+                        ocr_psm=int(cfg.get("ocr", {}).get("psm", 6)),
+                        inbox_root=cfg.get("routing", {}).get("inbox_root", "agent_workspaces/Agent-5/inbox"),
+                        fsm_enabled=bool(cfg.get("routing", {}).get("agent5_fsm_bridge_enabled", True)),
+                    ),
+                    get_output_rect=lambda agent: self._coords.get(agent, {}).get("output_area")
+                )
+                log.info("Response capture initialized with strategy: %s", cfg.get("default_strategy", "file"))
+            except Exception as e:
+                log.warning("Failed to initialize response capture: %s", e)
+                self._response_capture = None
         
         if not self._coords:
             log.error("No coordinates found for layout mode: %s", layout_mode)
@@ -137,6 +186,11 @@ class AgentCellPhone:
         # Default behavior remains environment-driven unless explicitly set by caller
 
         # Apply per-agent throttling for new-chat openings
+        if new_chat:
+            # Enforce per-agent max cap first
+            if self._max_new_chats_per_agent >= 0 and self._new_chat_count.get(agent, 0) >= self._max_new_chats_per_agent:
+                new_chat = False
+            # Apply interval throttle
         if new_chat and self._new_chat_interval_sec > 0:
             now_ts = time.time()
             last_ts = self._last_new_chat_ts.get(agent, 0.0)
@@ -163,6 +217,8 @@ class AgentCellPhone:
                 time.sleep(0.8)
                 self._cursor.hotkey("ctrl", "t")
                 time.sleep(0.6)
+                # Increment per-agent new-chat count
+                self._new_chat_count[agent] = self._new_chat_count.get(agent, 0) + 1
         
         # Final target for typing: starter (if present) when new_chat, otherwise input box
         target = (starter_loc if new_chat and starter_loc else input_loc)
@@ -407,6 +463,30 @@ class AgentCellPhone:
                 " TASK_LIST.md, pick one contract, execute, then inbox update with evidence."
             )
         return " ".join(lines).strip()
+
+    # Response capture methods
+    def start_capture_for_agents(self, agents: List[str]) -> None:
+        """Start response capture for specified agents"""
+        if not self._response_capture:
+            log.warning("Response capture not available")
+            return
+        
+        for agent in agents:
+            if agent in self._coords:
+                self._response_capture.start_for(agent)
+                log.info("Started response capture for %s", agent)
+            else:
+                log.warning("Agent %s not found in layout %s", agent, self._layout_mode)
+
+    def stop_capture(self) -> None:
+        """Stop all response capture threads"""
+        if self._response_capture:
+            self._response_capture.stop_all()
+            log.info("Stopped all response capture threads")
+
+    def is_capture_enabled(self) -> bool:
+        """Check if response capture is available and enabled"""
+        return self._response_capture is not None
 
 # ──────────────────────────── cursor abstraction
 class _Cursor:

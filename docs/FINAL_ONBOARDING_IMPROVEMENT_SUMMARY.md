@@ -118,7 +118,7 @@ The comprehensive onboarding message was successfully delivered to all agents wi
   - Side-by-side comparison
 - **Usage**:
   ```bash
-  python scripts/onboarding_approach_comparison.py
+  python scripts/consolidated_onboarding.py --compare
   ```
 
 #### **3. Documentation Files**

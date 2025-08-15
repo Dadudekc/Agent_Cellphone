@@ -494,8 +494,8 @@ class FourAgentHorizontalGUI(QMainWindow):
             import subprocess
             import sys
             
-            # Run the onboarding script for all agents
-            onboarding_script = os.path.join(os.getcwd(), "scripts", "run_onboarding.py")
+            # Run the consolidated onboarding script for all agents
+            onboarding_script = os.path.join(os.getcwd(), "scripts", "consolidated_onboarding.py")
             if os.path.exists(onboarding_script):
                 self.log_message("System", "Running onboarding sequence...")
                 
@@ -503,7 +503,7 @@ class FourAgentHorizontalGUI(QMainWindow):
                 def run_onboarding():
                     try:
                         result = subprocess.run(
-                            [sys.executable, onboarding_script],
+                            [sys.executable, onboarding_script, "--all", "--style", "full"],
                             capture_output=True,
                             text=True,
                             cwd=os.getcwd()

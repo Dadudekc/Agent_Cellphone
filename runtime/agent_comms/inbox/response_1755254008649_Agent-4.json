@@ -1,0 +1,13 @@
+{
+  "type": "agent_response",
+  "from": "Agent-4",
+  "to": "Agent-5",
+  "timestamp": "2025-08-15T05:33:28",
+  "agent": "Agent-4",
+  "ts": 1755254008,
+  "payload": {
+    "type": "agent_freeform",
+    "summary": "# Agent-4 Response File / # This file will be monitored by the response capture system",
+    "raw": "# Agent-4 Response File\n# This file will be monitored by the response capture system"
+  }
+}

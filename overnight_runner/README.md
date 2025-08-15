@@ -1,161 +1,295 @@
-### Overnight Runner – Autonomous Multi‑Agent Coordination
+# Overnight Runner – Autonomous Multi-Agent Coordination System
 
-This directory contains a small, opinionated toolkit to coordinate 4‑agent autonomous work sessions using the Agent Cell Phone (ACP) and an optional file‑inbox channel.
+This directory contains the core orchestration system for coordinating autonomous AI agents using the Agent Cell Phone (ACP) framework. The system enables multiple agents to work simultaneously on development tasks while maintaining coordinated progress through structured workflows.
 
-#### Components
-- `runner.py`: schedules recurring prompts (resume/task/coordinate/sync/verify) to specific agents at a fixed cadence.
-- `listener.py`: tails an agent’s `inbox/` folder for JSON messages and pushes them into the internal pipeline (Phase‑2 scaffold).
-- ACP (already in `src/agent_cell_phone.py`): performs the visible UI typing to each agent’s Cursor input box based on calibrated coordinates.
+## 🏗️ System Architecture
 
-#### What’s new (v2, captain‑less FSM mode)
-- Captain‑less, FSM‑led cadence: no captain prompts; FSM assigns tasks from contracts and agents report back via inbox.
-- Listener supports optional Discord devlogs via `.env` (no token, webhook only).
-- Pacing controls to suppress noise (resume cooldown, active grace window, skip kickoff/assignments).
+### Core Components Integration
 
-#### Prerequisites
-- Run commands from `D:\Agent_Cellphone` so imports and paths resolve correctly.
-- Calibrate coordinates once per layout/window move.
-- Keep Cursor windows visible for ACP to click/type.
+The overnight runner connects with Agent_Cellphone's core components to create a complete autonomous development system:
 
-#### One‑time setup
-1) Create `.env` in repo root:
+```
+Core Components (Foundation)          Overnight Runner (Orchestration)
+├── MultimodalAgent                    ├── Runner (sends scheduled prompts)
+├── DevAutomationAgent                 ├── Listener (receives agent responses)  
+├── InboxListener                      └── FSM Bridge (manages workflows)
+└── CommandRouter
+```
+
+### How It All Works Together
+
+1. **Runner** sends scheduled messages to agents through their Cursor input areas
+2. **Agents** work autonomously and send structured responses via JSON files
+3. **Listener** monitors agent inboxes and processes responses
+4. **FSM Bridge** manages task states and workflow progression
+5. **Core Components** handle message routing and command processing
+
+## 🚀 Key Components
+
+### `runner.py` - The Master Controller
+- **Purpose**: Orchestrates the entire multi-agent system overnight
+- **Function**: Sends scheduled prompts (RESUME, TASK, COORDINATE, SYNC, VERIFY) to agents
+- **Plans**: Supports various work strategies (contracts, autonomous-dev, single-repo-beta, etc.)
+- **Integration**: Uses AgentCellPhone to physically type messages into agent input areas
+
+### `listener.py` - The Communication Hub
+- **Purpose**: Monitors agent responses and coordinates communication
+- **Function**: Watches agent inboxes for new JSON message files
+- **Processing**: Routes messages, updates agent states, triggers next actions
+- **Integration**: Connects with core InboxListener and MessagePipeline components
+
+### `fsm_bridge.py` - The Workflow Engine
+- **Purpose**: Manages Finite State Machine workflows and task assignments
+- **Function**: Processes task updates, assigns work, tracks progress
+- **Integration**: Bridges core FSM components with the overnight runner system
+
+## 📡 How Communication Works
+
+### Outbound: Runner → Agents
+```
+Runner → AgentCellPhone → PyAutoGUI → Cursor Input Box → Agent
+```
+
+1. **Runner** creates structured messages based on work plans
+2. **AgentCellPhone** looks up agent screen coordinates
+3. **PyAutoGUI** moves mouse to agent's input area and types the message
+4. **Agent** receives prompt and begins working
+
+### Inbound: Agents → System
+```
+Agent → JSON File → Inbox → Listener → FSM Bridge → System Update
+```
+
+1. **Agent** completes task and creates structured response
+2. **Response** is written to target agent's inbox directory
+3. **Listener** detects new file and processes content
+4. **FSM Bridge** updates task state and triggers next actions
+
+## 🔄 Response Collection Methods
+
+### Primary: FSM Updates
+Agents send structured task updates:
+```json
+{
+  "type": "fsm_update",
+  "task_id": "task_123",
+  "state": "completed",
+  "summary": "Implemented user authentication",
+  "evidence": ["commit_hash", "test_results", "build_output"],
+  "repo_path": "D:/repositories/auth-service"
+}
+```
+
+### Secondary: Direct Messages
+Agents can send coordination messages:
+```json
+{
+  "type": "note",
+  "from": "Agent-1",
+  "to": "Agent-2",
+  "topic": "coordination",
+  "summary": "API endpoints ready",
+  "details": {"endpoints": ["/users", "/auth"]}
+}
+```
+
+## 🛠️ Setup & Configuration
+
+### Prerequisites
+- Run commands from `D:\Agent_Cellphone` for proper path resolution
+- Calibrate agent screen coordinates once per layout/window configuration
+- Keep Cursor windows visible for automated interaction
+- Python dependencies installed (`pip install -r requirements.txt`)
+
+### Environment Configuration
+Create `.env` in repo root:
 ```env
 DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/.../...
 DEVLOG_USERNAME=Agent Devlog
 ```
-2) Install dependencies:
-```powershell
-pip install -r requirements.txt
-```
-3) Calibrate agent coordinates (see below) once per layout/move.
 
-Conventions
-- Paths in examples may use forward slashes but target Windows paths.
-- Timestamps are ISO8601 (`ToString('o')`).
-- Prefer the unified messaging tool `overnight_runner/tools/send-sync.ps1`.
-
-#### Coordinate calibration (4‑agent)
-1) Hover over the agent’s input box when prompted (≈6s):
+### Coordinate Calibration
+Calibrate agent input box positions:
 ```powershell
-python -c "import time,json,pyautogui; p='src/runtime/config/cursor_agent_coords.json'; print('Hover over Agent-1 input box (4-agent)...'); time.sleep(6); x,y=pyautogui.position(); d=json.load(open(p,'r',encoding='utf-8')); d.setdefault('4-agent',{}); d['4-agent'].setdefault('Agent-1',{}); d['4-agent']['Agent-1']['input_box']={'x':int(x),'y':int(y)}; d['4-agent']['Agent-1']['starter_location_box']={'x':int(x),'y':int(y)}; json.dump(d, open(p,'w',encoding='utf-8'), indent=2); print('Updated',x,y)"
+python -c "
+import time,json,pyautogui
+p='src/runtime/config/cursor_agent_coords.json'
+print('Hover over Agent-1 input box (4-agent)...')
+time.sleep(6)
+x,y=pyautogui.position()
+d=json.load(open(p,'r',encoding='utf-8'))
+d.setdefault('4-agent',{})
+d['4-agent'].setdefault('Agent-1',{})
+d['4-agent']['Agent-1']['input_box']={'x':int(x),'y':int(y)}
+d['4-agent']['Agent-1']['starter_location_box']={'x':int(x),'y':int(y)}
+json.dump(d, open(p,'w',encoding='utf-8'), indent=2)
+print('Updated',x,y)
+"
 ```
-2) Verify delivery to that agent:
+
+## 🚀 Quick Start
+
+### 1. Start the Listener (Terminal A)
 ```powershell
-python src/agent_cell_phone.py --layout 4-agent --agent Agent-1 --msg "[VERIFY] Live calibration: Agent-1" --tag verify
+python overnight_runner/listener.py --agent Agent-5 --env-file .env --devlog-embed --devlog-username "Agent Devlog"
 ```
 
-#### Quick start (captain‑less FSM run)
-Terminal A (listener + devlogs):
+### 2. Start the Runner (Terminal B)
 ```powershell
-python overnight_runner/listener.py --agent Agent-5 --env-file .env --devlog-embed --devlog-username "Agent Devlog" | cat
-```
-Terminal B (30–120 min cadence, captain‑less, FSM‑enabled, contracts‑tailored):
-```powershell
-$env:ACP_DEFAULT_NEW_CHAT='1'; $env:ACP_AUTO_ONBOARD='1'; $env:ACP_SINGLE_MESSAGE='1'; $env:ACP_MESSAGE_VERBOSITY='extensive'; $env:ACP_NEW_CHAT_INTERVAL_SEC='1800'
+# Set environment variables for optimal operation
+$env:ACP_DEFAULT_NEW_CHAT='1'
+$env:ACP_AUTO_ONBOARD='1'
+$env:ACP_SINGLE_MESSAGE='1'
+$env:ACP_MESSAGE_VERBOSITY='extensive'
+$env:ACP_NEW_CHAT_INTERVAL_SEC='1800'
 
+# Launch the runner
 python overnight_runner/runner.py --layout 5-agent --agents Agent-1,Agent-2,Agent-3,Agent-4 \
   --duration-min 60 --interval-sec 1200 --sender Agent-3 --plan contracts \
   --fsm-enabled --fsm-agent Agent-5 --fsm-workflow default \
-  --contracts-file D:/repositories/communications/overnight_YYYYMMDD_/Agent-5/contracts.json \
-  --suppress-resume --skip-assignments --skip-captain-kickoff --skip-captain-fsm-feed \
-  --resume-cooldown-sec 3600 --active-grace-sec 1200 \
-  --initial-wait-sec 10 --phase-wait-sec 8 --stagger-ms 2500 --jitter-ms 800 \
-  --comm-root D:/repositories/communications/overnight_YYYYMMDD_ --create-comm-folders \
-  --devlog-sends --devlog-embed --devlog-username "Agent Devlog" --devlog-webhook $env:DISCORD_WEBHOOK_URL | cat
+  --seed-from-tasklists --skip-assignments --skip-captain-kickoff --skip-captain-fsm-feed \
+  --devlog-sends --devlog-embed --devlog-username "Agent Devlog"
 ```
-What happens:
-- Listener tails `agent_workspaces/Agent-5/inbox`, updates `state.json`, and posts Discord devlogs on task/sync/verify/fsm_update.
-- Runner drops `fsm_request_*.json` each cycle; FSM assigns small, verifiable tasks round‑robin to Agents 1–4.
-- Agents work and send `fsm_update` with state, summary, evidence (links/logs) back to Agent‑5 inbox.
 
-Key flags:
-- `--plan autonomous-dev`: rotates prompts that foster autonomous progress + peer coordination.
-- `--resume-agents`: who receives each cycle’s prompts (captain receives kickoff only).
-- `--stagger-ms`, `--jitter-ms`: spacing between per‑agent sends to avoid rapid focus switches.
-- `--initial-wait-sec`, `--phase-wait-sec`: give time for kickoff/preamble/assignments to settle.
-- Captain‑less pacing flags:
-- `--suppress-resume`, `--resume-cooldown-sec`, `--active-grace-sec`, `--skip-assignments`, `--skip-captain-kickoff`, `--skip-captain-fsm-feed`.
+## 🔧 Run-Forever Scripts
 
-#### Use repo task lists (anti‑duplication)
-- Before coding, open each repo’s `TASK_LIST.md` to select work and update status.
-- Prefer reuse/refactor across repos; avoid duplication, stubs, or shims.
-- Commit small, verifiable edits; add tests/build steps where practical.
+For production resilience, use the PowerShell wrapper scripts:
 
-#### File‑system messaging (silent channel)
-Start a listener for an agent (e.g., Agent‑3):
+### Listener Forever
 ```powershell
-python overnight_runner/listener.py --agent Agent-3
+pwsh -File scripts/run_listener_forever.ps1 -Agent Agent-5
 ```
-Send a message by dropping JSON into the inbox:
+
+### Runner Forever  
 ```powershell
-# Path: agent_workspaces/Agent-3/inbox/sync_YYYYMMDD_HHMMSS.json
-{
-  "from": "Agent-3",
-  "to": "Agent-3",
-  "message": "Agent-3 10-min sync: what changed, open TODO, and the next verifiable action.",
-  "command": "sync",
-  "args": {}
-}
+pwsh -File scripts/run_runner_forever.ps1 -Agents 'Agent-1,Agent-2,Agent-3,Agent-4' -Layout '5-agent'
 ```
 
-#### Common pitfalls
-- “File not found” when running tools: ensure you’re in `D:\Agent_Cellphone` (not `D:\repositories`).
-- No typing: re‑check `src/runtime/config/cursor_agent_coords.json` and that Cursor windows are visible.
-- Too chatty: increase `--interval-sec`, or raise `--stagger-ms`/`--initial-wait-sec`.
-- Discord not posting: ensure `.env` `DISCORD_WEBHOOK_URL` is set (no quotes/trailing spaces). Test with: `python scripts/devlog_test.py`.
-- PowerShell pager noise: avoid piping to `cat` if commands appear stuck; re‑run without `| cat`.
+These scripts automatically restart their respective Python processes on failure and maintain continuous operation.
 
-#### If the system looks “broken” or updates seem lost
-1) Sync code and deps:
-```powershell
-git fetch --all --prune
-git pull --rebase origin main
-pip install -r requirements.txt
+## 📋 Work Plans
+
+### Contracts Mode
+- **Purpose**: Focused work on specific assigned contracts
+- **Flow**: Agents receive tasks, execute, report progress via fsm_update
+- **Best for**: Structured project work with clear deliverables
+
+### Autonomous-Dev Mode
+- **Purpose**: Self-directed development with peer coordination
+- **Flow**: Agents choose high-leverage tasks, coordinate with peers
+- **Best for**: Exploratory development and system improvements
+
+### Single-Repo-Beta Mode
+- **Purpose**: Focused effort to bring a single repository to beta-ready state
+- **Flow**: All agents work on same repo with specific checklist items
+- **Best for**: Final push to production readiness
+
+### PRD-Milestones Mode
+- **Purpose**: Work aligned to Product Requirements Document milestones
+- **Flow**: PRD milestones converted to FSM tasks, agents work sequentially
+- **Best for**: Milestone-driven development with clear acceptance criteria
+
+## 🔄 Message Flow Examples
+
+### Complete Cycle Example
+1. **Runner** sends: "Agent-1 resume: focus the target repo to reach beta-ready"
+2. **Agent-1** receives prompt in Cursor input area
+3. **Agent-1** works on assigned task
+4. **Agent-1** sends fsm_update with progress and evidence
+5. **Listener** processes response and updates system state
+6. **FSM Bridge** assigns next task or triggers verification
+
+### Response Processing
 ```
-2) Re‑verify coordinates (see calibration above) and `.env`.
-3) Run the listener test post:
-```powershell
-python scripts/devlog_test.py
-```
-4) Start listener and cadence again (Quick start above).
-
-#### Quick one‑offs
-- List agents in layout:
-```powershell
-python src/agent_cell_phone.py --layout 4-agent --list-agents --test
-```
-- Send a single resume to an agent:
-```powershell
-python src/agent_cell_phone.py --layout 4-agent --agent Agent-2 --msg "Resume autonomous development: choose the highest-leverage task and begin now." --tag resume
-```
-
-#### What the autonomous‑dev plan sends
-In cycles, the runner rotates:
-- `[RESUME]` resume autonomous development
-- `[TASK]` implement one concrete improvement (tests/build/lint/docs/refactor)
-- `[COORDINATE]` prompt a peer for a quick sanity check; incorporate feedback
-- `[SYNC]` 10‑minute status: changed, open TODO, next verifiable action
-- `[VERIFY]` verify outcomes (tests/build); stage diffs and summarize if blocked
-
-This balances momentum with collaboration while avoiding duplication.
-
-#### PRD‑driven mode (seed FSM from PRD milestones)
-
-Use the new `prd-milestones` plan to seed the FSM task queue directly from a PRD JSON and rotate milestone‑aligned prompts:
-
-```powershell
-python overnight_runner/runner.py --layout 5-agent --agents Agent-1,Agent-2,Agent-3,Agent-4 \
-  --duration-min 60 --interval-sec 900 --sender Agent-3 --plan prd-milestones \
-  --fsm-enabled --fsm-agent Agent-5 --fsm-workflow default \
-  --prd-path D:/repositories/project_repository/PRDs/<YOUR_PRD>.json \
-  --skip-assignments --skip-captain-kickoff --skip-captain-fsm-feed \
-  --devlog-sends --devlog-embed --devlog-username "Agent Devlog" | cat
+Agent Response → InboxListener → MessagePipeline → CommandRouter → FSM Bridge
+     ↓
+State Updates + Task Progression + Notifications + Next Actions
 ```
 
-What happens:
-- PRD milestones are converted to queued FSM tasks (idempotent; only new ones are created).
-- Each cycle, an FSM request assigns queued tasks round‑robin to agents.
-- Prompts coach agents to align work to the active milestone and acceptance criteria.
-- If `--devlog-sends` is on, each send is echoed to Discord.
+## 🚨 Troubleshooting
+
+### Common Issues
+
+**"File not found" errors**
+- Ensure you're running from `D:\Agent_Cellphone`
+- Check that all paths in configuration files are correct
+
+**No typing/automation**
+- Verify `src/runtime/config/cursor_agent_coords.json` exists and has correct coordinates
+- Ensure Cursor windows are visible and not minimized
+- Re-run coordinate calibration if windows were moved
+
+**Too many messages**
+- Increase `--interval-sec` for longer cycles
+- Adjust `--stagger-ms` and `--jitter-ms` for better pacing
+- Use `--suppress-resume` and `--resume-cooldown-sec` to reduce noise
+
+**Discord notifications not working**
+- Verify `.env` has correct `DISCORD_WEBHOOK_URL` (no quotes/trailing spaces)
+- Test with: `python scripts/devlog_test.py`
+
+### System Recovery
+If the system appears broken:
+
+1. **Sync code and dependencies**:
+   ```powershell
+   git fetch --all --prune
+   git pull --rebase origin main
+   pip install -r requirements.txt
+   ```
+
+2. **Re-verify configuration**:
+   - Check coordinates and `.env` file
+   - Test listener with: `python scripts/devlog_test.py`
+
+3. **Restart components**:
+   - Stop all processes
+   - Start listener first, then runner
+   - Use run-forever scripts for resilience
+
+## 🎯 Best Practices
+
+### Agent Coordination
+- **Check TASK_LIST.md first**: Always review existing tasks before starting new work
+- **Prefer reuse**: Look for existing solutions across repositories before creating new code
+- **Small commits**: Make incremental, verifiable changes with clear evidence
+- **Peer coordination**: Request sanity checks from other agents before large changes
+
+### Response Quality
+- **Structured updates**: Use fsm_update format for task progress
+- **Evidence inclusion**: Attach commit hashes, test results, build outputs
+- **Clear summaries**: Provide concise descriptions of what was accomplished
+- **Next steps**: Always indicate what comes next or what's blocking progress
+
+### System Maintenance
+- **Monitor logs**: Check `logs/runner.log` and `logs/listener.log` for issues
+- **Regular restarts**: Use run-forever scripts for long-running sessions
+- **Coordinate updates**: Ensure all agents are using compatible versions
+- **Backup states**: Archive important state files before major changes
+
+## 🔗 Integration Points
+
+### With Core Components
+- **MultimodalAgent**: Provides voice/vision capabilities for agents
+- **DevAutomationAgent**: Handles development task automation
+- **InboxListener**: Manages message routing and processing
+- **CommandRouter**: Processes commands and routes to handlers
+
+### With External Systems
+- **Discord**: Devlog notifications and monitoring
+- **Git**: Repository management and task tracking
+- **File System**: Persistent message storage and state management
+- **Cursor IDE**: Direct agent interaction through automated typing
+
+## 📚 Additional Resources
+
+- **Project Structure**: See `PROJECT_STRUCTURE.md` for system overview
+- **Agent Communication**: See `INTER_AGENT_COMMUNICATION_GUIDE.md` for detailed protocols
+- **FSM Workflows**: See `fsm_data/` directory for workflow definitions
+- **Configuration**: See `config/` directory for system settings and templates
+
+---
+
+*This system creates a "digital assembly line" where multiple AI agents can work autonomously while maintaining coordinated progress toward project goals through structured communication and workflow management.*
 
 

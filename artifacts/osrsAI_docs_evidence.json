@@ -1,0 +1,7 @@
+{
+  "task_id": "docs-define-observation-states-and-discrete-actions",
+  "repo": "D:/repositories/dadudekc/osrsAIagent",
+  "doc": "D:\\repositories\\dadudekc\\osrsAIagent\\docs\\observations_actions.md",
+  "sha256": "BD38E4F536F632E529A5089D4ECD9098E7431D7A38644EC7A59C58BC1067432D",
+  "commit": "44ed7b4e015e773e984991f6f124a6315e89f8b0 docs: define observation space and discrete actions for environment_wrapper"
+}

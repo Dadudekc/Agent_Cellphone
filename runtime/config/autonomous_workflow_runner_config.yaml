@@ -1,0 +1,279 @@
+# Autonomous Development Workflow Runner Configuration
+# This config implements the systematic repo-to-beta transformation workflow
+
+workflow:
+  name: "Autonomous Development Workflow"
+  mission: "Transform all repos in D:\\repos\\Dadudekc to beta-ready state"
+  target_directory: "D:\\repos\\Dadudekc"
+  
+  # Workflow phases with Ctrl+T strategy
+  phases:
+    phase_1:
+      name: "Assessment & Planning"
+      cycle: 1
+      duration_minutes: 30
+      ctrl_t_strategy: "use_ctrl_t"  # Fresh context for new phase
+      description: "Repository discovery and prioritization"
+      
+    phase_2:
+      name: "Implementation Start"
+      cycle: 2
+      duration_minutes: 30
+      ctrl_t_strategy: "no_ctrl_t"  # Continue in existing context
+      description: "Begin implementing missing components"
+      
+    phase_3:
+      name: "Progress Check"
+      cycle: 3
+      duration_minutes: 30
+      ctrl_t_strategy: "no_ctrl_t"  # Maintain context
+      description: "Evaluate progress and identify blockers"
+      
+    phase_4:
+      name: "Implementation Continue"
+      cycle: 4
+      duration_minutes: 30
+      ctrl_t_strategy: "no_ctrl_t"  # Continue building
+      description: "Continue implementation work"
+      
+    phase_5:
+      name: "Mid-Course Correction"
+      cycle: 5
+      duration_minutes: 30
+      ctrl_t_strategy: "use_ctrl_t"  # Fresh context for strategy changes
+      description: "Review progress and adjust strategy"
+      
+    phase_6:
+      name: "Implementation Final"
+      cycle: 6
+      duration_minutes: 30
+      ctrl_t_strategy: "no_ctrl_t"  # Continue implementation
+      description: "Complete implementation work"
+      
+    phase_7:
+      name: "Testing & Validation"
+      cycle: 7
+      duration_minutes: 30
+      ctrl_t_strategy: "use_ctrl_t"  # Fresh context for validation
+      description: "Validate beta-readiness"
+      
+    phase_8:
+      name: "Documentation & Deployment"
+      cycle: 8
+      duration_minutes: 30
+      ctrl_t_strategy: "no_ctrl_t"  # Complete final phase
+      description: "Finalize docs and deploy"
+
+# Agent role assignments for the workflow
+agents:
+  Agent-1:
+    role: "Repository Assessment Specialist"
+    focus: "Priority analysis and quick wins identification"
+    repositories: ["SWARM", "AI_Debugger_Assistant", "DigitalDreamscape"]
+    
+  Agent-2:
+    role: "Implementation Architect"
+    focus: "Technical implementation and testing"
+    repositories: ["Auto_Blogger", "Dream.os", "FreeWork"]
+    
+  Agent-3:
+    role: "Quality Assurance Engineer"
+    focus: "Testing, validation, and deployment"
+    repositories: ["DaDudeKC-Website", "DreamVault", "FreerideinvestorWebsite"]
+    
+  Agent-4:
+    role: "Documentation & DevOps Specialist"
+    focus: "Documentation, CI/CD, and monitoring"
+    repositories: ["DaDudekC", "FocusForge", "HCshinobi"]
+    
+  Agent-5:
+    role: "Workflow Coordinator & Captain"
+    focus: "Progress monitoring, resource allocation, blocker resolution"
+    repositories: ["All repositories - coordination only"]
+
+# Beta-readiness criteria and validation
+beta_readiness:
+  required_criteria:
+    - name: "Tests"
+      description: "Unit tests, integration tests, coverage >80%"
+      weight: 20
+      
+    - name: "Build"
+      description: "Clean build process, no errors"
+      weight: 15
+      
+    - name: "Deploy"
+      description: "Deployment pipeline working"
+      weight: 15
+      
+    - name: "Docs"
+      description: "README, API docs, user guides"
+      weight: 10
+      
+    - name: "UI"
+      description: "User interface complete and functional"
+      weight: 10
+      
+    - name: "Monitoring"
+      description: "Logging, error tracking, performance metrics"
+      weight: 10
+      
+    - name: "Security"
+      description: "Authentication, authorization, input validation"
+      weight: 10
+      
+    - name: "Performance"
+      description: "Response times, resource usage optimized"
+      weight: 10
+  
+  minimum_score: 80  # Must achieve 80% to be beta-ready
+  validation_required: true
+
+# Progress tracking and reporting
+progress_tracking:
+  response_format:
+    - repo: "Repository name"
+    - agent: "Agent identifier"
+    - phase: "Current workflow phase"
+    - progress: "Progress percentage (0-100)"
+    - current_task: "Description of current work"
+    - blockers: "List of encountered blockers"
+    - next_steps: "Planned next actions"
+    - estimated_completion: "Estimated cycles to completion"
+  
+  update_frequency: "every_cycle"  # Update response.txt each cycle
+  escalation_threshold: 2  # Escalate after 2 cycles of no progress
+
+# Ctrl+T strategy configuration
+ctrl_t_strategy:
+  phase_start: true      # Use Ctrl+T at start of new phases
+  phase_continuation: false  # No Ctrl+T during phase continuation
+  phase_transition: true     # Use Ctrl+T between phases
+  error_recovery: true       # Use Ctrl+T for error recovery
+  agent_confusion: true      # Use Ctrl+T if agent seems confused
+  
+  # Throttling to prevent excessive new chats
+  max_new_chats_per_agent: 8  # One per phase
+  new_chat_interval_sec: 1800  # 30 minutes (one cycle)
+  
+  # Smart Ctrl+T triggers
+  triggers:
+    - "phase_transition_detected"
+    - "error_message_detected"
+    - "confusion_indicator_detected"
+    - "blocker_resolution_complete"
+    - "strategy_change_requested"
+
+# Repository prioritization matrix
+prioritization:
+  matrix:
+    priority_1:
+      name: "Quick Wins"
+      criteria: "High Impact, Low Effort"
+      target_completion: "1-2 cycles"
+      examples: ["Documentation updates", "Test additions", "Build fixes"]
+      
+    priority_2:
+      name: "Strategic Projects"
+      criteria: "High Impact, High Effort"
+      target_completion: "4-6 cycles"
+      examples: ["Major feature implementation", "Architecture improvements"]
+      
+    priority_3:
+      name: "Maintenance Tasks"
+      criteria: "Low Impact, Low Effort"
+      target_completion: "2-3 cycles"
+      examples: ["Code cleanup", "Minor bug fixes"]
+      
+    priority_4:
+      name: "Defer or Archive"
+      criteria: "Low Impact, High Effort"
+      target_completion: "Defer until later"
+      examples: ["Legacy system updates", "Major refactoring"]
+
+# Efficiency optimization
+efficiency:
+  parallel_development: true    # Work on multiple repos simultaneously
+  pattern_reuse: true          # Reuse successful patterns from other repos
+  automated_testing: true      # Implement CI/CD where possible
+  documentation_first: true    # Write docs as you develop
+  incremental_progress: true   # Small, verifiable improvements each cycle
+  
+  # Resource allocation optimization
+  resource_allocation:
+    - "Assign high-priority repos to most capable agents"
+    - "Balance workload across all agents"
+    - "Reallocate resources based on progress and blockers"
+    - "Coordinate multi-agent efforts for complex repos"
+
+# Success metrics and KPIs
+success_metrics:
+  development_velocity:
+    target_repos_per_cycle: "2-3 repos making progress"
+    target_beta_readiness_rate: "1-2 repos per day"
+    target_cycle_efficiency: "80% planned work completion"
+  
+  quality_metrics:
+    target_test_coverage: ">80% across all repos"
+    target_build_success_rate: ">95% successful builds"
+    target_documentation_completeness: "100% of repos documented"
+  
+  workflow_efficiency:
+    target_phase_completion: "Complete each phase within cycle time"
+    target_blocker_resolution: "Resolve blockers within 1 cycle"
+    target_coordination_efficiency: "Minimal coordination overhead"
+
+# Error handling and recovery
+error_handling:
+  recovery_procedures:
+    - name: "Agent Reset"
+      action: "Use Ctrl+T for fresh context"
+      trigger: "Agent confusion or errors"
+      
+    - name: "Task Reassignment"
+      action: "Move stuck tasks to different agents"
+      trigger: "Agent unable to progress after 2 cycles"
+      
+    - name: "Repository Rollback"
+      action: "Revert to last working state"
+      trigger: "Critical build or deployment failures"
+      
+    - name: "Manual Intervention"
+      action: "Escalate complex issues to human"
+      trigger: "Recovery procedures fail"
+  
+  escalation_path:
+    - "Agent attempts self-recovery"
+    - "Agent requests coordination from Agent-5"
+    - "Agent-5 attempts resolution"
+    - "Escalate to human operator"
+
+# Integration with overnight runner
+runner_integration:
+  plan_name: "autonomous-development-workflow"
+  layout_mode: "5-agent"
+  duration_minutes: 480  # 8 hours total
+  interval_seconds: 1800  # 30 minutes per cycle
+  capture_enabled: true
+  fsm_enabled: true
+  fsm_agent: "Agent-5"
+  
+  # Message templates for each phase
+  message_templates:
+    phase_1: "onboarding.repository_assessment"
+    phase_2: "onboarding.implementation_start"
+    phase_3: "onboarding.progress_check"
+    phase_4: "onboarding.implementation_continue"
+    phase_5: "onboarding.mid_course_correction"
+    phase_6: "onboarding.implementation_final"
+    phase_7: "onboarding.testing_validation"
+    phase_8: "onboarding.documentation_deployment"
+  
+  # Ctrl+T configuration for runner
+  ctrl_t_config:
+    phase_start: true
+    phase_continuation: false
+    phase_transition: true
+    error_recovery: true
+    max_new_chats_per_agent: 8
+    new_chat_interval_sec: 1800

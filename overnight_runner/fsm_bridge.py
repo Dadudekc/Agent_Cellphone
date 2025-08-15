@@ -15,7 +15,7 @@ FSM_ROOT = Path("fsm_data")
 TASKS_DIR = FSM_ROOT / "tasks"
 WORKFLOWS_DIR = FSM_ROOT / "workflows"
 INBOX_ROOT = Path("agent_workspaces")
-REPO_ROOT = Path("D:/repositories")
+REPO_ROOT = Path("D:/repos/Dadudekc")
 
 
 @dataclass
@@ -340,6 +340,9 @@ def handle_fsm_update(payload: Dict[str, Any]) -> Dict[str, Any]:
     except Exception:
         pass
     return {"ok": True, "task_id": tr.task_id, "state": tr.state}
+
+    # NOTE: unreachable due to return above
+
 
 def seed_tasks_from_prd(prd_path: str, workflow_id: Optional[str] = "default") -> Dict[str, Any]:
     """Seed FSM tasks from a PRD JSON file.
