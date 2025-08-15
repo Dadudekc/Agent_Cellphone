@@ -11,15 +11,18 @@ from __future__ import annotations
 
 from datetime import datetime
 from typing import Optional
+import logging
 
 from fastapi import FastAPI
 from pydantic import BaseModel
 
 from .agent_service import LocalAgentService
 from .event_bus import event_bus
+from .browser_utils import get_logger, log
 
 
 app = FastAPI(title="AgentCellPhone API")
+logger = get_logger(__name__)
 
 
 # Local service instance that performs the actual work
@@ -49,6 +52,14 @@ def send_message(msg: Message):
             "timestamp": datetime.utcnow().isoformat(),
         }
     )
+    log(
+        logger,
+        logging.INFO,
+        "send_message",
+        target=msg.target,
+        tag=msg.tag,
+        success=success,
+    )
     return {"success": success, "detail": detail}
 
 
@@ -66,6 +77,13 @@ def broadcast_message(msg: Message):
             "timestamp": datetime.utcnow().isoformat(),
         }
     )
+    log(
+        logger,
+        logging.INFO,
+        "broadcast_message",
+        tag=msg.tag,
+        success=success,
+    )
     return {"success": success, "detail": detail}
 
 
@@ -80,6 +98,7 @@ def status():
             "timestamp": datetime.utcnow().isoformat(),
         }
     )
+    log(logger, logging.INFO, "status", agents=len(data.get("available_agents", [])))
     return data
 
 

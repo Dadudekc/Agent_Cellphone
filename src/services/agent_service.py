@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional, Tuple
+import logging
 
 # The local service depends on the core AgentCellPhone implementation
 try:  # pragma: no cover - optional import for non-GUI tests
@@ -19,6 +20,13 @@ except Exception:  # pragma: no cover
     MsgTag = None  # type: ignore
 
 import requests
+
+from .browser_utils import (
+    get_logger,
+    get_request_kwargs,
+    log,
+    retry_with_backoff,
+)
 
 
 class AgentService(ABC):
@@ -97,17 +105,38 @@ class APIAgentService(AgentService):
 
     def __init__(self, base_url: str = "http://localhost:8000") -> None:
         self.base_url = base_url.rstrip("/")
+        self.logger = get_logger(__name__)
 
     # ------------------------------------------------------------------
     def _post(self, endpoint: str, payload: Dict) -> Tuple[bool, str]:
         url = f"{self.base_url}{endpoint}"
+
+        def do_post():
+            return requests.post(url, json=payload, timeout=5, **get_request_kwargs())
+
         try:
-            resp = requests.post(url, json=payload, timeout=5)
+            resp = retry_with_backoff(do_post, logger=self.logger)
             if resp.ok:
                 data = resp.json()
+                log(
+                    self.logger,
+                    logging.INFO,
+                    "post_success",
+                    url=url,
+                    status=resp.status_code,
+                )
                 return bool(data.get("success", False)), data.get("detail", "")
+            log(
+                self.logger,
+                logging.WARNING,
+                "post_failure",
+                url=url,
+                status=resp.status_code,
+                detail=resp.text,
+            )
             return False, resp.text
         except Exception as exc:  # pragma: no cover - network failure
+            log(self.logger, logging.ERROR, "post_exception", url=url, error=str(exc))
             return False, str(exc)
 
     # ------------------------------------------------------------------
@@ -133,12 +162,32 @@ class APIAgentService(AgentService):
     # ------------------------------------------------------------------
     def get_system_status(self) -> Dict:
         url = f"{self.base_url}/status"
+
+        def do_get():
+            return requests.get(url, timeout=5, **get_request_kwargs())
+
         try:
-            resp = requests.get(url, timeout=5)
+            resp = retry_with_backoff(do_get, logger=self.logger)
             if resp.ok:
+                log(
+                    self.logger,
+                    logging.INFO,
+                    "status_success",
+                    url=url,
+                    status=resp.status_code,
+                )
                 return resp.json()
+            log(
+                self.logger,
+                logging.WARNING,
+                "status_failure",
+                url=url,
+                status=resp.status_code,
+                detail=resp.text,
+            )
             return {"error": resp.text}
         except Exception as exc:  # pragma: no cover - network failure
+            log(self.logger, logging.ERROR, "status_exception", url=url, error=str(exc))
             return {"error": str(exc)}
 
 
