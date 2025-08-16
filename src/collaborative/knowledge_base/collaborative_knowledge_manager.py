@@ -387,3 +387,4 @@ class CollaborativeKnowledgeManager:
 
 # Global instance for system-wide access
 collaborative_knowledge_manager = CollaborativeKnowledgeManager()
+

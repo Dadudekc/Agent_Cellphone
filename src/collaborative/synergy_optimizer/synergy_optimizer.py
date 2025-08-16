@@ -673,3 +673,4 @@ class SynergyOptimizer:
 
 # Global instance for system-wide access
 synergy_optimizer = SynergyOptimizer()
+

@@ -581,3 +581,4 @@ class CollaborativeTaskManager:
 
 # Global instance for system-wide access
 collaborative_task_manager = CollaborativeTaskManager()
+

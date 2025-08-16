@@ -283,3 +283,4 @@ class CollaborativeTaskManager:
                 CollaborativeTaskState.COMPLETED, CollaborativeTaskState.FAILED
             ]])
         }
+
