@@ -1,0 +1,21 @@
+{
+  "ts": "2025-08-16T19:39:07.364886+00:00",
+  "agents": {
+    "Agent-1": {
+      "age_sec": 29786.341498613358,
+      "status": "stalled"
+    },
+    "Agent-2": {
+      "age_sec": 29785.364886045456,
+      "status": "stalled"
+    },
+    "Agent-3": {
+      "age_sec": 29785.364886045456,
+      "status": "stalled"
+    },
+    "Agent-4": {
+      "age_sec": 29786.341498613358,
+      "status": "stalled"
+    }
+  }
+}
