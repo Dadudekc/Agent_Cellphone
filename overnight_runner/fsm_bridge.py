@@ -1,419 +1,282 @@
 #!/usr/bin/env python3
-from __future__ import annotations
+"""
+FSM Bridge for Overnight Runner
+
+This module provides a bridge between the overnight runner and the FSM system,
+allowing for state management and task orchestration.
+"""
 
 import json
 import os
-from dataclasses import dataclass, field
+import sys
+from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, Any, List, Optional
-import time
-import uuid
-from urllib import request, error
+from typing import Dict, List, Optional, Any
+
+# Ensure package root and src/ are on path for direct script execution
+_THIS = Path(__file__).resolve()
+sys.path.insert(0, str(_THIS.parents[1]))
+sys.path.insert(0, str(_THIS.parents[1] / 'src'))
+
+from src.core.config import get_owner_path, get_repos_root, get_communications_root  # type: ignore
 
 
-FSM_ROOT = Path("fsm_data")
-TASKS_DIR = FSM_ROOT / "tasks"
-WORKFLOWS_DIR = FSM_ROOT / "workflows"
-INBOX_ROOT = Path("D:/repos/Dadudekc")
-REPO_ROOT = Path("D:/repos/Dadudekc")
+# Use configurable paths instead of hardcoded ones
+INBOX_ROOT = get_owner_path()
+REPO_ROOT = get_owner_path()
 
 
-@dataclass
-class TaskRecord:
-    task_id: str
-    repo: str
-    intent: str
-    state: str
-    owner: Optional[str] = None
-    acceptance_criteria: Optional[str] = None
-    evidence_required: Optional[str] = None
-    # Extended lifecycle/audit fields
-    assigned_at: Optional[str] = None
-    started_at: Optional[str] = None
-    completed_at: Optional[str] = None
-    owner_history: List[Dict[str, Any]] = field(default_factory=list)
-    evidence: List[Dict[str, Any]] = field(default_factory=list)
-    priority: Optional[int] = None
-    labels: List[str] = field(default_factory=list)
-    blocked_reason: Optional[str] = None
-    workflow: Optional[str] = None
-    attempt: int = 0
+def _P(path_str: str) -> Path:
+    """Convert string to Path object."""
+    return Path(path_str)
 
 
-def _read_json(path: Path) -> Dict[str, Any]:
-    if not path.exists():
-        return {}
+def _write_inbox_message(agent: str, message: Dict[str, Any]) -> bool:
+    """Write a message to an agent's inbox."""
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except Exception:
-        return {}
+        inbox_dir = INBOX_ROOT / agent / "inbox"
+        inbox_dir.mkdir(parents=True, exist_ok=True)
+        
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"fsm_message_{timestamp}.json"
+        filepath = inbox_dir / filename
+        
+        with open(filepath, 'w', encoding='utf-8') as f:
+            json.dump(message, f, indent=2, ensure_ascii=False)
+        
+        print(f"✅ Message written to {filepath}")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Failed to write message to {agent} inbox: {e}")
+        return False
 
 
-def _write_json(path: Path, data: Dict[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, indent=2), encoding="utf-8")
-
-
-def load_workflow(workflow_id: str) -> Dict[str, Any]:
-    return _read_json(WORKFLOWS_DIR / f"{workflow_id}.json")
-
-
-def list_task_files() -> List[Path]:
-    if not TASKS_DIR.exists():
+def _read_inbox_messages(agent: str, limit: int = 10) -> List[Dict[str, Any]]:
+    """Read messages from an agent's inbox."""
+    try:
+        inbox_dir = INBOX_ROOT / agent / "inbox"
+        if not inbox_dir.exists():
+            return []
+        
+        messages = []
+        for filepath in sorted(inbox_dir.glob("fsm_message_*.json"), reverse=True):
+            if len(messages) >= limit:
+                break
+                
+            try:
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    message = json.load(f)
+                    message['_filepath'] = str(filepath)
+                    messages.append(message)
+            except Exception as e:
+                print(f"⚠️  Failed to read {filepath}: {e}")
+                continue
+        
+        return messages
+        
+    except Exception as e:
+        print(f"❌ Failed to read inbox for {agent}: {e}")
         return []
-    return sorted([p for p in TASKS_DIR.iterdir() if p.suffix == ".json"])
 
-def _try_parse_task_list(repo_path: Path) -> List[TaskRecord]:
-    tasks: List[TaskRecord] = []
-    tl = repo_path / "TASK_LIST.md"
-    if not tl.exists():
+
+def _scan_repositories_for_tasks() -> List[Dict[str, Any]]:
+    """Scan all repositories for TASK_LIST.md entries and seed queued tasks."""
+    tasks = []
+    
+    if not REPO_ROOT.exists():
+        print(f"⚠️  Repository root {REPO_ROOT} does not exist")
         return tasks
+    
     try:
-        # very light parser: lines starting with - [ ] and fields in following indented lines
-        task_id = title = None
-        state = "new"
-        ac = None
-        for line in tl.read_text(encoding="utf-8").splitlines():
-            s = line.strip()
-            if s.startswith("- ["):
-                if task_id and title:
-                    tasks.append(TaskRecord(task_id=task_id, repo=repo_path.name, intent=title, state=state))
-                task_id = title = None
-                state = "new"
-            if s.startswith("task_id:"):
-                task_id = s.split(":", 1)[1].strip()
-            elif s.startswith("title:"):
-                title = s.split(":", 1)[1].strip()
-            elif s.startswith("state:"):
-                state = s.split(":", 1)[1].strip() or "new"
-        if task_id and title:
-            tasks.append(TaskRecord(task_id=task_id, repo=repo_path.name, intent=title, state=state))
-    except Exception:
-        return []
-    return tasks
-
-
-def load_tasks() -> Dict[str, TaskRecord]:
-    tasks: Dict[str, TaskRecord] = {}
-    for p in list_task_files():
-        data = _read_json(p)
-        task_id = data.get("task_id") or p.stem
-        tr = TaskRecord(
-            task_id=task_id,
-            repo=data.get("repo", ""),
-            intent=data.get("intent", ""),
-            state=data.get("state", "new"),
-            owner=data.get("owner"),
-            acceptance_criteria=data.get("acceptance_criteria"),
-            evidence_required=data.get("evidence_required"),
-            assigned_at=data.get("assigned_at"),
-            started_at=data.get("started_at"),
-            completed_at=data.get("completed_at"),
-            owner_history=list(data.get("owner_history", [])),
-            evidence=list(data.get("evidence", [])),
-            priority=data.get("priority"),
-            labels=list(data.get("labels", [])),
-            blocked_reason=data.get("blocked_reason"),
-            workflow=data.get("workflow"),
-            attempt=int(data.get("attempt", 0)),
-        )
-        tasks[task_id] = tr
-    return tasks
-
-def discover_and_merge_repo_tasks(existing: Dict[str, TaskRecord]) -> Dict[str, TaskRecord]:
-    """Augment task set by parsing TASK_LIST.md from repos when FSM tasks are sparse."""
-    try:
-        if not REPO_ROOT.exists():
-            return existing
-        exclude = {".git", ".github", ".vscode", ".idea", ".pytest_cache", "__pycache__", "node_modules", "venv", ".venv", "dist", "build", ".mypy_cache", ".ruff_cache", ".tox", ".cache", "communications"}
         for repo in sorted(REPO_ROOT.iterdir()):
-            if not repo.is_dir() or repo.name in exclude or repo.name.startswith("."):
+            if not repo.is_dir() or repo.name.startswith('.'):
                 continue
-            markers = [".git", "README.md", "pyproject.toml", "package.json", "requirements.txt"]
-            if not any((repo / m).exists() for m in markers):
+                
+            tasklist_file = repo / "TASK_LIST.md"
+            if not tasklist_file.exists():
                 continue
-            for tr in _try_parse_task_list(repo):
-                existing.setdefault(tr.task_id, tr)
-    except Exception:
-        return existing
-    return existing
+            
+            try:
+                # Read TASK_LIST.md and extract tasks
+                content = tasklist_file.read_text(encoding='utf-8')
+                
+                # Simple task extraction (can be enhanced)
+                lines = content.split('\n')
+                current_task = None
+                
+                for line in lines:
+                    line = line.strip()
+                    if line.startswith('## '):
+                        if current_task:
+                            tasks.append(current_task)
+                        
+                        current_task = {
+                            'repo': repo.name,
+                            'title': line[3:],  # Remove '## '
+                            'status': 'queued',
+                            'created': datetime.now().isoformat(),
+                            'filepath': str(tasklist_file)
+                        }
+                    elif line.startswith('- ') and current_task:
+                        if 'description' not in current_task:
+                            current_task['description'] = line[2:]  # Remove '- '
+                
+                if current_task:
+                    tasks.append(current_task)
+                    
+            except Exception as e:
+                print(f"⚠️  Failed to process {tasklist_file}: {e}")
+                continue
+        
+        print(f"✅ Scanned {len(tasks)} tasks from repositories")
+        return tasks
+        
+    except Exception as e:
+        print(f"❌ Failed to scan repositories: {e}")
+        return tasks
 
 
-def _save_task(record: TaskRecord) -> None:
-    path = TASKS_DIR / f"{record.task_id}.json"
-    data = {
-        "task_id": record.task_id,
-        "repo": record.repo,
-        "intent": record.intent,
-        "state": record.state,
-        "owner": record.owner,
-        "acceptance_criteria": record.acceptance_criteria,
-        "evidence_required": record.evidence_required,
-        "assigned_at": record.assigned_at,
-        "started_at": record.started_at,
-        "completed_at": record.completed_at,
-        "owner_history": record.owner_history,
-        "evidence": record.evidence,
-        "priority": record.priority,
-        "labels": record.labels,
-        "blocked_reason": record.blocked_reason,
-        "workflow": record.workflow,
-        "attempt": record.attempt,
+def _create_fsm_task(owner: str, task_data: Dict[str, Any]) -> Dict[str, Any]:
+    """Create an FSM task from task data."""
+    return {
+        "id": f"task-{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+        "type": "task",
+        "owner": owner,
+        "title": task_data.get('title', 'Untitled Task'),
+        "description": task_data.get('description', 'No description'),
+        "repo": task_data.get('repo', 'unknown'),
+        "status": "queued",
+        "priority": "medium",
+        "created": datetime.now().isoformat(),
+        "updated": datetime.now().isoformat(),
+        "assignee": None,
+        "evidence": [],
+        "transitions": [],
+        # Helpful context for downstream tools
+        "workflow": "default",
+        "repo_path": str(get_repos_root() / task_data.get('repo', '')),
+        "comm_root_path": str(get_communications_root()),
     }
-    _write_json(path, data)
 
 
-def _now_iso() -> str:
-    return time.strftime("%Y-%m-%dT%H:%M:%S")
-
-
-def _write_inbox_message(to_agent: str, payload: Dict[str, Any]) -> Path:
-    inbox = INBOX_ROOT / to_agent / "inbox"
-    inbox.mkdir(parents=True, exist_ok=True)
-    ts = time.strftime("%Y%m%d_%H%M%S")
-    msg_type = payload.get("type", "note")
-    # Attach a standard envelope for idempotency/traceability
-    message_id = payload.get("id") or str(uuid.uuid4())
-    payload["id"] = message_id
-    payload.setdefault("created_at", _now_iso())
-    payload.setdefault("schema_version", 1)
-    payload.setdefault("correlation_id", payload.get("correlation_id", message_id))
-    payload.setdefault("causation_id", payload.get("causation_id", message_id))
-    fname = f"{msg_type}_{ts}_{to_agent}.json"
-    path = inbox / fname
-    _write_json(path, payload)
-    return path
-
-
-def _post_discord(title: str, description: str) -> None:
-    """Optional devlog to Discord via webhook in environment.
-    Set DISCORD_WEBHOOK_URL and optional DEVLOG_USERNAME in .env or env.
-    """
-    url = os.environ.get("DISCORD_WEBHOOK_URL")
-    if not url:
-        return
-    user = os.environ.get("DEVLOG_USERNAME", "Agent Devlog")
-    payload = {
-        "username": user,
-        "embeds": [{"title": title, "description": description, "color": 5814783}],
-    }
-    data = json.dumps(payload).encode("utf-8")
-    req = request.Request(url, data=data, headers={"Content-Type": "application/json"})
+def process_fsm_update(agent: str, update_data: Dict[str, Any]) -> bool:
+    """Process an FSM update from an agent."""
     try:
-        with request.urlopen(req, timeout=8):
-            pass
-    except (error.HTTPError, error.URLError):
-        # Silent failure to avoid breaking FSM; listener may also post devlogs
-        pass
-
-
-def handle_fsm_request(payload: Dict[str, Any]) -> Dict[str, Any]:
-    """Select next tasks and assign to agents. Payload may include:
-    { 'type':'fsm_request', 'from':'Agent-3', 'to':'Agent-5', 'workflow':'default', 'agents':['Agent-1','Agent-2','Agent-4'] }
-    """
-    targets: List[str] = payload.get("agents") or []
-    focus_repo: Optional[str] = payload.get("focus_repo") or None
-    workflow_id = payload.get("workflow") or "default"
-
-    _ = load_workflow(workflow_id)  # reserved for future branching by state graph
-    tasks = load_tasks()
-    # If few open tasks, augment from TASK_LIST.md of repos
-    if len(tasks) < 3:
-        tasks = discover_and_merge_repo_tasks(tasks)
-
-    assigned: List[Dict[str, Any]] = []
-    # simple round-robin: pick tasks with state in {new, queued} and no owner
-    open_tasks = [t for t in tasks.values() if t.state in {"new", "queued"} and not t.owner]
-    # If a focus repo is hinted, prioritize tasks from that repo
-    if focus_repo:
-        preferred = [t for t in open_tasks if t.repo == focus_repo]
-        others = [t for t in open_tasks if t.repo != focus_repo]
-        open_tasks = preferred + others
-    i = 0
-    for t in open_tasks:
-        if not targets:
-            break
-        owner = targets[i % len(targets)]
-        t.owner = owner
-        t.state = "assigned"
-        t.assigned_at = _now_iso()
-        t.acceptance_criteria = t.acceptance_criteria or "Small, verifiable edit with tests/build evidence."
-        t.evidence_required = t.evidence_required or "Link to commit/PR and test/build output."
-        t.workflow = workflow_id
-        # Track owner history
-        t.owner_history.append({"owner": owner, "at": t.assigned_at})
-        _save_task(t)
-        assignment = {
-            "type": "task",
-            "from": payload.get("to", "Agent-5"),
-            "to": owner,
-            "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
-            "task_id": t.task_id,
-            "repo": t.repo,
-            "intent": t.intent,
-            "acceptance_criteria": t.acceptance_criteria,
-            "evidence_required": t.evidence_required,
-            # Helpful context for downstream tools
-            "workflow": workflow_id,
-            "repo_path": f"D:/repos/{t.repo}" if t.repo else None,
-            "comm_root_path": str(Path("D:/repos/communications")),
+        # Validate update data
+        required_fields = ['task_id', 'state', 'summary']
+        for field in required_fields:
+            if field not in update_data:
+                print(f"❌ Missing required field: {field}")
+                return False
+        
+        # Create FSM task if it doesn't exist
+        task_id = update_data['task_id']
+        state = update_data['state']
+        summary = update_data['summary']
+        
+        # Write update to agent's inbox for FSM processing
+        message = {
+            "type": "fsm_update",
+            "from": agent,
+            "task_id": task_id,
+            "state": state,
+            "summary": summary,
+            "evidence": update_data.get('evidence', []),
+            "timestamp": datetime.now().isoformat(),
+            "workflow": update_data.get('workflow', 'default')
         }
-        _write_inbox_message(owner, assignment)
-        assigned.append(assignment)
-        i += 1
-
-    # Optional devlog summary
-    if assigned:
-        preview = []
-        for a in assigned[:5]:
-            preview.append(f"{a.get('task_id')} → {a.get('to')} ({a.get('repo')})")
-        extra = "; more…" if len(assigned) > 5 else ""
-        desc = f"workflow: {workflow_id} | count: {len(assigned)}\n" + "\n".join(preview) + extra
-        _post_discord("FSM assigned tasks", desc)
-
-    return {"ok": True, "assigned": assigned, "count": len(assigned)}
+        
+        return _write_inbox_message(agent, message)
+        
+    except Exception as e:
+        print(f"❌ Failed to process FSM update: {e}")
+        return False
 
 
-def handle_fsm_update(payload: Dict[str, Any]) -> Dict[str, Any]:
-    """Update a task record with new state/evidence.
-    { 'type':'fsm_update', 'task_id': '...', 'state':'in_progress|blocked|done', 'summary':'...', 'evidence':{...} }
-    """
-    task_id = payload.get("task_id")
-    if not task_id:
-        return {"ok": False, "error": "missing task_id"}
-    tasks = load_tasks()
-    tr = tasks.get(task_id)
-    if tr is None:
-        return {"ok": False, "error": f"task {task_id} not found"}
-    new_state = payload.get("state") or tr.state
-    # Transition timestamps
-    if tr.state != new_state:
-        if new_state in {"in_progress", "executing"} and not tr.started_at:
-            tr.started_at = _now_iso()
-        if new_state in {"done", "completed"} and not tr.completed_at:
-            tr.completed_at = _now_iso()
-        tr.state = new_state
-    # persist any acceptance/evidence hints
-    if payload.get("acceptance_criteria"):
-        tr.acceptance_criteria = payload["acceptance_criteria"]
-    if payload.get("evidence_required"):
-        tr.evidence_required = payload["evidence_required"]
-    # Merge evidence
-    ev = payload.get("evidence")
-    if ev:
-        if isinstance(ev, dict):
-            ev_list = [ev]
-        elif isinstance(ev, list):
-            ev_list = [e for e in ev if isinstance(e, dict)]
-        else:
-            ev_list = []
-        now = _now_iso()
-        for e in ev_list:
-            e.setdefault("ts", now)
-        # simple append; caller responsible for dedupe if needed
-        tr.evidence.extend(ev_list)
-    _save_task(tr)
-
-    # notify captain with a verification summary message
-    captain = payload.get("captain") or "Agent-3"
-    summary_msg = {
-        "type": "verify",
-        "from": payload.get("from", "Agent-5"),
-        "to": captain,
-        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
-        "task_id": tr.task_id,
-        "state": tr.state,
-        "summary": payload.get("summary", ""),
-    }
-    _write_inbox_message(captain, summary_msg)
-    # Optional devlog for update
+def get_fsm_status(agent: str) -> Dict[str, Any]:
+    """Get FSM status for a specific agent."""
     try:
-        ev = payload.get("evidence")
-        if isinstance(ev, list):
-            ev_str = "; ".join([str(e) for e in ev])
-        else:
-            ev_str = str(ev) if ev else ""
-        desc = f"task_id: {tr.task_id} | state: {tr.state}\nsummary: {payload.get('summary','')}"
-        if ev_str:
-            desc += f"\nevidence: {ev_str}"
-        _post_discord(f"FSM_UPDATE {tr.task_id}", desc)
-    except Exception:
-        pass
-    return {"ok": True, "task_id": tr.task_id, "state": tr.state}
+        # Read recent messages from agent's inbox
+        messages = _read_inbox_messages(agent, limit=20)
+        
+        # Filter for FSM-related messages
+        fsm_messages = [msg for msg in messages if msg.get('type') in ['fsm_update', 'fsm_request']]
+        
+        # Get agent's current state
+        state_file = INBOX_ROOT / agent / "state.json"
+        current_state = {}
+        if state_file.exists():
+            try:
+                current_state = json.loads(state_file.read_text(encoding='utf-8'))
+            except Exception:
+                pass
+        
+        return {
+            "agent": agent,
+            "current_state": current_state,
+            "fsm_messages": fsm_messages,
+            "last_update": current_state.get('updated', 'unknown'),
+            "status": "active" if fsm_messages else "inactive"
+        }
+        
+    except Exception as e:
+        print(f"❌ Failed to get FSM status for {agent}: {e}")
+        return {"agent": agent, "error": str(e)}
 
-    # NOTE: unreachable due to return above
 
-
-def seed_tasks_from_prd(prd_path: str, workflow_id: Optional[str] = "default") -> Dict[str, Any]:
-    """Seed FSM tasks from a PRD JSON file.
-
-    Expected PRD schema (see config/templates/prd.schema.json):
-      {
-        "repo": "repo-name",
-        "vision": "...",
-        "milestones": [ {"id": "M1", "title": "...", "acceptance": [..], ... } ]
-      }
-
-    For each milestone, create a queued TaskRecord if it does not already exist.
-    """
+def seed_fsm_tasks(owner: str) -> List[Dict[str, Any]]:
+    """Seed FSM with tasks from repository TASK_LIST.md files."""
     try:
-        p = Path(prd_path)
-        if not p.exists():
-            return {"ok": False, "error": f"PRD file not found: {prd_path}"}
-        data = _read_json(p)
-        repo = str(data.get("repo", "")).strip()
-        milestones = data.get("milestones") or []
-        if not repo or not isinstance(milestones, list):
-            return {"ok": False, "error": "Invalid PRD: missing repo or milestones"}
-
-        tasks_before = load_tasks()
-        created: List[str] = []
-
-        for m in milestones:
-            if not isinstance(m, dict):
-                continue
-            task_id = str(m.get("id") or "").strip()
-            title = str(m.get("title") or "").strip()
-            if not task_id or not title:
-                continue
-            if task_id in tasks_before:
-                # already present; skip
-                continue
-
-            record = TaskRecord(
-                task_id=task_id,
-                repo=repo,
-                intent=title,
-                state="queued",
-                owner=None,
-                acceptance_criteria=m.get("acceptance"),
-                evidence_required="Link to commit/PR and test/build output.",
-                workflow=workflow_id,
-            )
-            _save_task(record)
-            created.append(task_id)
-
-        return {"ok": True, "created": created, "count": len(created)}
-    except Exception as exc:
-        return {"ok": False, "error": str(exc)}
+        # Scan repositories for tasks
+        repo_tasks = _scan_repositories_for_tasks()
+        
+        # Convert to FSM tasks
+        fsm_tasks = []
+        for task_data in repo_tasks:
+            fsm_task = _create_fsm_task(owner, task_data)
+            fsm_tasks.append(fsm_task)
+        
+        # Write tasks to FSM inbox
+        for task in fsm_tasks:
+            message = {
+                "type": "fsm_task_seed",
+                "task": task,
+                "timestamp": datetime.now().isoformat()
+            }
+            _write_inbox_message("Agent-5", message)  # Send to FSM orchestrator
+        
+        print(f"✅ Seeded {len(fsm_tasks)} FSM tasks")
+        return fsm_tasks
+        
+    except Exception as e:
+        print(f"❌ Failed to seed FSM tasks: {e}")
+        return []
 
 
-def seed_tasks_from_tasklists(workflow_id: Optional[str] = "default") -> Dict[str, Any]:
-    """Scan all repos under REPO_ROOT for TASK_LIST.md entries and seed queued tasks.
+def main():
+    """Main entry point for testing."""
+    print("🔧 FSM Bridge Test")
+    print("=" * 50)
+    
+    # Test configuration
+    print(f"📁 INBOX_ROOT: {INBOX_ROOT}")
+    print(f"📁 REPO_ROOT: {REPO_ROOT}")
+    print(f"📁 Repos Root: {get_repos_root()}")
+    print(f"📁 Communications Root: {get_communications_root()}")
+    
+    # Test task seeding
+    print("\n🌱 Testing task seeding...")
+    tasks = seed_fsm_tasks("test_user")
+    print(f"Seeded {len(tasks)} tasks")
+    
+    # Test FSM status
+    print("\n📊 Testing FSM status...")
+    status = get_fsm_status("Agent-1")
+    print(f"Agent-1 status: {status.get('status', 'unknown')}")
+    
+    print("\n✅ FSM Bridge test completed")
 
-    Idempotent: skips task_ids that already exist in FSM storage.
-    """
-    try:
-        existing = load_tasks()
-        merged = discover_and_merge_repo_tasks({})
-        created: List[str] = []
-        for task_id, tr in merged.items():
-            if task_id in existing:
-                continue
-            tr.state = tr.state or "queued"
-            tr.workflow = workflow_id
-            _save_task(tr)
-            created.append(task_id)
-        return {"ok": True, "created": created, "count": len(created)}
-    except Exception as exc:
-        return {"ok": False, "error": str(exc)}
+
+if __name__ == "__main__":
+    main()

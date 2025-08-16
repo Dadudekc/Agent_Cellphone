@@ -20,6 +20,7 @@ sys.path.insert(0, str(_THIS.parents[1] / 'src'))
 
 from src.services.agent_cell_phone import AgentCellPhone, MsgTag  # type: ignore
 from src.core.fsm_orchestrator import FSMOrchestrator  # type: ignore
+from src.core.config import get_repos_root, get_owner_path, get_communications_root, get_signals_root  # type: ignore
 
 
 @dataclass
@@ -60,7 +61,7 @@ def build_message_plan(plan: str) -> List[PlannedMessage]:
     if plan == "resume-task-sync":
         return [
             PlannedMessage(MsgTag.RESUME, "{agent} resume operations. Maintain uninterrupted focus. Report blockers."),
-            PlannedMessage(MsgTag.TASK,   "{agent} choose highest-impact repo under D:\\repositories. Ship 1 measurable improvement."),
+            PlannedMessage(MsgTag.TASK,   "{agent} choose highest-impact repo under {repos_root}. Ship 1 measurable improvement."),
             PlannedMessage(MsgTag.COORDINATE, "{agent} coordinate with team. Hand off incomplete work with clear next steps."),
             PlannedMessage(MsgTag.SYNC,   "{agent} 30-min sync: brief status, next step, risks."),
             PlannedMessage(MsgTag.VERIFY, "{agent} verify tests/build. If blocked by approvals, prepare changes and summaries."),
@@ -82,17 +83,19 @@ def build_message_plan(plan: str) -> List[PlannedMessage]:
             PlannedMessage(MsgTag.VERIFY, "{agent} verify acceptance against the milestone's criteria; attach evidence and summary."),
         ]
     if plan == "repo-git-setup":
+        github_config_path = get_repos_root() / "github_config.json"
         return [
-            PlannedMessage(MsgTag.RESUME, "{agent} resume: configure git for assigned repos using D:/repos/github_config.json. Do not overwrite. Create branch DreamscapeSWARM-<date> on conflicts. Summarize findings."),
+            PlannedMessage(MsgTag.RESUME, f"{{agent}} resume: configure git for assigned repos using {github_config_path}. Do not overwrite. Create branch DreamscapeSWARM-<date> on conflicts. Summarize findings."),
             PlannedMessage(MsgTag.TASK,   "{agent} for each assigned repo: if .git missing -> git init; set origin to https://github.com/<owner>/<repo>.git from github_config.json; commit TASK_LIST.md if new; fetch origin and attempt non-destructive merge; on conflicts, abort and create DreamscapeSWARM-<date> branch; leave notes."),
             PlannedMessage(MsgTag.COORDINATE, "{agent} coordinate: avoid concurrent pushes; open an issue/todo note when manual review is needed; attach repo and branch name."),
             PlannedMessage(MsgTag.SYNC,   "{agent} 10-min sync: per-repo status (origin set? branch? conflicts?), next step, risks."),
             PlannedMessage(MsgTag.VERIFY, "{agent} verify: attach git_setup_report.json path and any push logs for assigned repos."),
         ]
     if plan == "prd-creation":
+        owner_path = get_owner_path()
         return [
             PlannedMessage(MsgTag.RESUME,
-                "{agent} resume: pick 2-3 repos from D:\\repos\\Dadudekc for PRD analysis. "
+                f"{{agent}} resume: pick 2-3 repos from {owner_path} for PRD analysis. "
                 "Open each repo and understand its purpose."),
             PlannedMessage(MsgTag.TASK,
                 "{agent} create hand-crafted PRD.md for one repo based on manual inspection "
@@ -141,12 +144,12 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--initial-wait-sec", type=int, default=60, help="wait before first cycle to let preamble/assignments settle")
     p.add_argument("--phase-wait-sec", type=int, default=15, help="wait between preamble, assignments, and captain kickoff")
     p.add_argument("--preamble", action="store_true", help="send anti-duplication coordination preamble at start")
-    p.add_argument("--assign-root", default="D:/repos/Dadudekc", help="root folder to assign repositories from")
+    p.add_argument("--assign-root", default=str(get_owner_path()), help="root folder to assign repositories from")
     p.add_argument("--max-repos-per-agent", type=int, default=5, help="limit of repos per agent in assignment")
-    p.add_argument("--comm-root", default="D:/repos/Dadudekc/communications", help="central communications root (non-invasive)")
+    p.add_argument("--comm-root", default=str(get_communications_root()), help="central communications root (non-invasive)")
     p.add_argument("--create-comm-folders", action="store_true", help="create central communications folders and kickoff notes")
     # Agent workspace root for inbox/outbox and per-agent prompts
-    p.add_argument("--workspace-root", default="D:/repos/Dadudekc", help="root folder for agent workspaces")
+    p.add_argument("--workspace-root", default=str(get_owner_path()), help="root folder for agent workspaces")
     # Single‑repo focus options
     p.add_argument("--single-repo-mode", action="store_true", help="Focus all agents on a single repository until beta‑ready")
     p.add_argument("--focus-repo", help="Repository name to focus when in single‑repo mode. If omitted, the first alphabetical repo from --assign-root is used.")
@@ -357,7 +360,7 @@ def build_tailored_message(agent: str, tag: MsgTag, contracts: List[dict]) -> st
     return f"{agent} continue on {task_id}: {title}."
 
 
-def read_agent_state(agent: str, workspace_root: str = "D:/repos/Dadudekc") -> Dict[str, str]:
+def read_agent_state(agent: str, workspace_root: str = str(get_owner_path())) -> Dict[str, str]:
     """Read workspace_root/Agent-X/state.json written by the listener."""
     try:
         p = Path(workspace_root) / agent / "state.json"
@@ -369,7 +372,7 @@ def read_agent_state(agent: str, workspace_root: str = "D:/repos/Dadudekc") -> D
         return {}
 
 
-def is_recently_active(agent: str, active_grace_sec: int, workspace_root: str = "D:/repos/Dadudekc") -> bool:
+def is_recently_active(agent: str, active_grace_sec: int, workspace_root: str = str(get_owner_path())) -> bool:
     st = read_agent_state(agent, workspace_root)
     updated = st.get("updated")
     if not updated:
@@ -383,7 +386,7 @@ def is_recently_active(agent: str, active_grace_sec: int, workspace_root: str = 
         return False
 
 
-def is_stalled(agent: str, stalled_threshold_sec: int, workspace_root: str = "D:/repos/Dadudekc") -> bool:
+def is_stalled(agent: str, stalled_threshold_sec: int, workspace_root: str = str(get_owner_path())) -> bool:
     """True if agent hasn't updated state.json within stalled_threshold_sec. Missing file counts as stalled."""
     st = read_agent_state(agent, workspace_root)
     updated = st.get("updated")
@@ -705,7 +708,7 @@ def main() -> int:
     # Track last any-message time per agent for global cooldown
     last_any_sent: Dict[str, float] = {}
     # Signal path for immediate resume on state-changes
-    signal_dir = Path("D:/repos/communications/_signals")
+    signal_dir = get_signals_root()
     # Track last repo focus we announced per agent, to decide when to re-open a new chat
     last_focus_repo_sent: Dict[str, str | None] = {a: None for a in available}
     for cycle in range(total_cycles):
@@ -803,7 +806,8 @@ def main() -> int:
                         f"Open TASK_LIST.md, pick the next verifiable step, and after completion send an fsm_update (task_id,state,summary,evidence)."
                     )
                 elif args.plan == "single-repo-beta":
-                    repo_line = f"Focus repo: {focus_repo}. " if focus_repo else "Focus a valid repository under D:/repos (not caches/temp). "
+                    repos_root = get_repos_root()
+                    repo_line = f"Focus repo: {focus_repo}. " if focus_repo else f"Focus a valid repository under {repos_root} (not caches/temp). "
                     checklist = ", ".join([s.strip() for s in str(args.beta_ready_checklist).split(',') if s.strip()])
                     if planned.tag == MsgTag.RESUME:
                         content = (
