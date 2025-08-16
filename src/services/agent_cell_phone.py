@@ -48,7 +48,8 @@ except ImportError:
 REPO_ROOT   = Path(__file__).resolve().parent.parent.parent    # Go up to project root (from src/services/)
 CONFIG_DIR  = REPO_ROOT / "runtime" / "config"
 COORD_FILE  = REPO_ROOT / "runtime" / "agent_comms" / "cursor_agent_coords.json"
-MODE_FILE   = REPO_ROOT / "config" / "templates" / "agent_modes.json"
+# Mode configuration now lives in runtime/config to support autonomous pipelines
+MODE_FILE   = CONFIG_DIR / "modes_runtime.json"
 CAPTURE_CONFIG_FILE = CONFIG_DIR / "agent_capture.yaml"
 
 # ──────────────────────────── logging

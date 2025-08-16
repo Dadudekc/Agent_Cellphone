@@ -18,6 +18,7 @@ REQUIRED_FILES = [
     "config/system/system_config.json",
     "config/templates/agent_modes.json",
     "config/templates/message_templates.json",
+    "runtime/config/modes_runtime.json",
 ]
 
 

@@ -1,0 +1,25 @@
+{
+  "autopolicy": {
+    "resume_on_error": true,
+    "max_retries_per_mode": 3,
+    "default_new_chat": true
+  },
+  "pipeline": {
+    "stages": [
+      "ideation_to_prd",
+      "tasklist_autogen"
+    ]
+  },
+  "modes": {
+    "ideation_to_prd": {
+      "description": "Convert an initial product idea into a detailed product requirements document.",
+      "prompt_template": "[IDEATION→PRD] {agent_id} convert idea to PRD.",
+      "next": "tasklist_autogen"
+    },
+    "tasklist_autogen": {
+      "description": "Generate a development task list from a PRD.",
+      "prompt_template": "[TASKLIST] {agent_id} derive actionable tasks from PRD.",
+      "next": null
+    }
+  }
+}
