@@ -112,7 +112,8 @@ Transform inter-agent communication across Cursor instances into a seamless, rel
 1. **Enhance System Reliability**
 2. **Implement Advanced Error Handling**
 3. **Add Health Monitoring**
-4. **Improve Performance**
+4. **Improve Startup & Configuration**
+5. **Persist Workflow State**
 
 ### Key Components:
 
@@ -160,6 +161,62 @@ Transform inter-agent communication across Cursor instances into a seamless, rel
 - `performance_monitor.py` - Performance tracking
 - `optimizer.py` - Optimization engine
 - `resource_manager.py` - Resource management
+
+#### 3.4 Configuration Validator & Startup Script
+**Priority:** High
+**Timeline:** Week 4-5
+
+**Features:**
+- Single entry-point start script
+- Configuration validation with clear defaults
+- Pre-flight checks for messaging channels
+- Environment variable management
+
+**Deliverables:**
+- `startup.py` - Unified start script
+- `config_validator.py` - Config validation utilities
+
+#### 3.5 Watchdog Monitoring & Alerts
+**Priority:** Medium
+**Timeline:** Week 5-6
+
+**Features:**
+- Heartbeat monitoring for each agent
+- Automatic restart on failures
+- Email/webhook alerting
+- Centralized log aggregation
+
+**Deliverables:**
+- `watchdog.py` - Agent heartbeat monitor
+- `alert_notifier.py` - Notification system
+
+#### 3.6 State Persistence & Recovery
+**Priority:** Medium
+**Timeline:** Week 6-7
+
+**Features:**
+- Checkpointing of workflow progress
+- Resume on restart
+- Persistent storage of run history
+- Recovery from partial failures
+
+**Deliverables:**
+- `state_store.py` - Persistence layer
+- `recovery_manager.py` - Restart logic
+
+#### 3.7 Workflow Resilience & Runbook
+**Priority:** Low
+**Timeline:** Week 7-8
+
+**Features:**
+- Loop and dead-end detection
+- Escalation paths and maintenance mode
+- Developer runbook documentation
+- Optional Cursor integration guidelines
+
+**Deliverables:**
+- `workflow_guard.py` - Resilience checks
+- `RUNBOOK.md` - Maintenance guide
 
 ### Success Criteria:
 - [ ] System uptime > 99.9%
