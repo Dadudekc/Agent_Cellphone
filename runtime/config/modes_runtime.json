@@ -1,0 +1,13 @@
+{
+  "stages": ["init", "main"],
+  "modes": {
+    "test": {
+      "init": {"agent": "Agent-1", "budget": 1, "gate": "pass"},
+      "main": {"agent": "Agent-2", "budget": 2, "gate": "pass"}
+    },
+    "gated": {
+      "init": {"agent": "Agent-1", "budget": 1, "gate": "fail"},
+      "main": {"agent": "Agent-2", "budget": 2, "gate": "pass"}
+    }
+  }
+}

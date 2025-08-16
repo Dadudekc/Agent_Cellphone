@@ -7,5 +7,5 @@ work even after the project was reorganised into a ``src``
 layout.
 """
 
-from src.agent_cell_phone import *  # noqa: F401,F403
+from src.services.agent_cell_phone import *  # noqa: F401,F403
 
