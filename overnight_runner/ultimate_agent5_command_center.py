@@ -494,9 +494,9 @@ class ConfigurationManager(QWidget):
         env_group = QGroupBox("🌍 Environment Configuration")
         env_layout = QFormLayout()
         
-        self.repos_root = QLineEdit(get_repos_root())
-        self.owner_path = QLineEdit(get_owner_path())
-        self.comms_root = QLineEdit(get_communications_root())
+        self.repos_root = QLineEdit(str(get_repos_root()))
+        self.owner_path = QLineEdit(str(get_owner_path()))
+        self.comms_root = QLineEdit(str(get_communications_root()))
         
         env_layout.addRow("Repos Root:", self.repos_root)
         env_layout.addRow("Owner Path:", self.owner_path)
