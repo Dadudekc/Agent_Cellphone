@@ -255,8 +255,8 @@ def handle_fsm_request(payload: Dict[str, Any]) -> Dict[str, Any]:
             "evidence_required": t.evidence_required,
             # Helpful context for downstream tools
             "workflow": workflow_id,
-            "repo_path": f"D:/repositories/{t.repo}" if t.repo else None,
-            "comm_root_path": str(Path("D:/repositories/communications")),
+            "repo_path": f"D:/repos/{t.repo}" if t.repo else None,
+            "comm_root_path": str(Path("D:/repos/communications")),
         }
         _write_inbox_message(owner, assignment)
         assigned.append(assignment)

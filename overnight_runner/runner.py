@@ -83,7 +83,7 @@ def build_message_plan(plan: str) -> List[PlannedMessage]:
         ]
     if plan == "repo-git-setup":
         return [
-            PlannedMessage(MsgTag.RESUME, "{agent} resume: configure git for assigned repos using D:/repositories/github_config.json. Do not overwrite. Create branch DreamscapeSWARM-<date> on conflicts. Summarize findings."),
+            PlannedMessage(MsgTag.RESUME, "{agent} resume: configure git for assigned repos using D:/repos/github_config.json. Do not overwrite. Create branch DreamscapeSWARM-<date> on conflicts. Summarize findings."),
             PlannedMessage(MsgTag.TASK,   "{agent} for each assigned repo: if .git missing -> git init; set origin to https://github.com/<owner>/<repo>.git from github_config.json; commit TASK_LIST.md if new; fetch origin and attempt non-destructive merge; on conflicts, abort and create DreamscapeSWARM-<date> branch; leave notes."),
             PlannedMessage(MsgTag.COORDINATE, "{agent} coordinate: avoid concurrent pushes; open an issue/todo note when manual review is needed; attach repo and branch name."),
             PlannedMessage(MsgTag.SYNC,   "{agent} 10-min sync: per-repo status (origin set? branch? conflicts?), next step, risks."),
@@ -705,7 +705,7 @@ def main() -> int:
     # Track last any-message time per agent for global cooldown
     last_any_sent: Dict[str, float] = {}
     # Signal path for immediate resume on state-changes
-    signal_dir = Path("D:/repositories/communications/_signals")
+    signal_dir = Path("D:/repos/communications/_signals")
     # Track last repo focus we announced per agent, to decide when to re-open a new chat
     last_focus_repo_sent: Dict[str, str | None] = {a: None for a in available}
     for cycle in range(total_cycles):
@@ -803,7 +803,7 @@ def main() -> int:
                         f"Open TASK_LIST.md, pick the next verifiable step, and after completion send an fsm_update (task_id,state,summary,evidence)."
                     )
                 elif args.plan == "single-repo-beta":
-                    repo_line = f"Focus repo: {focus_repo}. " if focus_repo else "Focus a valid repository under D:/repositories (not caches/temp). "
+                    repo_line = f"Focus repo: {focus_repo}. " if focus_repo else "Focus a valid repository under D:/repos (not caches/temp). "
                     checklist = ", ".join([s.strip() for s in str(args.beta_ready_checklist).split(',') if s.strip()])
                     if planned.tag == MsgTag.RESUME:
                         content = (

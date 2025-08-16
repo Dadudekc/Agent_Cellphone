@@ -90,11 +90,11 @@ python overnight_runner/runner.py `
   --layout 5-agent --captain Agent-5 --resume-agents Agent-1,Agent-2,Agent-3,Agent-4 `
   --duration-min 60 --interval-sec 1200 --sender Agent-3 --plan contracts `
   --fsm-enabled --fsm-agent Agent-5 --fsm-workflow default `
-  --contracts-file D:/repositories/communications/overnight_YYYYMMDD_/Agent-5/contracts.json `
+  --contracts-file D:/repos/communications/overnight_YYYYMMDD_/Agent-5/contracts.json `
   --suppress-resume --skip-assignments --skip-captain-kickoff --skip-captain-fsm-feed `
   --resume-cooldown-sec 3600 --active-grace-sec 1200 `
   --initial-wait-sec 10 --phase-wait-sec 8 --stagger-ms 2500 --jitter-ms 800 `
-  --comm-root D:/repositories/communications/overnight_YYYYMMDD_ --create-comm-folders | cat
+  --comm-root D:/repos/communications/overnight_YYYYMMDD_ --create-comm-folders | cat
 ```
 
 ### Terminal Stall Detection

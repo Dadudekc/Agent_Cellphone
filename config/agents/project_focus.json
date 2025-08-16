@@ -1,0 +1,121 @@
+{
+  "project_focus_config": {
+    "description": "Configure which projects your agents should focus on. Modify this file to change agent project assignments.",
+    "version": "1.0",
+    "last_updated": "2025-01-15",
+    "user_instructions": [
+      "Add/remove projects from the 'available_projects' list",
+      "Modify agent assignments in 'agent_project_assignments'",
+      "Set project priorities (1=highest, 5=lowest)",
+      "Configure project categories for better organization"
+    ],
+    "available_projects": [
+      {
+        "name": "FreeRideInvestor",
+        "category": "trading",
+        "priority": 1,
+        "description": "Trading platform and investment tools",
+        "repository_path": "Dadudekc/FreeRideInvestor",
+        "active": true
+      },
+      {
+        "name": "FreerideinvestorWebsite",
+        "category": "web_development",
+        "priority": 2,
+        "description": "Main website and content management",
+        "repository_path": "Dadudekc/FreerideinvestorWebsite",
+        "active": true
+      },
+      {
+        "name": "osrsAIagent",
+        "category": "ai_automation",
+        "priority": 3,
+        "description": "AI-powered automation tools",
+        "repository_path": "Dadudekc/osrsAIagent",
+        "active": true
+      },
+      {
+        "name": "autonomous_platform",
+        "category": "platform_development",
+        "priority": 4,
+        "description": "Autonomous agent platform",
+        "repository_path": "project_repository/PRDs/autonomous_platform.json",
+        "active": true
+      },
+      {
+        "name": "ai_chatbot_assistant",
+        "category": "ai_automation",
+        "priority": 5,
+        "description": "AI chatbot and customer service",
+        "repository_path": "project_repository/PRDs/ai_chatbot_assistant.json",
+        "active": true
+      }
+    ],
+    "agent_project_assignments": {
+      "Agent-1": {
+        "primary_projects": ["FreeRideInvestor", "autonomous_platform"],
+        "secondary_projects": ["ai_chatbot_assistant"],
+        "max_projects": 3,
+        "focus_area": "system_coordination"
+      },
+      "Agent-2": {
+        "primary_projects": ["FreerideinvestorWebsite", "ai_chatbot_assistant"],
+        "secondary_projects": ["autonomous_platform"],
+        "max_projects": 3,
+        "focus_area": "task_management"
+      },
+      "Agent-3": {
+        "primary_projects": ["FreerideinvestorWebsite", "osrsAIagent"],
+        "secondary_projects": ["FreeRideInvestor"],
+        "max_projects": 3,
+        "focus_area": "data_processing"
+      },
+      "Agent-4": {
+        "primary_projects": ["osrsAIagent", "autonomous_platform"],
+        "secondary_projects": ["ai_chatbot_assistant"],
+        "max_projects": 3,
+        "focus_area": "communication_security"
+      },
+      "Agent-5": {
+        "primary_projects": ["CAPTAIN"],
+        "secondary_projects": [],
+        "max_projects": 1,
+        "focus_area": "coordination"
+      }
+    },
+    "project_categories": {
+      "trading": {
+        "description": "Trading and investment related projects",
+        "agents": ["Agent-1", "Agent-3"]
+      },
+      "web_development": {
+        "description": "Website and web application projects",
+        "agents": ["Agent-2", "Agent-3"]
+      },
+      "ai_automation": {
+        "description": "AI and automation focused projects",
+        "agents": ["Agent-3", "Agent-4"]
+      },
+      "platform_development": {
+        "description": "Core platform and infrastructure projects",
+        "agents": ["Agent-1", "Agent-4"]
+      }
+    },
+    "dynamic_assignment_rules": {
+      "enable_auto_reassignment": true,
+      "reassignment_triggers": [
+        "project_completion",
+        "agent_overload",
+        "priority_change",
+        "skill_match"
+      ],
+      "skill_requirements": {
+        "FreeRideInvestor": ["trading", "php", "financial_analysis"],
+        "FreerideinvestorWebsite": ["web_development", "content_management", "seo"],
+        "osrsAIagent": ["ai_automation", "python", "game_automation"],
+        "autonomous_platform": ["platform_development", "ai", "orchestration"],
+        "ai_chatbot_assistant": ["ai", "nlp", "customer_service"]
+      }
+    }
+  }
+}

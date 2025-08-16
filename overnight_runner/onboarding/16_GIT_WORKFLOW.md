@@ -1,7 +1,7 @@
 # Git Workflow – Portable Setup
 
 - Configure via env when possible:
-  - `REPOS_ROOT` (default `D:/repositories`)
+  - `REPOS_ROOT` (default `D:/repos`)
   - `ACP_DEFAULT_NEW_CHAT`, `ACP_NEW_CHAT_INTERVAL_SEC`
 - Credentials:
   - Use credential helper; store token in `github_config.json` only for tooling, never embed in remotes

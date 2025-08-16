@@ -148,7 +148,7 @@ __pycache__/
 overnight_runner/__pycache__/
 communications/
 # workspace communications root can be external; ignore if present
-D:/repositories/communications/
+D:/repos/communications/
 
 # Local monorepo clones; do not embed nested repos
 repos/

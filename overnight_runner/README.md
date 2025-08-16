@@ -76,7 +76,7 @@ Agents send structured task updates:
   "state": "completed",
   "summary": "Implemented user authentication",
   "evidence": ["commit_hash", "test_results", "build_output"],
-  "repo_path": "D:/repositories/auth-service"
+  "repo_path": "D:/repos/auth-service"
 }
 ```
 

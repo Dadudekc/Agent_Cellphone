@@ -71,6 +71,9 @@ class CollaborativeAgentRunner:
         print(f"👥 Managing agents: {', '.join(self.agents)}")
         print("⚡ MODE: NON-STOP COLLABORATIVE WORK - AGENTS NEVER STOP!")
         
+        # Execute proper onboarding sequence FIRST (following workflow standards)
+        self._proper_onboarding_sequence()
+        
         # Start the monitor
         self._start_monitor()
         
@@ -115,7 +118,68 @@ class CollaborativeAgentRunner:
                 
         except Exception as e:
             print(f"⚠️  Warning: Monitor setup failed: {e}, but continuing...")
-            
+
+    def _proper_onboarding_sequence(self):
+        """Execute proper onboarding sequence following workflow standards
+        
+        MANDATORY SEQUENCE (ALWAYS FOLLOW):
+        1. START NEW CHAT → Uses starter_location_box coordinates
+        2. ONBOARDING MESSAGE → Sent to starter coordinates (new chat)
+        3. SUBSEQUENT MESSAGES → Use input_box coordinates (existing chat)
+        """
+        print("🎯 Executing PROPER ONBOARDING SEQUENCE...")
+        print("📋 Following mandatory workflow standards:")
+        print("   • New chat → starter coordinates")
+        print("   • Onboarding → starter coordinates")
+        print("   • Tasks → input coordinates")
+        print("")
+        
+        for agent in self.agents:
+            try:
+                print(f"🚀 Onboarding {agent} with proper workflow...")
+                
+                # STEP 1: START NEW CHAT (starter coordinates)
+                onboarding_message = (
+                    f"🎯 COLLABORATIVE AGENTS ONBOARDING {agent}\n"
+                    f"📋 PHASE 2 COLLABORATIVE OBJECTIVES:\n"
+                    f"• Work together continuously and collaboratively\n"
+                    f"• Complete high-leverage implementation tasks\n"
+                    f"• Maintain momentum and prevent stalls\n"
+                    f"• Use progressive escalation when needed\n\n"
+                    f"🚀 STATUS: Starting fresh collaborative sequence\n"
+                    f"📍 LOCATION: New chat (starter coordinates)"
+                )
+                
+                # This MUST use new_chat=True to go to starter coordinates
+                self.acp.send(agent, onboarding_message, MsgTag.ONBOARDING, new_chat=True)
+                print(f"✅ New chat started for {agent} at starter coordinates")
+                
+                time.sleep(2)  # Wait for chat to open
+                
+                # STEP 2: SEND COLLABORATIVE TASK (input coordinates - existing chat)
+                collaborative_task = (
+                    f"🤝 COLLABORATIVE TASK FOR {agent}:\n"
+                    f"• Join the continuous collaboration system\n"
+                    f"• Work with other agents on shared objectives\n"
+                    f"• Maintain active participation and momentum\n"
+                    f"• Use progressive escalation if you stall\n\n"
+                    f"📍 LOCATION: Existing chat (input coordinates)"
+                )
+                
+                # This uses new_chat=False to go to input coordinates
+                self.acp.send(agent, collaborative_task, MsgTag.TASK, new_chat=False)
+                print(f"✅ Collaborative task sent to {agent} at input coordinates")
+                
+                time.sleep(2)  # Wait between agents
+                
+            except Exception as e:
+                print(f"⚠️  Onboarding failed for {agent}: {e}")
+                continue
+        
+        print("🎉 PROPER ONBOARDING SEQUENCE COMPLETED!")
+        print("✅ All agents now follow correct workflow standards")
+        print("")
+
     def _nudge_stalled_agents(self):
         """Nudge stalled agents using progressive escalation"""
         print("🔧 Checking for stalled agents and applying progressive escalation...")

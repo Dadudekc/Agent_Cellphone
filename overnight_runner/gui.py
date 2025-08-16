@@ -92,7 +92,7 @@ class RunnerGUI:
     def _default_comms_root(self) -> str:
         from datetime import datetime
         d = datetime.now().strftime("%Y%m%d")
-        return f"D:/repositories/communications/overnight_{d}_"
+        return f"D:/repos/communications/overnight_{d}_"
 
     def _python(self) -> str:
         return sys.executable or "python"

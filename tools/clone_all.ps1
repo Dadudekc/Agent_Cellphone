@@ -36,7 +36,7 @@ if (-not $Dest -or [string]::IsNullOrWhiteSpace($Dest)) {
 if (-not (Test-Path $Dest)) { New-Item -ItemType Directory -Path $Dest -Force | Out-Null }
 
 # Sync github_config.json for tools that read it
-$cfgPath = 'D:\repositories\github_config.json'
+$cfgPath = 'D:\repos\github_config.json'
 $cfg = @{}
 if (Test-Path $cfgPath) { try { $cfg = Get-Content $cfgPath -Raw | ConvertFrom-Json } catch {} }
 if (-not $cfg) { $cfg = [ordered]@{} }

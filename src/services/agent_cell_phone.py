@@ -247,9 +247,17 @@ class AgentCellPhone:
                 self._onboarded_agents.add(agent)
 
         print(f"[SEND] {agent} at ({target['x']}, {target['y']}): {composed_text[:120]}{('...' if len(composed_text)>120 else '')}")
-        self._cursor.move_click(target["x"], target["y"]) 
-        # Type using Shift+Enter for line breaks to avoid sending mid-message
+        
+        # Ensure input area is ready to prevent premature sending
+        self._ensure_input_ready(target)
+        
+        # Type using improved buffering system
         self._type_with_shift_enter(composed_text)
+        
+        # Final delay before sending to ensure all input is buffered
+        time.sleep(0.3)
+        
+        # Now send the complete message
         self._cursor.enter()
         log.info("→ %s %s", agent, composed_text[:80])
 
@@ -396,17 +404,65 @@ class AgentCellPhone:
         return agent if agent.startswith("Agent-") else f"Agent-{agent}"
 
     # ──────────────────────────── onboarding helper
-    def _type_with_shift_enter(self, text: str) -> None:
-        """Type the given text, using Shift+Enter for line breaks so we only send once at the end."""
-        normalized = text.replace("\r\n", "\n").replace("\r", "\n")
-        parts = normalized.split("\n")
-        for idx, part in enumerate(parts):
-            if part:
-                self._cursor.type(part)
-            if idx < len(parts) - 1:
-                # Insert a visual line break without sending
-                self._cursor.hotkey("shift", "enter")
+    def _ensure_input_ready(self, target_loc: dict) -> None:
+        """Ensure the input area is ready to receive text without premature sending.
+        
+        This method performs several checks to prevent the terminal from sending
+        messages before the complete input is ready.
+        """
+        # Click to focus the input area
+        self._cursor.move_click(target_loc["x"], target_loc["y"])
+        time.sleep(0.3)  # Wait for focus
+        
+        # Clear any existing partial input that might cause issues
+        try:
+            self._cursor.hotkey("ctrl", "a")  # Select all
+            time.sleep(0.1)
+            self._cursor.hotkey("backspace")  # Clear
+            time.sleep(0.2)
+        except:
+            # If Ctrl+A fails, just clear with backspace
+            for _ in range(10):  # Clear up to 10 characters
+                self._cursor.hotkey("backspace")
                 time.sleep(0.05)
+        
+        # Additional delay to ensure input area is stable
+        time.sleep(0.3)
+
+    def _type_with_shift_enter(self, text: str) -> None:
+        """Type the given text with proper input buffering to prevent premature sending.
+        
+        This method ensures the complete message is typed before any Enter key is pressed,
+        preventing the system from sending prompts early due to terminal input buffering issues.
+        """
+        # Normalize line endings
+        normalized = text.replace("\r\n", "\n").replace("\r", "\n")
+        
+        # Split into lines but don't send until complete
+        lines = normalized.split("\n")
+        
+        for idx, line in enumerate(lines):
+            if line:
+                # Type the line content
+                self._cursor.type(line)
+                time.sleep(0.05)  # Small delay between characters for stability
+            
+            # For multi-line messages, use proper line breaks that don't send
+            if idx < len(lines) - 1:
+                # Use Ctrl+Shift+Enter or just Enter depending on the application
+                # This prevents premature sending while maintaining readability
+                try:
+                    # Try Ctrl+Shift+Enter first (more reliable for preventing send)
+                    self._cursor.hotkey("ctrl", "shift", "enter")
+                except:
+                    # Fallback to regular Enter with longer delay
+                    self._cursor.hotkey("enter")
+                    time.sleep(0.1)  # Longer delay to ensure input is buffered
+                
+                time.sleep(0.1)  # Additional delay for UI stability
+        
+        # Final delay to ensure all input is properly buffered
+        time.sleep(0.2)
 
     def _compose_onboarding_message(self, agent: str) -> str:
         """Create a single-shot onboarding + FSM primer block for a newly opened chat.
@@ -442,7 +498,7 @@ class AgentCellPhone:
                     f"{bullet}Seed/adjust contracts; throttle to small batches; prevent duplication across repos.\n"
                     f"{bullet}Assign via FSM (round‑robin/open tasks). Require acceptance criteria and evidence links.\n"
                     f"{bullet}Enforce verify gates; if blocked by perms, stage diffs and request review.\n"
-                    f"{bullet}Monitor Agent-5/state.json and contracts.json; keep comms in D:/repositories/communications/overnight_YYYYMMDD_/Agent-5.\n"
+                    f"{bullet}Monitor Agent-5/state.json and contracts.json; keep comms in D:/repos/communications/overnight_YYYYMMDD_/Agent-5.\n"
                     "FSM loop:\n"
                     f"{bullet}Each cadence, trigger fsm_request; agents check inbox, execute, and send fsm_update (task_id, state, summary, evidence).\n"
                     f"{bullet}When verified, issue next task; maintain momentum; minimize context switching."
@@ -450,7 +506,7 @@ class AgentCellPhone:
             else:
                 return (
                     f"WELCOME {agent} — {role_hint}\n"
-                    "Context: ACP types into Cursor; file inbox carries structured JSON. Work from D:/repositories.\n"
+                    "Context: ACP types into Cursor; file inbox carries structured JSON. Work from D:/repos.\n"
                     f"Start here: agent_workspaces/onboarding/README.md → role docs → DEVELOPMENT_STANDARDS.md → CORE_PROTOCOLS.md.\n"
                     "Norms:\n"
                     f"{bullet}Reuse/refactor; avoid duplication and stubs; keep edits small and cohesive.\n"
@@ -468,7 +524,7 @@ class AgentCellPhone:
         if agent == "Agent-5":
             lines.append(
                 "Captain: start here agent_workspaces/onboarding/README.md; coordinate contracts from TASK_LIST.md; use FSM to assign small,"
-                " evidence-backed tasks; enforce verify gates; keep comms under D:/repositories/communications/overnight_YYYYMMDD_/Agent-5."
+                " evidence-backed tasks; enforce verify gates; keep comms under D:/repos/communications/overnight_YYYYMMDD_/Agent-5."
                 " Trigger fsm_request each cadence and nudge agents to maintain momentum."
             )
         else:

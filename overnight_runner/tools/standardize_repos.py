@@ -72,7 +72,7 @@ def ensure_templates(repo: Path) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser("standardize_repos")
-    ap.add_argument("--root", default="D:/repositories", help="root path of repositories")
+    ap.add_argument("--root", default="D:/repos", help="root path of repositories")
     args = ap.parse_args()
     root = Path(args.root)
     count = 0

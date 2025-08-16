@@ -7,7 +7,7 @@ GitHub token
 
 Cloning tool
 ```powershell
-python overnight_runner/tools/github_clone_tool.py --user <github-username> --token $env:GITHUB_TOKEN --dest D:/repositories
+python overnight_runner/tools/github_clone_tool.py --user <github-username> --token $env:GITHUB_TOKEN --dest D:/repos
 ```
 
 Safety notes

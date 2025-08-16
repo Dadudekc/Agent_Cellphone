@@ -19,7 +19,7 @@ sys.modules.setdefault("pyautogui", types.ModuleType("pyautogui"))
 
 
 def _load_gui_module():
-    gui_path = PROJECT_ROOT / "gui" / "five_agent_grid_gui.py"
+    gui_path = PROJECT_ROOT / "src" / "gui" / "five_agent_grid_gui.py"
     assert gui_path.exists(), f"GUI file not found at {gui_path}"
     import importlib.util
     spec = importlib.util.spec_from_file_location("_gui_under_test", str(gui_path))

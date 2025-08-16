@@ -1,125 +1,123 @@
 # Project Requirements Document (PRD)
 
 ## Project Overview
-- **Project Name**: SmartStock Pro
-- **Version**: 2.2.2
+- **Project Name**: Trading Leads Bot
+- **Version**: 1.0.0
 - **Last Updated**: 2025-08-15
-- **Status**: Production Ready - WordPress Plugin with Advanced Features
+- **Status**: Development Phase - Web Scraping & Automation Suite
 
 ## Objectives
-- **Primary**: Create a comprehensive WordPress plugin for advanced stock research and AI-powered trade planning
-- **Secondary**: Provide real-time stock data, sentiment analysis, and customizable alerts
-- **Tertiary**: Deliver enhanced analytics and performance tracking for investment decisions
-- **Strategic**: Establish a professional-grade stock analysis tool integrated with WordPress ecosystems
+- **Primary**: Create a Python-based web scraping and automation framework for financial data collection
+- **Secondary**: Extract market sentiment, trading discussions, and financial news from social media
+- **Tertiary**: Provide AI-powered analysis and trade signals for enhanced decision-making
+- **Strategic**: Automate trading research and lead generation for profitable investment opportunities
 
 ## Features
 
 ### Core Features
-- **Stock Research System**: Real-time stock quotes and historical data from Alpha Vantage and yFinance
-- **AI-Powered Trade Plans**: OpenAI integration for intelligent trade plan generation and sentiment analysis
-- **Customizable Alerts**: Price-based and sentiment-based alerts with email notifications
-- **Advanced Analytics**: Comprehensive tracking of API usage, alert performance, and user engagement
-- **WordPress Integration**: Seamless shortcode integration and admin panel management
-- **Multi-API Support**: Fallback mechanisms and rate limit handling for reliable data access
+- **Automated Web Scraping**: Selenium and BeautifulSoup integration for real-time data extraction
+- **Social Media Data Mining**: Twitter, Reddit, and StockTwits integration for trading insights
+- **Discord Bot Integration**: Automated notifications and lead distribution via Discord
+- **Flask Dashboard**: Web-based interface for viewing scraped leads and analytics
+- **Database Storage**: SQLite database for persistent lead storage and management
+- **Continuous Integration**: GitHub Actions for automated testing and deployment
 
 ### Future Features
-- **Mobile Application**: Native iOS and Android apps for mobile trading and alerts
-- **Advanced Charting**: Interactive charts with technical indicators and drawing tools
-- **Portfolio Management**: Track multiple portfolios and performance metrics
-- **Social Trading**: Community features for sharing insights and strategies
-- **Real-time Trading**: Direct integration with brokerage APIs for automated trading
+- **AI-Powered Analysis**: NLP and machine learning for sentiment analysis and trade signals
+- **Multi-Channel Alerts**: Telegram and email notifications in addition to Discord
+- **Real-Time Dashboard**: Advanced charts, filtering, and real-time data updates
+- **Scheduled Scraping**: Cron or Celery workers for automated scraping operations
+- **Containerized Deployment**: Docker setup for easy installation and updates
+- **Expanded Data Sources**: Integration with financial news APIs and additional platforms
 
 ## Requirements
 
 ### Functional Requirements
-- **FR1**: Plugin must fetch real-time stock data from multiple financial APIs with fallback support
-- **FR2**: AI integration must generate comprehensive trade plans based on stock data and sentiment
-- **FR3**: Alert system must support price-based and sentiment-based triggers with email notifications
-- **FR4**: WordPress integration must provide shortcodes and admin interface for easy management
-- **FR5**: Analytics system must track API usage, alert performance, and user engagement metrics
-- **FR6**: Caching system must optimize API responses and improve performance
+- **FR1**: System must scrape financial data from multiple web sources using Selenium and BeautifulSoup
+- **FR2**: Social media integration must extract trading discussions and market sentiment
+- **FR3**: Discord bot must provide automated notifications and lead distribution
+- **FR4**: Dashboard must display scraped leads with filtering and search capabilities
+- **FR5**: Database must store leads persistently with proper indexing and retrieval
+- **FR6**: Automation must run continuously with configurable scheduling and error handling
 
 ### Non-Functional Requirements
-- **NFR1**: Performance - Plugin must load in <2 seconds and handle 100+ concurrent users
-- **NFR2**: Reliability - 99.9% uptime with robust error handling and fallback mechanisms
-- **NFR3**: Security - WordPress security best practices, input validation, and API key protection
-- **NFR4**: Scalability - Support for multiple WordPress installations and high-traffic sites
-- **NFR5**: Usability - Intuitive admin interface and shortcode implementation for end users
+- **NFR1**: Performance - Scraping operations must complete within reasonable timeframes
+- **NFR2**: Reliability - System must handle web source changes and failures gracefully
+- **NFR3**: Scalability - Architecture must support multiple data sources and increased load
+- **NFR4**: Security - Secure handling of API keys and user data
+- **NFR5**: Maintainability - Modular code structure with clear separation of concerns
 
 ## Technical Specifications
-- **Language**: PHP 7.4+
-- **Framework**: WordPress Plugin Architecture with custom class structure
-- **APIs**: Alpha Vantage, yFinance, Finnhub, OpenAI for AI services
-- **Database**: WordPress database with custom tables for alerts and analytics
-- **Frontend**: HTML5, CSS3, JavaScript with AJAX for dynamic interactions
-- **Deployment**: WordPress plugin installation with automatic updates
+- **Language**: Python 3.8+
+- **Web Scraping**: Selenium WebDriver, BeautifulSoup4, Requests
+- **Web Framework**: Flask for dashboard and API endpoints
+- **Database**: SQLite with SQLAlchemy ORM
+- **Bot Integration**: Discord.py for automated notifications
+- **Deployment**: Local deployment with Docker containerization planned
 
 ## Architecture
 ```
-SmartStock Pro/
-├── smartstock-pro.php           # Main plugin file and entry point
-├── includes/
-│   ├── utils/                   # Utility classes (logging, error handling, analytics)
-│   ├── admin/                   # WordPress admin interface and settings
-│   ├── api/                     # External API integrations and handlers
-│   ├── alerts/                  # Alert creation, management, and cron jobs
-│   ├── ajax/                    # AJAX request handlers for dynamic functionality
-│   ├── cache/                   # Caching mechanisms for API responses
-│   └── lifecycle/               # Plugin activation, deactivation, and cleanup
-├── docs/                        # Documentation and user guides
-└── .gitignore                   # Version control exclusions
+trading-leads-bot/
+├── auto_scraper.py      # Main automation engine with Selenium
+├── manual_scraper.py    # Manual scraping utilities
+├── dashboard.py         # Flask web dashboard
+├── database.py          # Database operations and models
+├── config.py            # Configuration management
+├── basicbot/            # Discord bot implementation
+├── tests/               # Test suite and validation
+├── docs/                # Documentation and guides
+└── .github/             # GitHub Actions CI/CD
 ```
 
 ## Timeline
-- **Phase 1**: 2025-08-15 to 2025-09-15 - Core functionality optimization and bug fixes
-- **Phase 2**: 2025-09-15 to 2025-10-15 - Advanced analytics and performance improvements
-- **Phase 3**: 2025-10-15 to 2025-11-15 - Mobile app development and enhanced features
+- **Phase 1**: 2025-08-15 to 2025-09-15 - Core scraping optimization and stability
+- **Phase 2**: 2025-09-15 to 2025-10-15 - AI analysis and advanced features
+- **Phase 3**: 2025-10-15 to 2025-11-15 - Multi-channel alerts and containerization
 
 ## Acceptance Criteria
-- **AC1**: Plugin installs and activates without errors in WordPress 5.8+ environments
-- **AC2**: All API integrations function correctly with fallback mechanisms
-- **AC3**: AI trade plan generation produces actionable insights with sentiment analysis
-- **AC4**: Alert system reliably triggers notifications based on configured criteria
-- **AC5**: Admin interface provides comprehensive management of all plugin features
+- **AC1**: Web scraping successfully extracts data from configured sources
+- **AC2**: Discord bot provides reliable notifications and lead distribution
+- **AC3**: Dashboard displays leads with proper filtering and search functionality
+- **AC4**: Database operations handle large volumes of leads efficiently
+- **AC5**: Automation runs continuously with proper error handling and logging
 
 ## Risks & Mitigation
-- **Risk 1**: API rate limits affecting data availability - Mitigation: Multiple API keys and fallback services
-- **Risk 2**: WordPress compatibility issues with updates - Mitigation: Regular testing and version compatibility checks
-- **Risk 3**: AI service costs and reliability - Mitigation: Cost monitoring and alternative AI providers
-- **Risk 4**: Performance issues with high traffic - Mitigation: Caching, optimization, and load testing
-- **Risk 5**: Security vulnerabilities in WordPress environment - Mitigation: Regular security audits and updates
+- **Risk 1**: Web source changes breaking scrapers - Mitigation: Robust error handling and fallback mechanisms
+- **Risk 2**: Rate limiting and IP blocking - Mitigation: Proxy rotation and request throttling
+- **Risk 3**: Data quality and accuracy issues - Mitigation: Validation algorithms and manual review processes
+- **Risk 4**: Scalability challenges with large data volumes - Mitigation: Efficient database design and caching
+- **Risk 5**: Legal compliance with web scraping - Mitigation: Respect robots.txt and implement ethical scraping practices
 
 ## Current Development Status
-- **Completed**: Core plugin functionality, API integrations, alert system, admin interface
-- **In Progress**: Performance optimization and advanced analytics features
-- **Next Priority**: Enhanced caching and mobile application development
+- **Completed**: Core scraping framework, Discord bot integration, basic dashboard
+- **In Progress**: AI analysis implementation and performance optimization
+- **Next Priority**: Multi-channel alerts and containerized deployment
 - **Blockers**: None identified - development proceeding according to roadmap
 
 ## Success Metrics
-- **Technical**: 99.9% uptime, <2 second load times, successful API integrations
-- **User Experience**: Intuitive shortcode implementation, comprehensive admin interface
-- **Business Value**: Reliable stock data, accurate AI insights, effective alert system
-- **Performance**: Optimized caching, efficient API usage, responsive user interface
+- **Technical**: Successful data extraction, reliable bot operation, responsive dashboard
+- **Business Value**: Quality trading leads, actionable market insights, automated research
+- **Performance**: Fast scraping operations, efficient data processing, minimal downtime
+- **User Experience**: Intuitive dashboard, reliable notifications, comprehensive lead management
 
 ## Dependencies
-- **WordPress**: 5.8+ with PHP 7.4+
-- **External APIs**: Alpha Vantage, yFinance, Finnhub, OpenAI
-- **PHP Libraries**: Standard PHP libraries with WordPress core functions
-- **Frontend**: jQuery (WordPress bundled), AJAX for dynamic interactions
-- **Database**: WordPress MySQL database with custom table structures
+- **Web Scraping**: Selenium, BeautifulSoup4, Requests, WebDriver Manager
+- **Data Processing**: Pandas for data manipulation and analysis
+- **Web Framework**: Flask for dashboard and API functionality
+- **Bot Framework**: Discord.py for automated notifications
+- **Database**: SQLite with Python standard library support
 
 ## Testing Strategy
-- **Unit Tests**: Individual class and method testing
-- **Integration Tests**: WordPress plugin integration and API connectivity
-- **Performance Tests**: Load testing and caching effectiveness
-- **Security Tests**: WordPress security best practices validation
-- **User Acceptance Tests**: Shortcode functionality and admin interface usability
+- **Unit Tests**: Individual component testing for scraping and data processing
+- **Integration Tests**: End-to-end workflow testing from scraping to notification
+- **Performance Tests**: Large data volume handling and response time optimization
+- **User Acceptance Tests**: Dashboard usability and bot functionality validation
 
 ## Deployment & Maintenance
-- **Installation**: Standard WordPress plugin installation process
-- **Updates**: GitHub-based update checker with automatic notifications
-- **Monitoring**: Comprehensive logging and analytics tracking
-- **Support**: Documentation, error handling, and user support systems
+- **Installation**: Python package installation with pip and environment setup
+- **Configuration**: Environment variables for API keys and bot tokens
+- **Monitoring**: Comprehensive logging and error tracking
+- **Updates**: GitHub Actions for automated testing and deployment
 
 ---
-**SmartStock Pro: Professional-grade stock analysis and AI-powered trading insights for WordPress.**
+**Trading Leads Bot: Automated financial intelligence and lead generation for enhanced trading decisions.**

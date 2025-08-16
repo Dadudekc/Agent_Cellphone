@@ -24,10 +24,10 @@ Step 'Import GUI components' {
 Step 'Generate contracts (dry run, max 1 per agent)' {
   if (-not $CommsRoot -or [string]::IsNullOrWhiteSpace($CommsRoot)){
     $d = Get-Date -Format 'yyyyMMdd'
-    $CommsRoot = "D:/repositories/communications/overnight_${d}_"
+    $CommsRoot = "D:/repos/communications/overnight_${d}_"
   }
   pwsh -NoLogo -NoProfile -File overnight_runner/tools/generate-contracts.ps1 `
-    -Root 'D:\repositories' `
+    -Root 'D:\repos' `
     -ToAgents 'Agent-1,Agent-2' `
     -From 'Agent-5' `
     -OutComms $CommsRoot `

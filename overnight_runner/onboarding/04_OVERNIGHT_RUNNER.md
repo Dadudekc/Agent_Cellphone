@@ -9,7 +9,7 @@ python overnight_runner/runner.py --layout 5-agent --captain Agent-5 --resume-ag
   --duration-min 480 --interval-sec 300 --sender Agent-3 --plan contracts \
   --fsm-enabled --fsm-agent Agent-5 --fsm-workflow default \
   --initial-wait-sec 60 --phase-wait-sec 15 --stagger-ms 2500 --jitter-ms 1000 \
-  --comm-root D:/repositories/communications/overnight_YYYYMMDD_ --create-comm-folders
+  --comm-root D:/repos/communications/overnight_YYYYMMDD_ --create-comm-folders
 ```
 
 Denser cadence (3 minutes), include self (5-agent)
@@ -18,7 +18,7 @@ python overnight_runner/runner.py --layout 5-agent --captain Agent-5 --resume-ag
   --duration-min 240 --interval-sec 180 --sender Agent-3 --plan contracts \
   --fsm-enabled --fsm-agent Agent-5 --fsm-workflow default \
   --initial-wait-sec 10 --phase-wait-sec 5 --stagger-ms 1500 --jitter-ms 600 \
-  --comm-root D:/repositories/communications/overnight_YYYYMMDD_
+  --comm-root D:/repos/communications/overnight_YYYYMMDD_
 ```
 
 Anti‑duplication
@@ -29,7 +29,7 @@ Anti‑duplication
 First run (end‑to‑end smoke)
 ```powershell
 # 1) Create comms folder
-$date=(Get-Date).ToString('yyyyMMdd'); $root="D:/repositories/communications/overnight_${date}_"; New-Item -ItemType Directory -Path $root -Force | Out-Null
+$date=(Get-Date).ToString('yyyyMMdd'); $root="D:/repos/communications/overnight_${date}_"; New-Item -ItemType Directory -Path $root -Force | Out-Null
 # 2) Start listener for Agent-5 (FSM orchestrator) with Discord devlogs
 python overnight_runner/listener.py --agent Agent-5 --env-file .env --devlog-embed --devlog-username "Agent Devlog"
 # 3) Send a sync message via tool (in another shell)

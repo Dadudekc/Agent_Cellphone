@@ -5,7 +5,7 @@ GitHub Clone Tool
 Clone a user's repositories using a Personal Access Token (classic PAT or fine-grained) into a target folder.
 
 Usage (from D:\Agent_Cellphone):
-  python overnight_runner/tools/github_clone_tool.py --user your-gh-username --token %GITHUB_TOKEN% --dest D:/repositories
+  python overnight_runner/tools/github_clone_tool.py --user your-gh-username --token %GITHUB_TOKEN% --dest D:/repos
 
 Notes:
   - Requires git installed and on PATH
@@ -58,7 +58,7 @@ def main() -> int:
     p = argparse.ArgumentParser("github_clone_tool")
     p.add_argument("--user", required=True, help="GitHub username / owner")
     p.add_argument("--token", default=os.getenv("GITHUB_TOKEN", ""), help="GitHub token (or set GITHUB_TOKEN)")
-    p.add_argument("--dest", default="D:/repositories", help="Destination root directory")
+    p.add_argument("--dest", default="D:/repos", help="Destination root directory")
     args = p.parse_args()
 
     if not args.token:

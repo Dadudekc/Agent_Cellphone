@@ -39,13 +39,23 @@ class RepositoryActivityMonitor:
     
     def __init__(self, repos_root: str = "D:/repos/Dadudekc"):
         self.repos_root = Path(repos_root)
-        self.agent_repos = {
-            "Agent-1": ["AI_Debugger_Assistant", "DigitalDreamscape", "FreeRideInvestor", "Hive-Mind", "MeT"],
-            "Agent-2": ["Auto_Blogger", "Dream.os", "FreeWork", "IT_help_desk", "NewSims4ModProject"],
-            "Agent-3": ["DaDudeKC-Website", "DreamVault", "FreerideinvestorWebsite", "LSTMmodel_trainer"],
-            "Agent-4": ["DaDudekC", "FocusForge", "HCshinobi", "MLRobotmaker", "SWARM"],
-            "Agent-5": ["CAPTAIN"]  # Special role
-        }
+        # Import here to avoid circular imports
+        try:
+            from src.core.project_focus_manager import ProjectFocusManager
+            self.project_manager = ProjectFocusManager()
+            self.use_dynamic_config = True
+        except ImportError:
+            # Fallback to hardcoded config if import fails
+            self.project_manager = None
+            self.use_dynamic_config = False
+            self.agent_repos = {
+                "Agent-1": ["AI_Debugger_Assistant", "DigitalDreamscape", "FreeRideInvestor", "Hive-Mind", "MeT"],
+                "Agent-2": ["Auto_Blogger", "Dream.os", "FreeWork", "IT_help_desk", "NewSims4ModProject"],
+                "Agent-3": ["DaDudeKC-Website", "DreamVault", "FreerideinvestorWebsite", "LSTMmodel_trainer"],
+                "Agent-4": ["DaDudekC", "FocusForge", "HCshinobi", "MLRobotmaker", "SWARM"],
+                "Agent-5": ["CAPTAIN"]  # Special role
+            }
+        
         self.cache = {}
         self.cache_ttl = 60  # 1 minute cache
     
@@ -65,11 +75,14 @@ class RepositoryActivityMonitor:
             self.cache[cache_key] = context
             return context
         
+        # Get agent repositories dynamically or fallback to hardcoded
+        agent_repos = self._get_agent_repositories(agent)
+        
         # Find which repo the agent is actively working on
         most_active_repo = None
         most_recent_activity = 0
         
-        for repo in self.agent_repos[agent]:
+        for repo in agent_repos:
             repo_path = self.repos_root / repo
             if not repo_path.exists():
                 continue
@@ -92,6 +105,31 @@ class RepositoryActivityMonitor:
         
         self.cache[cache_key] = context
         return context
+    
+    def _get_agent_repositories(self, agent: str) -> List[str]:
+        """Get repositories assigned to an agent, using dynamic config if available"""
+        if self.use_dynamic_config and self.project_manager:
+            try:
+                # Get projects from project manager
+                projects = self.project_manager.get_agent_projects(agent)
+                # Convert project names to repository paths
+                repos = []
+                for project_name in projects:
+                    project_info = self.project_manager.get_project_info(project_name)
+                    if project_info and project_info.repository_path:
+                        # Extract just the repository name from the path
+                        repo_name = project_info.repository_path.split('/')[-1]
+                        repos.append(repo_name)
+                return repos if repos else []
+            except Exception as e:
+                logger.warning(f"Error getting dynamic agent repositories for {agent}: {e}")
+                # Fallback to hardcoded config
+        
+        # Fallback to hardcoded configuration
+        if hasattr(self, 'agent_repos') and agent in self.agent_repos:
+            return self.agent_repos[agent]
+        
+        return []
     
     def _get_repo_activity_level(self, repo_path: Path) -> float:
         """Get activity level based on file modifications and git activity"""
