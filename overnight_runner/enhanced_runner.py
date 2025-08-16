@@ -160,14 +160,22 @@ class EnhancedOvernightRunner:
             self._standard_cycle(cycle_type)
     
     def _rescue_cycle(self):
-        """Rescue stalled agents with personalized messages"""
+        """Rescue stalled agents with progressive escalation"""
         summary = self.fsm.get_coordination_summary()
         
         for agent, agent_data in summary["agents"].items():
             if agent_data["status"] == "stalled":
                 # Generate personalized rescue message
                 message = self.fsm.generate_personalized_message(agent, "RESCUE")
-                self._send_message(agent, message, "RESCUE")
+                
+                # Use progressive escalation for stalled agents
+                if hasattr(self.acp, 'progressive_escalation'):
+                    # Progressive escalation: nudge → rescue message → new chat
+                    self.acp.progressive_escalation(agent, message, MsgTag.RESCUE)
+                else:
+                    # Fallback to traditional rescue
+                    self._send_message(agent, message, "RESCUE")
+                
                 time.sleep(1)
     
     def _coordinate_cycle(self):

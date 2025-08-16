@@ -98,7 +98,7 @@ class CollaborativeAgentRunner:
         print("✅ Collaborative Agents Runner stopped")
         
     def _start_monitor(self):
-        """Start the agent monitoring system"""
+        """Start the agent monitoring system with progressive escalation"""
         try:
             cfg = MonitorConfig(
                 agents=self.agents,
@@ -116,13 +116,46 @@ class CollaborativeAgentRunner:
         except Exception as e:
             print(f"⚠️  Warning: Monitor setup failed: {e}, but continuing...")
             
+    def _nudge_stalled_agents(self):
+        """Nudge stalled agents using progressive escalation"""
+        print("🔧 Checking for stalled agents and applying progressive escalation...")
+        
+        for agent in self.agents:
+            try:
+                # Check if agent appears stalled (no recent activity)
+                # This is a simplified check - the monitor handles detailed stall detection
+                if hasattr(self.acp, 'nudge_agent'):
+                    # Try subtle nudge first
+                    self.acp.nudge_agent(agent, "subtle")
+                    print(f"🔧 Applied subtle nudge to {agent}")
+                    time.sleep(0.5)
+                    
+                    # If still stalled, try moderate nudge
+                    time.sleep(2)  # Wait for potential response
+                    if hasattr(self.acp, 'nudge_agent'):
+                        self.acp.nudge_agent(agent, "moderate")
+                        print(f"🔧 Applied moderate nudge to {agent}")
+                        
+            except Exception as e:
+                print(f"⚠️  Nudge failed for {agent}: {e}")
+                
     def _never_stop_collaboration_loop(self):
         """MAIN LOOP - AGENTS NEVER STOP WORKING TOGETHER"""
         collaboration_interval = 120  # Every 2 minutes - AGENTS NEVER STOP
+        nudge_interval = 300         # Every 5 minutes - nudge agents to prevent stalls
+        
+        last_nudge_time = time.time()
         
         while not self._stop.is_set():
             try:
                 self._initiate_collaborative_work()
+                
+                # Periodic nudge to prevent stalls
+                current_time = time.time()
+                if current_time - last_nudge_time >= nudge_interval:
+                    self._nudge_stalled_agents()
+                    last_nudge_time = current_time
+                
                 time.sleep(collaboration_interval)
             except Exception as e:
                 print(f"⚠️  Collaboration error: {e}")

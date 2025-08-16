@@ -243,7 +243,7 @@ class Agent5Monitor:
 
     # ---- rescue path ----
     def _rescue(self, agent: str):
-        """Send rescue message to stalled agent"""
+        """Send rescue message to stalled agent using progressive escalation"""
         now = time.time()
         
         # Check cooldown to prevent spam
@@ -251,7 +251,8 @@ class Agent5Monitor:
             return
             
         try:
-            msg = (
+            # Use progressive escalation for stalled agents
+            rescue_msg = (
                 f"[RESCUE] {agent}, you appear stalled.\n"
                 f"Reply using the Dream.OS block:\n"
                 f"Task: <what you're doing>\n"
@@ -260,12 +261,19 @@ class Agent5Monitor:
                 f"Status: 🟡 pending or ✅ done"
             )
             
-            self.acp.send(agent, msg, MsgTag.RESCUE, new_chat=False)
+            # Progressive escalation: nudge → rescue message → new chat
+            if hasattr(self.acp, 'progressive_escalation'):
+                # Use the new progressive escalation system
+                self.acp.progressive_escalation(agent, rescue_msg, MsgTag.RESCUE)
+            else:
+                # Fallback to traditional rescue
+                self.acp.send(agent, rescue_msg, MsgTag.RESCUE, new_chat=False)
+            
             self.last_rescue[agent] = now
             
             # Optimistic nudge to reduce duplicate rescues until we see file updates
             self.last_activity[agent] = max(self.last_activity.get(agent, 0.0), now)
-            _log(f"rescue sent -> {agent}")
+            _log(f"progressive rescue sent -> {agent}")
             
         except Exception as e:
             _log(f"rescue failed -> {agent}: {e}")

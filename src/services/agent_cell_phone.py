@@ -76,6 +76,7 @@ class MsgTag(str, Enum):
     REPLY   = "[REPLY]"
     COORDINATE = "[COORDINATE]"
     ONBOARDING = "[ONBOARDING]"
+    RESCUE  = "[RESCUE]"
 
 # ──────────────────────────── message structure
 class AgentMessage:
@@ -164,11 +165,14 @@ class AgentCellPhone:
             
         log.debug("AgentCellPhone ready for %s (test=%s, layout=%s)", self._agent_id, test, layout_mode)
 
-    def send(self, agent: str, message: str, tag: MsgTag = MsgTag.NORMAL, new_chat: bool = False) -> None:
+    def send(self, agent: str, message: str, tag: MsgTag = MsgTag.NORMAL, new_chat: bool = False, nudge_stalled: bool = False) -> None:
         """Send a single line to a specific agent.
 
         When new_chat is True, the cursor focuses a stable location and triggers Ctrl+T
         to open a new chat before sending to the input box.
+        
+        When nudge_stalled is True, attempts to nudge the agent with Shift+Backspace
+        before sending the message to wake up stalled terminals.
         """
         agent = self._fmt_id(agent)
         if agent not in self._coords:
@@ -182,6 +186,16 @@ class AgentCellPhone:
         # Determine target locations
         starter_loc = self._coords[agent].get("starter_location_box") or self._coords[agent].get("input_box")
         input_loc = self._coords[agent].get("input_box") or starter_loc
+
+        # Progressive escalation for stalled agents
+        if nudge_stalled:
+            # Step 1: Try subtle nudge with Shift+Backspace
+            if input_loc:
+                self._cursor.move_click(input_loc["x"], input_loc["y"])
+                time.sleep(0.3)
+                self._cursor.hotkey("shift", "backspace")
+                time.sleep(0.2)
+                log.info("→ %s NUDGE (Shift+Backspace) to wake up stalled terminal", agent)
 
         # Respect default new-chat if requested via environment, but allow caller override to keep most sends inline
         # Default behavior remains environment-driven unless explicitly set by caller
@@ -488,6 +502,95 @@ class AgentCellPhone:
     def is_capture_enabled(self) -> bool:
         """Check if response capture is available and enabled"""
         return self._response_capture is not None
+
+    def nudge_agent(self, agent: str, nudge_type: str = "subtle") -> None:
+        """Nudge a stalled agent using different escalation strategies.
+        
+        Args:
+            agent: Target agent to nudge
+            nudge_type: Type of nudge - "subtle", "moderate", or "aggressive"
+        """
+        agent = self._fmt_id(agent)
+        if agent not in self._coords:
+            log.error("Agent %s not found in %s mode", agent, self._layout_mode)
+            return
+        
+        input_loc = self._coords[agent].get("input_box")
+        if not input_loc:
+            log.error("No input location found for agent %s", agent)
+            return
+        
+        log.info("→ %s NUDGE (%s) to wake up stalled terminal", agent, nudge_type.upper())
+        
+        if nudge_type == "subtle":
+            # Subtle nudge: Shift+Backspace to clear any partial input
+            self._cursor.move_click(input_loc["x"], input_loc["y"])
+            time.sleep(0.3)
+            self._cursor.hotkey("shift", "backspace")
+            time.sleep(0.2)
+            
+        elif nudge_type == "moderate":
+            # Moderate nudge: Clear input area and add a small delay
+            self._cursor.move_click(input_loc["x"], input_loc["y"])
+            time.sleep(0.3)
+            self._cursor.hotkey("ctrl", "a")  # Select all
+            time.sleep(0.1)
+            self._cursor.hotkey("backspace")  # Clear
+            time.sleep(0.2)
+            
+        elif nudge_type == "aggressive":
+            # Aggressive nudge: Clear and add a visual indicator
+            self._cursor.move_click(input_loc["x"], input_loc["y"])
+            time.sleep(0.3)
+            self._cursor.hotkey("ctrl", "a")  # Select all
+            time.sleep(0.1)
+            self._cursor.hotkey("backspace")  # Clear
+            time.sleep(0.2)
+            # Type a subtle wake-up character
+            self._cursor.type(".")
+            time.sleep(0.1)
+            self._cursor.hotkey("backspace")  # Remove it
+            time.sleep(0.2)
+        
+        log.info("→ %s NUDGE completed (%s)", agent, nudge_type)
+
+    def progressive_escalation(self, agent: str, message: str, tag: MsgTag = MsgTag.RESCUE) -> None:
+        """Progressive escalation strategy for stalled agents.
+        
+        This method implements a three-tier approach:
+        1. Subtle nudge (Shift+Backspace)
+        2. Rescue message in existing chat
+        3. New chat if all else fails
+        """
+        agent = self._fmt_id(agent)
+        if agent not in self._coords:
+            log.error("Agent %s not found in %s mode", agent, self._layout_mode)
+            return
+        
+        log.info("→ %s PROGRESSIVE ESCALATION starting", agent)
+        
+        # Step 1: Try subtle nudge
+        try:
+            self.nudge_agent(agent, "subtle")
+            time.sleep(1.0)  # Wait for potential response
+        except Exception as e:
+            log.warning("Subtle nudge failed for %s: %s", agent, e)
+        
+        # Step 2: Send rescue message in existing chat
+        try:
+            self.send(agent, message, tag, new_chat=False, nudge_stalled=False)
+            time.sleep(2.0)  # Wait for potential response
+        except Exception as e:
+            log.warning("Rescue message failed for %s: %s", agent, e)
+        
+        # Step 3: Escalate to new chat if needed
+        try:
+            log.info("→ %s Escalating to new chat", agent)
+            self.send(agent, message, tag, new_chat=True, nudge_stalled=False)
+        except Exception as e:
+            log.error("New chat escalation failed for %s: %s", agent, e)
+        
+        log.info("→ %s PROGRESSIVE ESCALATION completed", agent)
 
 # ──────────────────────────── cursor abstraction
 class _Cursor:

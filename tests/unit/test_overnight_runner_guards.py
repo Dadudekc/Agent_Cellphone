@@ -4,6 +4,7 @@ Test overnight runner guard functions.
 """
 
 import pytest
+import pathlib
 from unittest.mock import patch, MagicMock
 from datetime import datetime
 
