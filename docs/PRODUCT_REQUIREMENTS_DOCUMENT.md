@@ -332,6 +332,19 @@ Create a reliable, scalable, and user-friendly system for coordinating multiple 
 - [ ] Message processing operational
 - [ ] Real-time monitoring active
 
+## 🛠 Reliability Roadmap
+
+The current system is marketed as an "autonomous overnight" solution, but several infrastructure tasks are required before it can reliably run unattended:
+
+- Configuration validator and single start script
+- Comprehensive error handling and timeouts
+- Watchdog monitoring with alerts
+- State persistence and recovery checkpoints
+- Workflow sanity checks and escalation paths
+- Expanded automated test coverage
+- Operational runbook and documentation
+- Optional Cursor integration guidelines
+
 ## 🎯 Success Metrics
 
 ### Technical Metrics
