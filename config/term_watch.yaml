@@ -1,0 +1,5 @@
+# Default thresholds for the supervisor
+idle_secs: 45
+cpu_threshold: 1.0
+scan_interval_secs: 10
+root: runtime/agent_comms
