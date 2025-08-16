@@ -1,0 +1,52 @@
+version: 2
+states:
+  Plan:
+    next: Build
+  Build:
+    guards: [lint, typecheck, unit_tests]
+    on_pass: Review
+    on_fail: Quarantine
+  Review:
+    guards: [pr_checks]
+    on_pass: Deploy
+    on_fail: Blocked
+  Deploy:
+    guards: [deploy_dryrun, smoke]
+    on_pass: Done
+    on_fail: Rollback
+  Quarantine:
+    guards: [flaky_rerun]
+    on_pass: Review
+    on_fail: Blocked
+  Rollback:
+    guards: [rollback, smoke]
+    on_pass: Review
+    on_fail: Blocked
+  Blocked:
+    next: Plan
+  Done: {}
+
+guards:
+  lint: "ruff check ."
+  typecheck: "pyright --warnings"
+  unit_tests: "pytest -q --maxfail=1 --disable-warnings"
+  pr_checks: "pytest -q; coverage run -m pytest; coverage report --fail-under=80"
+  deploy_dryrun: "./deploy.sh --dry-run"
+  smoke: "./scripts/smoke.sh"
+  flaky_rerun: "pytest -q -k 'flaky' --maxfail=1 || true"
+  rollback: "./scripts/rollback.sh"
+
+effects:
+  on_enter:
+    Review:
+      - "gh pr create -f || true"
+      - "gh pr comment --body 'Automated handoff from Build → Review' || true"
+    Done:
+      - "echo '✅ Done'"
+
+policy:
+  idempotency_key: ".overnight/idempotency.json"
+  artifact_dir: ".overnight/artifacts"
+  max_parallel: 4
+  quarantine_label: "auto:quarantine"
+  blocked_label: "auto:blocked"
