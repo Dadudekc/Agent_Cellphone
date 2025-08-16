@@ -18,8 +18,8 @@ sys.path.insert(0, str(SRC))
 
 def main() -> int:
     try:
-        from agent_cell_phone import AgentCellPhone  # type: ignore
-        from inter_agent_framework import InterAgentFramework  # type: ignore
+        from services.agent_cell_phone import AgentCellPhone  # type: ignore
+        from services.inter_agent_framework import InterAgentFramework  # type: ignore
     except Exception as e:
         print(f"[DIAG] import error: {e}")
         return 1
@@ -42,4 +42,4 @@ def main() -> int:
     return 0
 
 if __name__ == "__main__":
-    test_broadcast_with_delays()
+    raise SystemExit(main())
