@@ -147,7 +147,10 @@ def test_clear_log_button_clears_log(monkeypatch):
 
         # Verify log was cleared
         assert "Line before clear" not in win.log_display.toPlainText()
-        assert win.log_display.toPlainText().strip() == ""
+        # After clear, log should contain only the 'Log cleared' message (with timestamp)
+        text = win.log_display.toPlainText()
+        assert "Line before clear" not in text
+        assert "Log cleared" in text
         
     finally:
         # Clean up

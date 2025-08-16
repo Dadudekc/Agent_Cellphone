@@ -1,7 +1,7 @@
 {
-  "ts": "2025-08-16T21:43:46.702325+00:00",
+  "ts": "2025-08-16T22:37:08.232807+00:00",
   "last_activity": {
-    "Agent-1": 1755380626.677303
+    "Agent-1": 1755383828.2037807
   },
   "last_rescue": {},
   "config": {
@@ -11,7 +11,7 @@
     "stall_threshold_sec": 1200,
     "warn_ratio": 0.8,
     "check_every_sec": 5,
-    "file_watch_root": "C:\\Users\\USER\\AppData\\Local\\Temp\\tmp5m29lx67\\agent_workspaces",
+    "file_watch_root": "C:\\Users\\USER\\AppData\\Local\\Temp\\tmpd9zsppnt\\agent_workspaces",
     "file_response_name": "response.txt",
     "inbox_root": "runtime/agent_comms/inbox",
     "fsm_enabled": true,
@@ -21,5 +21,5 @@
     "workspace_map_path": "src/runtime/config/agent_workspace_map.json",
     "test_mode": false
   },
-  "uptime_sec": 0.006005764007568359
+  "uptime_sec": 0.023019790649414062
 }

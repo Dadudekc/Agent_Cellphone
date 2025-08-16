@@ -34,11 +34,11 @@ def test_send_fsm_request_writes_inbox_file(monkeypatch):
 
     # Prepare temporary working directory to isolate filesystem effects
     temp_root = tempfile.mkdtemp(prefix="acp_gui_test_")
-    agent_inbox = Path(temp_root) / "agent_workspaces" / "Agent-5" / "inbox"
+    agent_inbox = Path(temp_root) / "Agent-5" / "inbox"
     agent_inbox.mkdir(parents=True, exist_ok=True)
 
-    # Force GUI code to use our temp directory as CWD
-    monkeypatch.setenv("PYTEST_ACP_TEMP_ROOT", temp_root)
+    # Force GUI code to use our temp directory for agent file operations
+    monkeypatch.setenv("AGENT_FILE_ROOT", temp_root)
     monkeypatch.setattr(module.os, "getcwd", lambda: temp_root)
 
     # Create window and invoke the action
@@ -46,10 +46,16 @@ def test_send_fsm_request_writes_inbox_file(monkeypatch):
     app = QApplication.instance() or QApplication(["test"])  # type: ignore
     win = module.FiveAgentGridGUI()  # type: ignore[attr-defined]
     try:
+        # Debug: Check what path the GUI will use
+        expected_inbox = Path(temp_root) / "Agent-5" / "inbox"
+        print(f"Test expects files in: {expected_inbox}")
+        print(f"AGENT_FILE_ROOT env var: {os.environ.get('AGENT_FILE_ROOT')}")
+        
         win.send_fsm_request()
 
         # Verify a file was created
         created = sorted(agent_inbox.glob("fsm_request_*.json"))
+        print(f"Files found in {agent_inbox}: {[f.name for f in created]}")
         assert created, "FSM request file was not created in Agent-5 inbox"
 
         # Validate JSON structure
