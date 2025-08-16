@@ -1,0 +1,7 @@
+{
+  "id": "TASK-1234",
+  "repo": "https://github.com/your/repo.git",
+  "branch": "feature/fix-widget",
+  "state": "Build",
+  "meta": { "owner": "Agent-3", "prio": "P1" }
+}

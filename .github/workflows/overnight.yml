@@ -1,0 +1,27 @@
+name: Overnight Runner
+on:
+  schedule:
+    - cron: "15 5 * * *"   # 05:15 America/Chicago ≈ 10:15 UTC
+  workflow_dispatch: {}
+permissions:
+  contents: read
+  pull-requests: write
+concurrency:
+  group: overnight-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: make setup
+      - run: make overnight-run
+      - if: ${{ env.DISCORD_WEBHOOK_URL || env.SLACK_WEBHOOK_URL }}
+        run: make overnight-digest
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - uses: actions/upload-artifact@v4
+        with: { name: overnight-artifacts, path: runtime/overnight/** }
