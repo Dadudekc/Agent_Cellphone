@@ -50,15 +50,16 @@ python overnight_runner/runner.py \
 
 ### Installation
 
-1. **Clone and setup:**
+1. **Clone repository:**
 ```bash
 git clone <repository>
-cd Agent_CellPhone
+cd Agent_Cellphone
 ```
 
-2. **Install dependencies:**
+2. **Run setup script:**  
+This will create a virtual environment, install dependencies, and copy `env.example` to `.env` if needed.
 ```bash
-pip install -r requirements.txt
+./setup.sh
 ```
 
 3. **Launch the system (autonomous 5‑agent mode with AI capture):**
@@ -81,6 +82,22 @@ python overnight_runner/runner.py `
   --comm-root D:/repositories/communications/overnight_YYYYMMDD_ --create-comm-folders | cat
 ```
 
+### Terminal Stall Detection
+
+Wrap Cursor commands with a heartbeat wrapper for logging and stall detection.
+
+```bash
+python scripts/term_watch.py wrap --agent-id 5 --cmd "npm run dev"
+```
+
+Run the supervisor in another terminal to classify states:
+
+```bash
+python scripts/term_watch.py watch --root runtime/agent_comms --idle-secs 45 --cpu-threshold 1.0 --loop
+```
+
+Configuration defaults can be adjusted in config/term_watch.yaml.
+
 ### Basic Usage
 
 #### Main Launcher (Recommended)
@@ -91,9 +108,6 @@ This provides a menu-driven interface to access all components (GUIs, tests, doc
 
 #### Direct GUI Access
 ```bash
-# Launch modern PyQt v2 GUI (8 agents panel with controls)
-python gui/dream_os_gui_v2.py
-
 # Two-Agent Horizontal GUI (focused beta flow)
 python gui/two_agent_horizontal_gui.py
 
