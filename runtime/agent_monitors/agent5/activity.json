@@ -1,0 +1,31 @@
+{
+  "ts": "2025-08-16T19:36:17.185276+00:00",
+  "last_activity": {
+    "Agent-1": 1755343361.0233874,
+    "Agent-2": 1755343362.0,
+    "Agent-3": 1755343362.0,
+    "Agent-4": 1755343361.0233874
+  },
+  "last_rescue": {},
+  "config": {
+    "agents": [
+      "Agent-1",
+      "Agent-2",
+      "Agent-3",
+      "Agent-4"
+    ],
+    "stall_threshold_sec": 300,
+    "warn_ratio": 0.8,
+    "check_every_sec": 5,
+    "file_watch_root": "agent_workspaces",
+    "file_response_name": "response.txt",
+    "inbox_root": "runtime/agent_comms/inbox",
+    "fsm_enabled": true,
+    "rescue_cooldown_sec": 60,
+    "active_grace_sec": 60,
+    "use_db_lane": false,
+    "workspace_map_path": "src/runtime/config/agent_workspace_map.json",
+    "test_mode": false
+  },
+  "uptime_sec": 1303.1678838729858
+}

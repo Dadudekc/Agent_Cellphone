@@ -1,0 +1,21 @@
+{
+  "id": "a0ace16e-5dbe-4e69-b462-4c9cac026405",
+  "title": "Build Automated Collaboration Tools",
+  "description": "Build automated collaboration tools that enhance agent teamwork.\n            \n            INSTRUCTIONS FOR ALL AGENTS:\n            - Agent-1: Lead the coordination and strategic planning\n            - Agent-2: Manage task breakdown and resource allocation\n            - Agent-3: Handle data analysis and technical implementation\n            - Agent-4: Ensure communication protocols and security\n            - Agent-5: Coordinate overall process and verification\n            \n            This is a COLLABORATIVE task that requires ALL agents working together.\n            Work together to tackle these tasks and combine your expertise to create innovative solutions.\n            NEVER STOP collaborating and improving!",
+  "task_type": "CollaborativeTaskType.COLLABORATION_TOOLS",
+  "state": "CollaborativeTaskState.NEW",
+  "created_at": "2025-08-16T14:17:40.080747",
+  "updated_at": "2025-08-16T14:17:40.080747",
+  "assigned_agents": [
+    "Agent-1",
+    "Agent-2",
+    "Agent-3",
+    "Agent-4",
+    "Agent-5"
+  ],
+  "dependencies": [],
+  "evidence": [],
+  "metadata": {},
+  "collaboration_rounds": 0,
+  "current_round": 1
+}

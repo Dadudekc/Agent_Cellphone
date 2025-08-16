@@ -19,10 +19,10 @@ echo  ██║  ██║╚██████╔╝███████╗█
 echo  ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝     ╚═════╝ ╚═╝  ╚═╝   ╚═╝   
 echo.
 echo  ================================================================================
-echo  🚀 CONTINUOUS AGENTS 1-4 RUNNER 🚀
+echo  🚀 NON-STOP COLLABORATIVE AGENTS 1-4 RUNNER 🚀
 echo  ================================================================================
 echo.
-echo  💇‍♀️  This will start Agents 1-4 working continuously while you do your hair!
+echo  💇‍♀️  This will start Agents 1-4 working NON-STOP and COLLABORATIVELY while you do your hair!
 echo.
 echo  👥 Agents that will be working:
 echo     • Agent-1: System Coordinator
@@ -31,10 +31,10 @@ echo     • Agent-3: Data Processor
 echo     • Agent-4: Communication Specialist
 echo.
 echo  ⚡ Features:
-echo     • Continuous task assignment every 5 minutes
-echo     • Automatic monitoring and rescue
-echo     • Smart task rotation to keep agents engaged
-echo     • Real-time status updates every 10 minutes
+echo     • NON-STOP collaborative work every 2 minutes
+echo     • Agents create their own task lists together
+echo     • Continuous collaboration and teamwork
+echo     • Real-time status updates every 5 minutes
 echo.
 echo  🎯 Press any key to start the agents...
 echo.
@@ -42,7 +42,7 @@ pause >nul
 
 cls
 echo.
-echo  🚀 Starting Continuous Agents 1-4...
+echo  🚀 Starting NON-STOP Collaborative Agents 1-4...
 echo  ⏳ Please wait while the system initializes...
 echo.
 

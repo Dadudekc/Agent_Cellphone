@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Continuous Agents 1-4 Runner
-============================
-Keeps agents 1-4 working non-stop with automatic task assignment and monitoring.
-Perfect for when you need to step away and let the agents handle everything!
+Continuous Agents 1-4 Collaborative Runner
+==========================================
+Makes agents 1-4 work NON-STOP and COLLABORATIVELY, creating their own task lists
+and working together continuously without any stopping or external task assignment.
 """
 
 import os
@@ -27,195 +27,242 @@ except ImportError as e:
     print("Make sure you're running from the project root directory")
     sys.exit(1)
 
-class ContinuousAgentRunner:
-    """Keeps agents 1-4 working continuously with smart task management"""
+class CollaborativeAgentRunner:
+    """Makes agents 1-4 work NON-STOP and COLLABORATIVELY"""
     
     def __init__(self):
         self.agents = ["Agent-1", "Agent-2", "Agent-3", "Agent-4"]
-        self.acp = AgentCellPhone(agent_id="Continuous-Runner", layout_mode="5-agent")
+        self.acp = AgentCellPhone(agent_id="Collaborative-Runner", layout_mode="5-agent")
         self.monitor = None
         self._stop = threading.Event()
         self._start_time = time.time()
         
-        # Task templates for continuous work
-        self.task_templates = {
-            "Agent-1": [
-                "Review and optimize system coordination protocols",
-                "Analyze team performance metrics and identify improvements",
-                "Coordinate cross-agent communication workflows",
-                "Develop new task management strategies",
-                "Monitor system health and performance indicators"
-            ],
-            "Agent-2": [
-                "Process and analyze pending data requests",
-                "Optimize resource allocation algorithms",
-                "Track project milestones and update progress",
-                "Review task completion rates and efficiency",
-                "Develop new project management methodologies"
-            ],
-            "Agent-3": [
-                "Analyze data processing pipelines for optimization",
-                "Research new analytical techniques and tools",
-                "Process backlog of data analysis requests",
-                "Develop innovative data visualization methods",
-                "Explore machine learning applications for data processing"
-            ],
-            "Agent-4": [
-                "Review communication protocols and security measures",
-                "Monitor network activity and security logs",
-                "Optimize inter-agent communication channels",
-                "Develop new security monitoring protocols",
-                "Analyze communication efficiency metrics"
-            ]
+        # Collaborative task generation system
+        self.collaborative_tasks = [
+            "Analyze and optimize the entire agent coordination system",
+            "Develop new collaborative workflows between all agents",
+            "Create a unified task management and tracking system",
+            "Design and implement cross-agent communication protocols",
+            "Build a collaborative decision-making framework",
+            "Develop shared knowledge bases and resource pools",
+            "Create automated task distribution and load balancing",
+            "Design collaborative problem-solving methodologies",
+            "Implement cross-agent learning and skill sharing",
+            "Build collaborative project planning and execution tools"
+        ]
+        
+        # Individual agent specialties for collaboration
+        self.agent_specialties = {
+            "Agent-1": "System coordination, leadership, and strategic planning",
+            "Agent-2": "Task management, resource allocation, and project tracking",
+            "Agent-3": "Data analysis, research, and technical implementation",
+            "Agent-4": "Communication, security, and protocol optimization"
         }
         
-        # Task rotation to keep things interesting
-        self.current_task_index = {agent: 0 for agent in self.agents}
+        # Task rotation and collaboration tracking
+        self.current_task_index = 0
+        self.collaboration_round = 0
+        self.last_collaboration_time = time.time()
         
     def start(self):
-        """Start the continuous agent runner"""
-        print("🚀 Starting Continuous Agents 1-4 Runner...")
+        """Start the collaborative agent runner - AGENTS NEVER STOP"""
+        print("🚀 Starting NON-STOP Collaborative Agents 1-4...")
         print(f"📅 Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print(f"👥 Managing agents: {', '.join(self.agents)}")
+        print("⚡ MODE: NON-STOP COLLABORATIVE WORK - AGENTS NEVER STOP!")
         
         # Start the monitor
         self._start_monitor()
         
-        # Start task assignment loop
-        threading.Thread(target=self._task_loop, daemon=True).start()
+        # Start the NEVER-STOP collaboration loop
+        threading.Thread(target=self._never_stop_collaboration_loop, daemon=True).start()
         
-        # Start status reporting
-        threading.Thread(target=self._status_loop, daemon=True).start()
+        # Start continuous status reporting
+        threading.Thread(target=self._continuous_status_loop, daemon=True).start()
         
-        print("✅ All systems running! Agents 1-4 are now working continuously.")
-        print("💇‍♀️ You can now do your hair - the agents will handle everything!")
-        print("📊 Monitor progress in the logs and agent workspaces")
+        # Start collaborative task generation
+        threading.Thread(target=self._collaborative_task_generation, daemon=True).start()
+        
+        print("✅ All systems running! Agents 1-4 are now working NON-STOP and COLLABORATIVELY!")
+        print("💇‍♀️ You can now do your hair - they will NEVER STOP working together!")
+        print("🤝 They will create their own task lists and work together continuously!")
         
     def stop(self):
-        """Stop the continuous agent runner"""
-        print("\n🛑 Stopping Continuous Agents Runner...")
+        """Stop the collaborative agent runner (only when you're done with hair)"""
+        print("\n🛑 Stopping Collaborative Agents Runner...")
         self._stop.set()
         
         if self.monitor:
             self.monitor.stop()
             
-        print("✅ Continuous Agents Runner stopped")
+        print("✅ Collaborative Agents Runner stopped")
         
     def _start_monitor(self):
         """Start the agent monitoring system"""
         try:
             cfg = MonitorConfig(
                 agents=self.agents,
-                stall_threshold_sec=600,  # 10 minutes
-                check_every_sec=10,       # Check every 10 seconds
-                rescue_cooldown_sec=180,  # 3 minutes between rescues
-                active_grace_sec=180,     # 3 minutes grace period
+                stall_threshold_sec=300,  # 5 minutes - more aggressive
+                check_every_sec=5,        # Check every 5 seconds
+                rescue_cooldown_sec=60,   # 1 minute between rescues
+                active_grace_sec=60,      # 1 minute grace period
                 fsm_enabled=True
             )
             
-            self.monitor = Agent5Monitor(cfg, sender="Continuous-Runner")
+            self.monitor = Agent5Monitor(cfg, sender="Collaborative-Runner")
             if not self.monitor.start():
                 print("⚠️  Warning: Monitor failed to start, but continuing...")
                 
         except Exception as e:
             print(f"⚠️  Warning: Monitor setup failed: {e}, but continuing...")
             
-    def _task_loop(self):
-        """Main loop for assigning tasks to agents"""
-        task_interval = 300  # Assign new tasks every 5 minutes
+    def _never_stop_collaboration_loop(self):
+        """MAIN LOOP - AGENTS NEVER STOP WORKING TOGETHER"""
+        collaboration_interval = 120  # Every 2 minutes - AGENTS NEVER STOP
         
         while not self._stop.is_set():
             try:
-                self._assign_tasks_to_all_agents()
-                time.sleep(task_interval)
+                self._initiate_collaborative_work()
+                time.sleep(collaboration_interval)
             except Exception as e:
-                print(f"⚠️  Task assignment error: {e}")
-                time.sleep(60)  # Wait a minute before retrying
+                print(f"⚠️  Collaboration error: {e}")
+                time.sleep(30)  # Only wait 30 seconds before retrying - NEVER STOP
                 
-    def _assign_tasks_to_all_agents(self):
-        """Assign fresh tasks to all agents"""
+    def _initiate_collaborative_work(self):
+        """Initiate collaborative work between all agents"""
+        self.collaboration_round += 1
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        
+        # Get current collaborative task
+        task = self.collaborative_tasks[self.current_task_index % len(self.collaborative_tasks)]
+        
+        # Create collaborative task message for ALL agents
+        collaborative_msg = f"""🤝 [COLLABORATIVE TASK ROUND {self.collaboration_round}] {timestamp}
+
+📋 COLLABORATIVE TASK: {task}
+
+🎯 INSTRUCTIONS FOR ALL AGENTS:
+- This is a COLLABORATIVE task that requires ALL agents working together
+- Agent-1: Lead the coordination and strategic planning
+- Agent-2: Manage task breakdown and resource allocation  
+- Agent-3: Handle data analysis and technical implementation
+- Agent-4: Ensure communication protocols and security
+
+🔄 COLLABORATION PROCESS:
+1. ALL agents must work together on this task
+2. Create shared task lists and work plans
+3. Coordinate efforts and share progress
+4. Build on each other's work continuously
+5. NEVER STOP - keep the collaboration momentum going!
+
+💡 REMEMBER: You are a TEAM working NON-STOP together!
+
+Status: 🔄 Collaborative Work in Progress
+Round: {self.collaboration_round}
+Progress: All agents collaborating..."""
+        
+        # Send to ALL agents simultaneously
         for agent in self.agents:
             try:
-                self._assign_task_to_agent(agent)
+                self.acp.send(agent, collaborative_msg, MsgTag.TASK, new_chat=False)
+                print(f"🤝 Sent collaborative task to {agent}: Round {self.collaboration_round}")
             except Exception as e:
-                print(f"⚠️  Failed to assign task to {agent}: {e}")
-                
-    def _assign_task_to_agent(self, agent: str):
-        """Assign a specific task to an agent"""
-        # Get next task from rotation
-        task_index = self.current_task_index[agent]
-        tasks = self.task_templates[agent]
-        task = tasks[task_index % len(tasks)]
+                print(f"❌ Failed to send collaborative task to {agent}: {e}")
         
-        # Rotate to next task
-        self.current_task_index[agent] = (task_index + 1) % len(tasks)
+        # Rotate to next collaborative task
+        self.current_task_index = (self.current_task_index + 1) % len(self.collaborative_tasks)
+        self.last_collaboration_time = time.time()
         
-        # Create detailed task message
-        timestamp = datetime.now().strftime("%H:%M:%S")
-        msg = f"""🔄 [CONTINUOUS TASK] {timestamp}
-
-📋 Task: {task}
-
-🎯 Instructions:
-- Work on this task continuously
-- Document your progress in your workspace
-- Update status when complete or if you need help
-- Move to next task when ready
-
-💡 Remember: You're part of a continuous workflow - keep the momentum going!
-
-Status: 🟡 In Progress
-Progress: Starting now..."""
+    def _collaborative_task_generation(self):
+        """Generate new collaborative tasks continuously"""
+        task_generation_interval = 300  # Every 5 minutes - generate new collaborative tasks
         
-        try:
-            self.acp.send(agent, msg, MsgTag.TASK, new_chat=False)
-            print(f"📤 Assigned task to {agent}: {task[:50]}...")
-        except Exception as e:
-            print(f"❌ Failed to send task to {agent}: {e}")
-            
-    def _status_loop(self):
-        """Periodic status reporting loop"""
         while not self._stop.is_set():
             try:
-                self._report_status()
-                time.sleep(600)  # Report every 10 minutes
+                self._generate_new_collaborative_tasks()
+                time.sleep(task_generation_interval)
+            except Exception as e:
+                print(f"⚠️  Task generation error: {e}")
+                time.sleep(60)  # Wait 1 minute before retrying
+                
+    def _generate_new_collaborative_tasks(self):
+        """Generate new collaborative tasks for agents to work on together"""
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        
+        # Generate new collaborative task ideas
+        new_tasks = [
+            f"Develop collaborative AI decision-making algorithms using all agents' expertise",
+            f"Create a unified knowledge management system that all agents contribute to",
+            f"Design collaborative problem-solving workflows that leverage each agent's strengths",
+            f"Build automated collaboration tools that enhance agent teamwork",
+            f"Develop collaborative learning systems that improve all agents' capabilities"
+        ]
+        
+        # Add new tasks to the rotation
+        self.collaborative_tasks.extend(new_tasks)
+        
+        # Send task generation notification to all agents
+        generation_msg = f"""🆕 [NEW COLLABORATIVE TASKS GENERATED] {timestamp}
+
+🎯 New collaborative tasks have been created for you to work on together!
+
+📋 New Tasks Available:
+{chr(10).join(f"• {task}" for task in new_tasks)}
+
+🤝 INSTRUCTIONS:
+- These are NEW collaborative opportunities
+- Work together to tackle these tasks
+- Combine your expertise and create innovative solutions
+- NEVER STOP collaborating and improving!
+
+💪 Keep the collaborative momentum going!"""
+        
+        for agent in self.agents:
+            try:
+                self.acp.send(agent, generation_msg, MsgTag.TASK, new_chat=False)
+                print(f"🆕 Sent new task generation to {agent}")
+            except Exception as e:
+                print(f"❌ Failed to send task generation to {agent}: {e}")
+                
+    def _continuous_status_loop(self):
+        """Continuous status reporting - NEVER STOPS"""
+        while not self._stop.is_set():
+            try:
+                self._report_collaborative_status()
+                time.sleep(300)  # Report every 5 minutes - NEVER STOP
             except Exception as e:
                 print(f"⚠️  Status reporting error: {e}")
-                time.sleep(300)  # Wait 5 minutes before retrying
+                time.sleep(120)  # Wait 2 minutes before retrying - NEVER STOP
                 
-    def _report_status(self):
-        """Report current status"""
+    def _report_collaborative_status(self):
+        """Report collaborative status"""
         uptime = time.time() - self._start_time
         uptime_str = f"{int(uptime // 3600)}h {int((uptime % 3600) // 60)}m"
         
-        status_msg = f"""📊 [STATUS REPORT] {datetime.now().strftime('%H:%M:%S')}
+        status_msg = f"""📊 [COLLABORATIVE STATUS REPORT] {datetime.now().strftime('%H:%M:%S')}
 
 ⏱️  Uptime: {uptime_str}
 👥 Active Agents: {len(self.agents)}
+🤝 Collaboration Rounds: {self.collaboration_round}
 🔄 Task Rotation: Active
-📈 System Status: Running Continuously
+📈 System Status: NON-STOP COLLABORATIVE WORK
 
-💪 Agents 1-4 are working hard and staying productive!
-🎯 Continuous task assignment is maintaining workflow momentum.
+💪 Agents 1-4 are working TOGETHER continuously!
+🎯 They are creating their own task lists and collaborating non-stop!
+🤝 Collaborative momentum is building with each round!
 
-Status: ✅ All Systems Operational"""
+Status: ✅ ALL AGENTS WORKING TOGETHER NON-STOP"""
         
         print(status_msg)
-        
-        # Also send to a central location if needed
-        try:
-            # Could send to a status channel or log file
-            pass
-        except Exception:
-            pass
 
 def main():
-    """Main entry point"""
-    runner = ContinuousAgentRunner()
+    """Main entry point - AGENTS NEVER STOP"""
+    runner = CollaborativeAgentRunner()
     
     # Setup signal handlers for graceful shutdown
     def signal_handler(signum, frame):
         print(f"\n📡 Received signal {signum}")
+        print("🛑 Stopping collaborative agents...")
         runner.stop()
         sys.exit(0)
     
@@ -225,8 +272,9 @@ def main():
     try:
         runner.start()
         
-        # Keep main thread alive
-        print("\n💤 Main thread sleeping - agents are working in background...")
+        # Keep main thread alive - AGENTS NEVER STOP
+        print("\n💤 Main thread sleeping - agents are working COLLABORATIVELY in background...")
+        print("🤝 They will NEVER STOP working together!")
         print("💡 Press Ctrl+C to stop when you're done with your hair!")
         
         while True:
