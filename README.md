@@ -27,6 +27,8 @@
 - **FSM workflow automation** triggered by AI responses
 - Skip all human-like behavior; pure mechanical precision
 
+For a high-level guide to autonomous modes, pipelines, guardrails, and Discord commands, see [AutonomousModes.md](docs/AutonomousModes.md).
+
 ## 🚀 Quick Start
 
 ### **🎯 NEW: Bi-Directional AI Communication (v1.0.0)**
@@ -191,6 +193,12 @@ acp.broadcast("Status update: All systems operational")
 - **Multiple fallback strategies** including Export Chat processing
 - **Cross-platform support** (Windows, macOS, Linux)
 - **Zero UI interaction** - completely headless operation
+
+## End-to-End Autonomous Flow
+1. Tasks are planned and queued.
+2. The overnight runner clones repositories, runs guard commands, and advances task state.
+3. The FSM orchestrator persists state and emits verification messages.
+4. Digests and optional Discord notifications summarize outcomes.
 
 ## 📁 Project Structure
 
