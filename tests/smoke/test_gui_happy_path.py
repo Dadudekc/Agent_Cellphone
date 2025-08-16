@@ -17,7 +17,7 @@ def test_seed_and_fsm_request(monkeypatch, tmp_path):
     import importlib.util
 
     # Import GUI module dynamically
-    gui_path = PROJECT_ROOT / "gui" / "five_agent_grid_gui.py"
+    gui_path = PROJECT_ROOT / "src" / "gui" / "five_agent_grid_gui.py"
     assert gui_path.exists()
     spec = importlib.util.spec_from_file_location("_gui_under_test", str(gui_path))
     module = importlib.util.module_from_spec(spec)

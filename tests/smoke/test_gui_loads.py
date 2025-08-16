@@ -14,7 +14,7 @@ sys.modules.setdefault("pyautogui", types.ModuleType("pyautogui"))
 
 
 @pytest.mark.parametrize("module_path, main_callable", [
-    ("gui/five_agent_grid_gui.py", "main"),
+    ("src/gui/five_agent_grid_gui.py", "main"),
 ])
 def test_gui_module_instantiates_qapplication(module_path: str, main_callable: str):
     """Smoke test: import GUI module and instantiate QApplication + main window, then exit.

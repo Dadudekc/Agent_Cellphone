@@ -14,6 +14,7 @@ import tempfile
 from pathlib import Path
 from unittest.mock import Mock, patch
 import pytest
+import os
 
 # Import the monitor
 try:
@@ -84,8 +85,17 @@ class TestAgent5Monitor:
         monitor = Agent5Monitor(cfg, test=True)
         monitor.acp = DummyACP()
         
-        # Simulate Agent-1 being stalled (no recent activity)
-        monitor.last_activity["Agent-1"] = time.time() - 5  # 5 seconds ago
+        # Simulate Agent-1 being stalled by setting old file timestamps
+        old_time = time.time() - 10  # 10 seconds ago
+        
+        # Update the file timestamps to be old
+        agent1_dir = self.agent_workspace / "Agent-1"
+        state_file = agent1_dir / "state.json"
+        state_file.touch(exist_ok=True)
+        os.utime(state_file, (old_time, old_time))
+        
+        # Set the activity timestamp to be old
+        monitor.last_activity["Agent-1"] = old_time
         
         # Run one tick
         monitor._tick()
@@ -108,8 +118,17 @@ class TestAgent5Monitor:
         monitor = Agent5Monitor(cfg, test=True)
         monitor.acp = DummyACP()
         
-        # Simulate stalled agent
-        monitor.last_activity["Agent-1"] = time.time() - 5
+        # Simulate stalled agent with old file timestamps
+        old_time = time.time() - 10  # 10 seconds ago
+        
+        # Update the file timestamps to be old
+        agent1_dir = self.agent_workspace / "Agent-1"
+        state_file = agent1_dir / "state.json"
+        state_file.touch(exist_ok=True)
+        os.utime(state_file, (old_time, old_time))
+        
+        # Set the activity timestamp to be old
+        monitor.last_activity["Agent-1"] = old_time
         
         # First tick should send rescue
         monitor._tick()

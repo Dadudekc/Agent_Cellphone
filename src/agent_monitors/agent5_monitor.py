@@ -73,6 +73,21 @@ class MonitorConfig:
     use_db_lane: bool = False
     workspace_map_path: str = "src/runtime/config/agent_workspace_map.json"
     test_mode: bool = False  # Enable test mode for testing
+    
+    def __post_init__(self):
+        """Apply environment variable overrides after initialization"""
+        # Environment variable overrides
+        if os.environ.get("AGENT_STALL_SEC"):
+            try:
+                self.stall_threshold_sec = int(os.environ["AGENT_STALL_SEC"])
+            except ValueError:
+                pass  # Keep default if invalid
+        
+        if os.environ.get("AGENT_CHECK_SEC"):
+            try:
+                self.check_every_sec = int(os.environ["AGENT_CHECK_SEC"])
+            except ValueError:
+                pass  # Keep default if invalid
 
 class Agent5Monitor:
     """Production monitor for Agent-5 to track agent responses and send rescues"""
