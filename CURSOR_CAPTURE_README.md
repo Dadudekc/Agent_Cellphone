@@ -3,6 +3,7 @@
 ## Overview
 
 The **Cursor AI Response Capture System** provides **bi-directional communication** between the Agent_Cellphone system and AI assistants using Cursor. It automatically captures AI responses from Cursor's local database and integrates them into the FSM workflow.
+> **Note:** This system relies on the Cursor editor and has only been tested with Cursor. An active paid Cursor membership is required for use.
 
 ## 🎯 **What This Solves**
 
