@@ -62,7 +62,20 @@ This will create a virtual environment, install dependencies, and copy `env.exam
 ./setup.sh
 ```
 
-3. **Launch the system (autonomous 5‑agent mode with AI capture):**
+3. **Configure environment variables (Discord):**
+
+   Set the following variables to enable Discord logging and command routing:
+
+   ```bash
+   export DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
+   export DISCORD_CHANNEL_ID="123456789012345678"
+   ```
+
+   The helper at `src/services/discord_webhook.py` posts embeds to the webhook,
+   and `src/core/discord_router.py` maps slash commands like `/plan` or
+   `/deploy` to orchestrator modes.
+
+4. **Launch the system (autonomous 5‑agent mode with AI capture):**
 ```powershell
 $env:ACP_DEFAULT_NEW_CHAT=1; $env:ACP_AUTO_ONBOARD=1; $env:ACP_SINGLE_MESSAGE=1; `
   $env:ACP_MESSAGE_VERBOSITY=extensive; $env:ACP_NEW_CHAT_INTERVAL_SEC=1800
