@@ -4,8 +4,9 @@
 **Version:** 1.0.0 - "CURSOR BRIDGE"  
 **Status:** 🚀 **BREAKTHROUGH ACHIEVED - BI-DIRECTIONAL AI COMMUNICATION UNLOCKED!** 🚀  
 **Current Task List:** see [TASK_LIST.md](./TASK_LIST.md)  
-**🚀 BREAKTHROUGH v1.0.0:** see [BREAKTHROUGH_v1.0.0_CURSOR_BRIDGE.md](./BREAKTHROUGH_v1.0.0_CURSOR_BRIDGE.md)  
+**🚀 BREAKTHROUGH v1.0.0:** see [BREAKTHROUGH_v1.0.0_CURSOR_BRIDGE.md](./BREAKTHROUGH_v1.0.0_CURSOR_BRIDGE.md)
 **Purpose:** Enable fast, deterministic inter-agent messaging across Cursor instances via PyAutoGUI using pre-mapped input box coordinates, with a modern GUI interface for seamless agent management. **🚨 NEW: Full bi-directional AI communication unlocked!**
+**Prerequisite:** This system is built around the Cursor editor. It has only been tested with Cursor and requires an active paid Cursor membership for use.
 
 ## 🎯 Overview
 
