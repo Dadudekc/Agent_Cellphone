@@ -17,3 +17,104 @@ import datetime
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from Utilities.utils import MLRobotUtils
+
+class TestMLRobotUtils:
+    """Test cases for MLRobotUtils class"""
+    
+    def setup_method(self):
+        """Set up test fixtures"""
+        self.utils = MLRobotUtils(is_debug_mode=True)
+    
+    def test_init(self):
+        """Test MLRobotUtils initialization"""
+        utils = MLRobotUtils()
+        assert utils.is_debug_mode == False
+        
+        utils_debug = MLRobotUtils(is_debug_mode=True)
+        assert utils_debug.is_debug_mode == True
+    
+    def test_get_model_types(self):
+        """Test get_model_types method"""
+        model_types = self.utils.get_model_types()
+        expected_types = ['linear_regression', 'random_forest', 'lstm', 'neural_network', 'arima']
+        
+        assert isinstance(model_types, list)
+        assert len(model_types) == 5
+        assert model_types == expected_types
+    
+    def test_log_message_debug_mode(self):
+        """Test log_message in debug mode"""
+        with patch('builtins.print') as mock_print:
+            self.utils.log_message("Test message")
+            mock_print.assert_called_once_with("Test message")
+    
+    def test_log_message_non_debug_mode(self):
+        """Test log_message in non-debug mode"""
+        utils = MLRobotUtils(is_debug_mode=False)
+        with patch('builtins.print') as mock_print:
+            utils.log_message("Test message")
+            mock_print.assert_not_called()
+    
+    def test_auto_generate_save_path_valid_csv(self):
+        """Test auto_generate_save_path with valid CSV file"""
+        input_path = "test_data.csv"
+        base_dir = "/tmp"
+        
+        result = self.utils.auto_generate_save_path(input_path, base_dir)
+        
+        assert result.startswith("/tmp/test_data_processed_")
+        assert result.endswith(".csv")
+        assert "test_data_processed_" in result
+    
+    def test_auto_generate_save_path_invalid_file(self):
+        """Test auto_generate_save_path with non-CSV file"""
+        input_path = "test_data.txt"
+        base_dir = "/tmp"
+        
+        with pytest.raises(ValueError, match="Input file is not a CSV file"):
+            self.utils.auto_generate_save_path(input_path, base_dir)
+    
+    def test_generate_save_path(self):
+        """Test generate_save_path method"""
+        file_path = "/path/to/test.csv"
+        config = {'SAVE_PATH_SECTION': {'save_path_dir': '/custom/dir'}}
+        
+        result = self.utils.generate_save_path(file_path, config)
+        
+        assert result == "/custom/dir/test_processed.csv"
+    
+    def test_generate_save_path_no_config(self):
+        """Test generate_save_path without custom config"""
+        file_path = "/path/to/test.csv"
+        config = {}
+        
+        result = self.utils.generate_save_path(file_path, config)
+        
+        assert result == "/path/to/test_processed.csv"
+    
+    def test_browse_directory(self):
+        """Test browse_directory method"""
+        mock_entry = Mock()
+        mock_entry.delete = Mock()
+        mock_entry.insert = Mock()
+        
+        with patch('tkinter.filedialog.askdirectory', return_value="/test/dir"):
+            self.utils.browse_directory(mock_entry)
+            
+            mock_entry.delete.assert_called_once_with(0, tk.END)
+            mock_entry.insert.assert_called_once_with(0, "/test/dir")
+    
+    def test_browse_data_file(self):
+        """Test browse_data_file method"""
+        mock_entry = Mock()
+        mock_entry.delete = Mock()
+        mock_entry.insert = Mock()
+        
+        with patch('tkinter.filedialog.askopenfilename', return_value="/test/file.csv"):
+            self.utils.browse_data_file(mock_entry)
+            
+            mock_entry.delete.assert_called_once_with(0, tk.END)
+            mock_entry.insert.assert_called_once_with(0, "/test/file.csv")
+
+if __name__ == "__main__":
+    pytest.main([__file__])
