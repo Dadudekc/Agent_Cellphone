@@ -1,0 +1,54 @@
+{
+  "5-agent": {
+    "Agent-1": {
+      "input_box": {
+        "x": 1829,
+        "y": 364
+      },
+      "starter_location_box": {
+        "x": 1829,
+        "y": 364
+      }
+    },
+    "Agent-2": {
+      "input_box": {
+        "x": 1828,
+        "y": 394
+      },
+      "starter_location_box": {
+        "x": 1828,
+        "y": 394
+      }
+    },
+    "Agent-3": {
+      "input_box": {
+        "x": 1825,
+        "y": 399
+      },
+      "starter_location_box": {
+        "x": 1825,
+        "y": 399
+      }
+    },
+    "Agent-4": {
+      "input_box": {
+        "x": 1019,
+        "y": 568
+      },
+      "starter_location_box": {
+        "x": 1019,
+        "y": 568
+      }
+    },
+    "Agent-5": {
+      "input_box": {
+        "x": -82,
+        "y": 700
+      },
+      "starter_location_box": {
+        "x": -82,
+        "y": 700
+      }
+    }
+  }
+}

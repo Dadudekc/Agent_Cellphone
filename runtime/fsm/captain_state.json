@@ -1,0 +1,76 @@
+{
+  "timestamp": 1755307488.2928758,
+  "tasks": [
+    {
+      "id": "task-001",
+      "title": "Coordinate Agent Progress",
+      "description": "Monitor and coordinate all agent progress across repositories",
+      "priority": "high",
+      "status": "in_progress",
+      "assigned_agent": null,
+      "created_at": 1755307477.643198,
+      "completed_at": null
+    },
+    {
+      "id": "task-002",
+      "title": "Resolve Blockers",
+      "description": "Identify and resolve blockers preventing agent progress",
+      "priority": "high",
+      "status": "in_progress",
+      "assigned_agent": null,
+      "created_at": 1755307477.643198,
+      "completed_at": null
+    },
+    {
+      "id": "task-003",
+      "title": "Update TASK_LIST.md",
+      "description": "Update repository TASK_LIST.md entries across active repos",
+      "priority": "medium",
+      "status": "completed",
+      "assigned_agent": null,
+      "created_at": 1755307477.643198,
+      "completed_at": 1755307488.2918751
+    },
+    {
+      "id": "task-004",
+      "title": "FSM Contract Alignment",
+      "description": "Draft and align FSM contracts per agent (states, transitions)",
+      "priority": "medium",
+      "status": "pending",
+      "assigned_agent": null,
+      "created_at": 1755307477.643198,
+      "completed_at": null
+    },
+    {
+      "id": "task-005",
+      "title": "Next Verification Planning",
+      "description": "Plan and execute next verification steps for all agents",
+      "priority": "high",
+      "status": "pending",
+      "assigned_agent": null,
+      "created_at": 1755307477.643198,
+      "completed_at": null
+    },
+    {
+      "id": "blocker-Agent-1-1755307488",
+      "title": "Resolve Blockers for Agent-1",
+      "description": "Address blockers: missing tests: tests/",
+      "priority": "high",
+      "status": "pending",
+      "assigned_agent": "Agent-1",
+      "created_at": 1755307488.2808645,
+      "completed_at": null
+    },
+    {
+      "id": "blocker-Agent-4-1755307488",
+      "title": "Resolve Blockers for Agent-4",
+      "description": "Address blockers: missing tests: tests/",
+      "priority": "high",
+      "status": "pending",
+      "assigned_agent": "Agent-4",
+      "created_at": 1755307488.2808645,
+      "completed_at": null
+    }
+  ],
+  "captain_status": "active"
+}

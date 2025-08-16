@@ -6,13 +6,19 @@ Provides intelligent, context-aware state management for agent coordination.
 
 from .repository_activity_monitor import RepositoryActivityMonitor, RepositoryContext
 from .enhanced_fsm import EnhancedFSM, AgentState
+from .autonomous_captain import AutonomousCaptain, CaptainTask
+from .autonomous_standardization import AutonomousStandardization, StandardizationTask
 
-__version__ = "1.0.0"
-__author__ = "Enhanced FSM System"
+__version__ = "2.1.0"
+__author__ = "Enhanced FSM System with Autonomous CAPTAIN + Standardization"
 
 __all__ = [
     "RepositoryActivityMonitor",
     "RepositoryContext", 
     "EnhancedFSM",
-    "AgentState"
+    "AgentState",
+    "AutonomousCaptain",
+    "CaptainTask",
+    "AutonomousStandardization",
+    "StandardizationTask"
 ]

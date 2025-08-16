@@ -1,0 +1,13 @@
+{
+  "type": "agent_response",
+  "from": "Agent-1",
+  "to": "Agent-5",
+  "timestamp": "2025-08-15T18:49:44",
+  "agent": "Agent-1",
+  "ts": 1755301784,
+  "payload": {
+    "type": "agent_freeform",
+    "summary": "Friday, August 15, 2025 6:49:44 PM",
+    "raw": "Friday, August 15, 2025 6:49:44 PM"
+  }
+}

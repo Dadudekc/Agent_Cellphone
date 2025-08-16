@@ -1,6 +1,0 @@
-{
-  "task_id": "task-001",
-  "repo": "unified-workspace",
-  "intent": "add unit tests for APIClient retry/backoff",
-  "state": "new"
-}

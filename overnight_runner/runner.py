@@ -19,6 +19,7 @@ sys.path.insert(0, str(_THIS.parents[1]))
 sys.path.insert(0, str(_THIS.parents[1] / 'src'))
 
 from src.services.agent_cell_phone import AgentCellPhone, MsgTag  # type: ignore
+from src.core.fsm_orchestrator import FSMOrchestrator  # type: ignore
 
 
 @dataclass
@@ -98,12 +99,27 @@ def build_message_plan(plan: str) -> List[PlannedMessage]:
                 "(README, code, docs). Follow AGENT_PRD_PROTOCOL.md - no boilerplate!"),
             PlannedMessage(MsgTag.COORDINATE,
                 "{agent} coordinate: declare which repos you're analyzing to avoid duplication. "
-                "Share insights on project types found."),
+                "Post your PRD.md to Agent-5 inbox for FSM processing."),
             PlannedMessage(MsgTag.SYNC,
-                "{agent} 10-min sync: PRD progress, insights on project complexity, next repo to tackle."),
+                "{agent} 10-min sync: status vs PRD creation, next milestone, risks."),
             PlannedMessage(MsgTag.VERIFY,
-                "{agent} verify: commit PRD.md with evidence of manual inspection. "
-                "Show it's not a template - it reflects real project understanding."),
+                "{agent} verify PRD acceptance criteria. Attach evidence and summary to Agent-5 inbox."),
+        ]
+    if plan == "fsm-driven":
+        return [
+            PlannedMessage(MsgTag.RESUME,
+                "{agent} resume: check FSM inbox for assigned tasks. "
+                "Review current task state and evidence requirements."),
+            PlannedMessage(MsgTag.TASK,
+                "{agent} execute one verifiable step on assigned FSM task. "
+                "Commit with tests/build evidence; send fsm_update to Agent-5."),
+            PlannedMessage(MsgTag.COORDINATE,
+                "{agent} coordinate: declare current task_id and state to avoid duplication. "
+                "Post progress updates to Agent-5 inbox for FSM processing."),
+            PlannedMessage(MsgTag.SYNC,
+                "{agent} 10-min FSM sync: task state, evidence collected, next verifiable action."),
+            PlannedMessage(MsgTag.VERIFY,
+                "{agent} verify task completion criteria. Send final fsm_update with evidence to Agent-5."),
         ]
     return build_message_plan("resume-task-sync")
 
@@ -118,7 +134,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--interval-sec", type=int, default=600, help="seconds between cycles (default 600=10m)")
     p.add_argument("--duration-min", type=int, help="total minutes to run; alternative to --iterations")
     p.add_argument("--iterations", type=int, help="number of cycles to run; overrides duration if provided")
-    p.add_argument("--plan", choices=["resume-only", "resume-task-sync", "aggressive", "autonomous-dev", "contracts", "single-repo-beta", "prd-milestones", "prd-creation"], default="autonomous-dev", help="message plan to rotate through")
+    p.add_argument("--plan", choices=["resume-only", "resume-task-sync", "aggressive", "autonomous-dev", "contracts", "single-repo-beta", "prd-milestones", "prd-creation", "fsm-driven"], default="autonomous-dev", help="message plan to rotate through")
     p.add_argument("--test", action="store_true", help="dry-run; do not move mouse/keyboard")
     p.add_argument("--stagger-ms", type=int, default=2000, help="delay between sends per agent within a cycle (ms)")
     p.add_argument("--jitter-ms", type=int, default=500, help="random +/- jitter added to stagger (ms)")
@@ -472,6 +488,41 @@ def main() -> int:
             print(f"Warning: Failed to initialize cursor DB capture: {e}")
             print("Ensure cursor_capture module is available")
     
+    # Initialize FSM Orchestrator if FSM is enabled
+    fsm_orchestrator = None
+    if args.fsm_enabled:
+        try:
+            # Configure FSM orchestrator paths
+            fsm_root = Path("fsm_data")
+            inbox_root = Path("runtime/fsm_bridge/outbox")
+            outbox_root = Path("communications/overnight_YYYYMMDD_/Agent-5/verifications")
+            
+            # Create outbox directory with current date
+            current_date = _dt.datetime.now().strftime("%Y%m%d")
+            outbox_root = outbox_root.parent / f"overnight_{current_date}_/Agent-5/verifications"
+            
+            fsm_orchestrator = FSMOrchestrator(
+                fsm_root=fsm_root,
+                inbox_root=inbox_root,
+                outbox_root=outbox_root
+            )
+            
+            # Start FSM orchestrator monitoring in background thread
+            import threading
+            fsm_thread = threading.Thread(
+                target=fsm_orchestrator.monitor_inbox,
+                kwargs={"poll_interval": 5},
+                daemon=True
+            )
+            fsm_thread.start()
+            print(f"FSM Orchestrator enabled - monitoring {inbox_root} for updates")
+            print(f"Verifications will be written to {outbox_root}")
+            
+        except Exception as e:
+            print(f"Warning: Failed to initialize FSM Orchestrator: {e}")
+            print("Ensure FSM orchestrator module is available")
+            fsm_orchestrator = None
+
     # (removed) duplicate kickoff/cycle targeting block — computed earlier
 
     plan = build_message_plan(args.plan)
@@ -823,6 +874,17 @@ def main() -> int:
             while remaining > 0 and not stop_flag["stop"]:
                 time.sleep(min(1.0, remaining))
                 remaining -= 1
+        
+        # Report FSM status if orchestrator is enabled
+        if fsm_orchestrator and fsm_orchestrator.is_monitoring():
+            try:
+                status = fsm_orchestrator.get_status_summary()
+                print(f"\n[FSM Status] Tasks: {status['total_tasks']} total, "
+                      f"{status['completed_tasks']} completed, "
+                      f"{status['in_progress_tasks']} in progress, "
+                      f"{status['processed_updates']} updates processed")
+            except Exception as e:
+                print(f"[FSM Status] Error getting status: {e}")
 
     # Cleanup response capture if enabled
     if args.capture_enabled and acp.is_capture_enabled():
@@ -836,6 +898,14 @@ def main() -> int:
             db_watcher.stop()
         except Exception as e:
             print(f"Error stopping cursor DB watcher: {e}")
+
+    # Cleanup FSM Orchestrator if enabled
+    if fsm_orchestrator:
+        print("Stopping FSM Orchestrator...")
+        try:
+            fsm_orchestrator.stop_monitoring()
+        except Exception as e:
+            print(f"Error stopping FSM Orchestrator: {e}")
 
     print("\nOvernight Runner finished")
     try:
