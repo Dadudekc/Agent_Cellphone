@@ -93,7 +93,7 @@ class AgentMessage:
 
 # ──────────────────────────── core class
 class AgentCellPhone:
-    """Deterministic messenger for Cursor agents with inter-agent communication."""
+    """Deterministic messenger for Cursor agents with inter-agent communication and PyAutoGUI queue integration."""
 
     # public API ─────────────────────────
     def __init__(self, agent_id: str = "Agent-1", layout_mode: str = "2-agent", test: bool = False) -> None:
@@ -133,6 +133,12 @@ class AgentCellPhone:
         self._listening = False
         self._listener_thread: Optional[threading.Thread] = None
         
+        # PyAutoGUI Queue Integration
+        self._pyautogui_queue = None
+        self._queue_enabled = os.environ.get("ACP_QUEUE_ENABLED", "1").strip() not in ("0", "", "false", "False")
+        self._queue_priority = int(os.environ.get("ACP_QUEUE_PRIORITY", "1") or 1)
+        self._queue_timeout = float(os.environ.get("ACP_QUEUE_TIMEOUT", "30.0") or 30.0)
+        
         # Response capture system
         self._response_capture: Optional[ResponseCapture] = None
         if ResponseCapture and yaml and CAPTURE_CONFIG_FILE.exists():
@@ -163,25 +169,53 @@ class AgentCellPhone:
             log.info("Available modes: %s", list(self._all_coords.keys()))
             sys.exit(1)
             
-        log.debug("AgentCellPhone ready for %s (test=%s, layout=%s)", self._agent_id, test, layout_mode)
+        log.debug("AgentCellPhone ready for %s (test=%s, layout=%s, queue=%s)", 
+                 self._agent_id, test, layout_mode, self._queue_enabled)
 
-    def send(self, agent: str, message: str, tag: MsgTag = MsgTag.NORMAL, new_chat: bool = False, nudge_stalled: bool = False) -> None:
-        """Send a single line to a specific agent.
+    def set_pyautogui_queue(self, queue_instance) -> None:
+        """Set the PyAutoGUI queue instance for coordinated messaging."""
+        self._pyautogui_queue = queue_instance
+        log.info("PyAutoGUI queue integration enabled for %s", self._agent_id)
+
+    def send(self, agent: str, message: str, tag: MsgTag = MsgTag.NORMAL, new_chat: bool = False, nudge_stalled: bool = False, use_queue: bool = None) -> None:
+        """Send a single line to a specific agent with optional PyAutoGUI queue integration.
 
         When new_chat is True, the cursor focuses a stable location and triggers Ctrl+T
         to open a new chat before sending to the input box.
         
         When nudge_stalled is True, attempts to nudge the agent with Shift+Backspace
         before sending the message to wake up stalled terminals.
+        
+        When use_queue is True (or queue is enabled globally), messages are sent through
+        the PyAutoGUI queue system to prevent conflicts.
         """
         agent = self._fmt_id(agent)
         if agent not in self._coords:
             log.error("Agent %s not found in %s mode", agent, self._layout_mode)
             return
         
+        # Determine if we should use the queue
+        should_use_queue = use_queue if use_queue is not None else self._queue_enabled
+        
         # Create message object
         msg = AgentMessage(self._agent_id, agent, message, tag)
         self._conversation_history.append(msg)
+        
+        # If queue is enabled and available, use it
+        if should_use_queue and self._pyautogui_queue:
+            log.info("→ %s QUEUED MESSAGE: %s", agent, message[:80])
+            if self._pyautogui_queue.queue_message(agent, message, self._queue_priority):
+                log.info("→ %s Message queued successfully", agent)
+                return
+            else:
+                log.warning("→ %s Queue failed, falling back to direct send", agent)
+        
+        # Fallback to direct sending (original behavior)
+        self._send_direct(agent, message, tag, new_chat, nudge_stalled)
+
+    def _send_direct(self, agent: str, message: str, tag: MsgTag = MsgTag.NORMAL, new_chat: bool = False, nudge_stalled: bool = False) -> None:
+        """Direct send implementation (original behavior)."""
+        agent = self._fmt_id(agent)
         
         # Determine target locations
         starter_loc = self._coords[agent].get("starter_location_box") or self._coords[agent].get("input_box")
@@ -322,6 +356,94 @@ class AgentCellPhone:
     def get_agent_id(self) -> str:
         """Get the current agent ID."""
         return self._agent_id
+
+    def send_queued(self, agent: str, message: str, tag: MsgTag = MsgTag.NORMAL, priority: int = None, timeout: float = None) -> bool:
+        """Send a message through the PyAutoGUI queue system.
+        
+        Args:
+            agent: Target agent
+            message: Message content
+            tag: Message tag
+            priority: Queue priority (lower = higher priority)
+            timeout: Maximum wait time for queue processing
+            
+        Returns:
+            True if message was queued successfully, False otherwise
+        """
+        if not self._pyautogui_queue:
+            log.warning("PyAutoGUI queue not available, falling back to direct send")
+            self.send(agent, message, tag)
+            return False
+        
+        priority = priority if priority is not None else self._queue_priority
+        timeout = timeout if timeout is not None else self._queue_timeout
+        
+        try:
+            # Add message to queue
+            if self._pyautogui_queue.queue_message(agent, message, priority):
+                log.info("→ %s Message queued with priority %d: %s", agent, priority, message[:80])
+                return True
+            else:
+                log.error("→ %s Failed to queue message", agent)
+                return False
+        except Exception as e:
+            log.error("→ %s Queue error: %s", agent, e)
+            return False
+
+    def get_queue_status(self) -> Dict[str, any]:
+        """Get the current PyAutoGUI queue status."""
+        if self._pyautogui_queue:
+            return self._pyautogui_queue.get_queue_status()
+        else:
+            return {
+                "queue_size": 0,
+                "processing": False,
+                "agent_locks": {},
+                "queue_available": False
+            }
+
+    def wait_for_queue_clear(self, timeout: float = None) -> bool:
+        """Wait for the PyAutoGUI queue to clear.
+        
+        Args:
+            timeout: Maximum wait time in seconds
+            
+        Returns:
+            True if queue cleared within timeout, False otherwise
+        """
+        if not self._pyautogui_queue:
+            return True  # No queue to wait for
+        
+        timeout = timeout if timeout is not None else self._queue_timeout
+        start_time = time.time()
+        
+        while time.time() - start_time < timeout:
+            status = self._pyautogui_queue.get_queue_status()
+            if status["queue_size"] == 0:
+                log.info("Queue cleared successfully")
+                return True
+            time.sleep(0.1)
+        
+        log.warning("Queue clear timeout after %.1f seconds", timeout)
+        return False
+
+    def clear_queue(self) -> bool:
+        """Clear the PyAutoGUI message queue.
+        
+        Returns:
+            True if queue was cleared, False otherwise
+        """
+        if not self._pyautogui_queue:
+            return False
+        
+        try:
+            # This would need to be implemented in the PyAutoGUIQueue class
+            # For now, we'll just log the request
+            log.info("Queue clear requested (not yet implemented)")
+            return False
+        except Exception as e:
+            log.error("Queue clear error: %s", e)
+            return False
 
     # private helpers ────────────────────
     def _listen_loop(self) -> None:
