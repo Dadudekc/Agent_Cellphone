@@ -10,21 +10,16 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 
 from services.agent_cell_phone import AgentCellPhone
 
-def test_special_chars():
-    """Test broadcasting messages with special characters"""
-    print("🧪 Testing broadcast with special characters")
-    
-    # Initialize agent cell phone in test mode
-    acp = AgentCellPhone(layout_mode="8-agent", test=True)
-    
-    # Test message with numbers
-    message = "[VERIFY] Coordinate test 3: Numbers 1234567890"
-    print(f"Broadcasting: {message}")
-    
-    # Send broadcast
-    acp.broadcast(message)
-    
-    print("✅ Broadcast completed in test mode")
 
-if __name__ == "__main__":
-    test_special_chars()
+def test_special_chars() -> None:
+    """Ensure broadcasting handles special characters without error."""
+    acp = AgentCellPhone(layout_mode="8-agent", test=True)
+    message = "[VERIFY] Coordinate test 3: Numbers 1234567890"
+
+    acp.broadcast(message)
+
+    recipients = [agent for agent in acp._coords if agent != acp._agent_id]
+    history = list(acp._conversation_history)
+
+    assert len(history) == len(recipients)
+    assert all(msg.content == message for msg in history)
