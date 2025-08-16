@@ -1,13 +1,13 @@
-import pathlib
-import sys
-import types
+#!/usr/bin/env python3
+"""
+Test overnight runner guard functions.
+"""
 
-# Stub yaml module to satisfy dependency if PyYAML is missing
-yaml_stub = types.ModuleType("yaml")
-yaml_stub.safe_load = lambda *args, **kwargs: {}
-sys.modules.setdefault("yaml", yaml_stub)
+import pytest
+from unittest.mock import patch, MagicMock
+from datetime import datetime
 
-from orchestrators.overnight_runner import run_guard, advance_state, process_task, Task
+from src.orchestrators.overnight_runner import run_guard, advance_state, process_task, Task
 
 
 def test_run_guard_truncates_output(tmp_path: pathlib.Path) -> None:

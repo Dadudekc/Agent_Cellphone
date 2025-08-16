@@ -1,7 +1,7 @@
 import json
 from unittest.mock import patch
 
-from orchestrators.lifecycle_orchestrator import LifecycleOrchestrator
+from src.orchestrators.lifecycle_orchestrator import LifecycleOrchestrator
 from agent_cell_phone import AgentCellPhone
 
 
