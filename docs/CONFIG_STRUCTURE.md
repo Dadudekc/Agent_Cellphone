@@ -14,6 +14,7 @@ src/runtime/config/
 
 **Files:**
 - `cursor_agent_coords.json` - Agent coordinate mappings for different GUI layouts (2-agent, 4-agent, 8-agent)
+- `modes_runtime.json` - Autonomous mode pipeline and autopolicy configuration
 - `templates/agent_modes.json` - Agent mode templates and configurations
 
 ### Templates
