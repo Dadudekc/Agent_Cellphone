@@ -1,0 +1,21 @@
+{
+  "id": "2a683c8b-c0d3-4c14-84f0-aa54415e605f",
+  "title": "Develop Collaborative Decision-Making Algorithms",
+  "description": "Develop collaborative decision-making algorithms using all agents' expertise.\n            \n            INSTRUCTIONS FOR ALL AGENTS:\n            - Agent-1: Lead the coordination and strategic planning\n            - Agent-2: Manage task breakdown and resource allocation\n            - Agent-3: Handle data analysis and technical implementation\n            - Agent-4: Ensure communication protocols and security\n            - Agent-5: Coordinate overall process and verification\n            \n            These are NEW collaborative opportunities.\n            Work together to tackle these tasks and combine your expertise to create innovative solutions.\n            ALL agents must work together on this task.\n            NEVER STOP collaborating and improving!\n            \n            COLLABORATION PROCESS: Keep the collaborative momentum going!",
+  "task_type": "CollaborativeTaskType.DECISION_MAKING",
+  "state": "CollaborativeTaskState.EXECUTION",
+  "created_at": "2025-08-16T14:36:38.164570",
+  "updated_at": "2025-08-16T14:36:38.205607",
+  "assigned_agents": [
+    "Agent-1",
+    "Agent-2",
+    "Agent-3",
+    "Agent-4",
+    "Agent-5"
+  ],
+  "dependencies": [],
+  "evidence": [],
+  "metadata": {},
+  "collaboration_rounds": 1,
+  "current_round": 2
+}

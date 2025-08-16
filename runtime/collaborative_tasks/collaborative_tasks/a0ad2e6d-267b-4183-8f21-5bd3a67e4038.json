@@ -1,0 +1,21 @@
+{
+  "id": "a0ad2e6d-267b-4183-8f21-5bd3a67e4038",
+  "title": "Analyze and Optimize Agent Coordination System",
+  "description": "Analyze and optimize the entire agent coordination system.\n            \n            INSTRUCTIONS FOR ALL AGENTS:\n            - Agent-1: Lead the coordination and strategic planning\n            - Agent-2: Manage task breakdown and resource allocation\n            - Agent-3: Handle data analysis and technical implementation\n            - Agent-4: Ensure communication protocols and security\n            - Agent-5: Coordinate overall process and verification\n            \n            These are NEW collaborative opportunities.\n            Work together to tackle these tasks and combine your expertise to create innovative solutions.\n            ALL agents must work together on this task.\n            NEVER STOP collaborating and improving!\n            \n            COLLABORATION PROCESS: Keep the collaborative momentum going!",
+  "task_type": "CollaborativeTaskType.DECISION_MAKING",
+  "state": "CollaborativeTaskState.NEW",
+  "created_at": "2025-08-16T14:36:38.173578",
+  "updated_at": "2025-08-16T14:36:38.173578",
+  "assigned_agents": [
+    "Agent-1",
+    "Agent-2",
+    "Agent-3",
+    "Agent-4",
+    "Agent-5"
+  ],
+  "dependencies": [],
+  "evidence": [],
+  "metadata": {},
+  "collaboration_rounds": 0,
+  "current_round": 1
+}
