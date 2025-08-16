@@ -10,6 +10,7 @@
       "tasklist_autogen"
     ]
   },
+  "stages": ["init", "main"],
   "modes": {
     "ideation_to_prd": {
       "description": "Convert an initial product idea into a detailed product requirements document.",
@@ -20,6 +21,14 @@
       "description": "Generate a development task list from a PRD.",
       "prompt_template": "[TASKLIST] {agent_id} derive actionable tasks from PRD.",
       "next": null
+    },
+    "test": {
+      "init": {"agent": "Agent-1", "budget": 1, "gate": "pass"},
+      "main": {"agent": "Agent-2", "budget": 2, "gate": "pass"}
+    },
+    "gated": {
+      "init": {"agent": "Agent-1", "budget": 1, "gate": "fail"},
+      "main": {"agent": "Agent-2", "budget": 2, "gate": "pass"}
     }
   }
 }
