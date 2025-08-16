@@ -1,5 +1,5 @@
 {
-  "timestamp": 1755308009.722722,
+  "timestamp": 1755308806.7700284,
   "tasks": [
     {
       "id": "tasklist-NewSims4ModProject-TASK_LIST",
@@ -80,10 +80,10 @@
       "current_format": "unknown",
       "target_format": "standard",
       "priority": "high",
-      "status": "pending",
+      "status": "instruction_sent",
       "assigned_agent": null,
       "created_at": 1755308009.5215387,
-      "completed_at": null
+      "completed_at": 1755308806.7660255
     },
     {
       "id": "readme-HCshinobi-README",
@@ -104,10 +104,10 @@
       "current_format": "unknown",
       "target_format": "standard",
       "priority": "high",
-      "status": "pending",
+      "status": "instruction_sent",
       "assigned_agent": null,
       "created_at": 1755308009.5215387,
-      "completed_at": null
+      "completed_at": 1755308806.767026
     },
     {
       "id": "tasklist-LSTMmodel_trainer-TASK_LIST",
@@ -116,10 +116,10 @@
       "current_format": "unknown",
       "target_format": "standard",
       "priority": "high",
-      "status": "pending",
+      "status": "instruction_sent",
       "assigned_agent": null,
       "created_at": 1755308009.5215387,
-      "completed_at": null
+      "completed_at": 1755308806.7680266
     },
     {
       "id": "readme-LSTMmodel_trainer-README",

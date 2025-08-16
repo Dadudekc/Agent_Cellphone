@@ -9,8 +9,8 @@ from .enhanced_fsm import EnhancedFSM, AgentState
 from .autonomous_captain import AutonomousCaptain, CaptainTask
 from .autonomous_standardization import AutonomousStandardization, StandardizationTask
 
-__version__ = "2.1.0"
-__author__ = "Enhanced FSM System with Autonomous CAPTAIN + Standardization"
+__version__ = "2.2.0"
+__author__ = "Enhanced FSM System with Autonomous CAPTAIN + Agent Instruction"
 
 __all__ = [
     "RepositoryActivityMonitor",

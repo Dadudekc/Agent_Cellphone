@@ -34,7 +34,7 @@ class StandardizationTask:
             self.created_at = time.time()
 
 class AutonomousStandardization:
-    """Autonomous system for standardizing repository files"""
+    """Autonomous system for guiding agents to create standardized repository documents"""
     
     def __init__(self, repos_root: str = "D:/repos/Dadudekc"):
         self.repos_root = Path(repos_root)
@@ -447,14 +447,14 @@ project/
         }
     
     def create_standardization_plan(self) -> str:
-        """Create a comprehensive standardization plan"""
+        """Create a comprehensive agent instruction plan"""
         plan = f"""
-🎯 AUTONOMOUS STANDARDIZATION PLAN
-==================================
+🎯 AUTONOMOUS AGENT INSTRUCTION PLAN
+====================================
 Generated: {time.strftime('%Y-%m-%d %H:%M:%S')}
 
 📊 OVERVIEW:
-- Total Files to Standardize: {len(self.standardization_tasks)}
+- Total Documents Needing Creation: {len(self.standardization_tasks)}
 - High Priority: {len([t for t in self.standardization_tasks if t.priority == 'high'])}
 - Medium Priority: {len([t for t in self.standardization_tasks if t.priority == 'medium'])}
 
@@ -465,26 +465,26 @@ Generated: {time.strftime('%Y-%m-%d %H:%M:%S')}
         high_priority = [t for t in self.standardization_tasks if t.priority == 'high']
         medium_priority = [t for t in self.standardization_tasks if t.priority == 'medium']
         
-        plan += "\n🚨 HIGH PRIORITY (Standardize First):\n"
+        plan += "\n🚨 HIGH PRIORITY (Instruct Agents First):\n"
         for task in high_priority[:5]:  # Top 5
-            plan += f"- {task.repo_name}: {task.file_type} standardization\n"
+            plan += f"- {task.repo_name}: {task.file_type} creation instruction\n"
         
         plan += "\n⚠️ MEDIUM PRIORITY:\n"
         for task in medium_priority[:5]:  # Top 5
-            plan += f"- {task.repo_name}: {task.file_type} standardization\n"
+            plan += f"- {task.repo_name}: {task.file_type} creation instruction\n"
         
         plan += """
 🤖 EXECUTION STRATEGY:
-1. CAPTAIN Agent-5 monitors compliance
-2. SWARM executes standardization tasks
-3. Automated formatting ensures consistency
-4. Real-time monitoring catches deviations
+1. CAPTAIN Agent-5 monitors documentation needs
+2. System generates detailed agent instructions
+3. Agents manually create documents using templates
+4. Real-time monitoring tracks document quality
 
 📋 NEXT STEPS:
 1. Run compliance analysis on all repositories
-2. Execute high-priority standardization tasks
-3. Monitor and maintain standards
-4. Update standardization rules as needed
+2. Generate agent instructions for missing documents
+3. Guide agents through manual document creation
+4. Monitor document quality and consistency
 """
         
         return plan
@@ -497,65 +497,94 @@ Generated: {time.strftime('%Y-%m-%d %H:%M:%S')}
         high_priority = [t for t in self.standardization_tasks if t.priority == 'high' and t.status == 'pending']
         
         for task in high_priority[:max_tasks]:
-            print(f"🎯 Standardizing: {task.repo_name} - {task.file_type}")
+            print(f"🎯 Instructing agent for: {task.repo_name} - {task.file_type}")
             
-            # Execute standardization
-            success = self._standardize_file(task)
+            # Generate agent instruction instead of automated creation
+            instruction = self._generate_agent_instruction(task)
+            print(f"📋 Instruction: {instruction}")
             
-            if success:
-                task.status = "completed"
-                task.completed_at = time.time()
-                print(f"✅ Standardized: {task.repo_name} - {task.file_type}")
-            else:
-                task.status = "failed"
-                print(f"❌ Failed to standardize: {task.repo_name} - {task.file_type}")
+            # Mark as instruction sent
+            task.status = "instruction_sent"
+            task.completed_at = time.time()
+            print(f"✅ Instruction sent for: {task.repo_name} - {task.file_type}")
         
         # Save state
         self._save_state()
     
-    def _standardize_file(self, task: StandardizationTask) -> bool:
-        """Standardize a specific file"""
-        try:
-            repo_path = self.repos_root / task.repo_name
-            if not repo_path.exists():
-                return False
+    def _generate_agent_instruction(self, task: StandardizationTask) -> str:
+        """Generate instruction for agent to manually create document"""
+        if task.file_type == "PRD":
+            return f"""📋 AGENT INSTRUCTION for {task.repo_name}:
             
-            # Find the file to standardize
-            if task.file_type == "PRD":
-                files = list(repo_path.glob("*PRD*"))
-            elif task.file_type == "TASK_LIST":
-                files = list(repo_path.glob("*TASK_LIST*"))
-            elif task.file_type == "README":
-                files = list(repo_path.glob("README*"))
-            else:
-                return False
+1. 🔍 INSPECT THE REPOSITORY:
+   - Review all source code files
+   - Analyze existing documentation
+   - Understand the project's purpose and scope
+   - Identify key features and functionality
+
+2. 📝 CREATE PROJECT REQUIREMENTS DOCUMENT (PRD):
+   - Use the standard PRD template as a guide
+   - Fill in [PROJECT_NAME] with "{task.repo_name}"
+   - Add [DATE] with current date
+   - Customize objectives based on what you discover
+   - Document actual features found in the code
+   - Specify technical requirements based on codebase
+   - Set realistic timeline based on project complexity
+
+3. 🎯 FOCUS ON ACCURACY:
+   - Don't create generic content
+   - Base everything on actual repository analysis
+   - Ensure PRD reflects the real project state"""
+        
+        elif task.file_type == "TASK_LIST":
+            return f"""📋 AGENT INSTRUCTION for {task.repo_name}:
             
-            if not files:
-                return False
+1. 📖 REVIEW EXISTING DOCUMENTS:
+   - Read the PRD you created
+   - Review any existing roadmap
+   - Understand the project's current state
+
+2. 🗺️ CREATE ROADMAP (if not exists):
+   - Break down the project into phases
+   - Identify major milestones
+   - Set realistic timelines
+   - Consider dependencies between components
+
+3. ✅ CREATE TASK LIST:
+   - Use the standard TASK_LIST template as a guide
+   - Fill in [PROJECT_NAME] with "{task.repo_name}"
+   - Add [DATE] with current date
+   - Create specific, actionable tasks
+   - Assign realistic priorities
+   - Estimate effort for each task
+   - Link tasks to roadmap phases
+
+4. 🎯 FOCUS ON SPECIFICITY:
+   - Don't create generic "implement feature" tasks
+   - Break down into concrete, verifiable actions
+   - Base tasks on actual code analysis
+   - Ensure tasks align with PRD objectives"""
+        
+        else:  # README
+            return f"""📋 AGENT INSTRUCTION for {task.repo_name}:
             
-            file_path = files[0]  # Use first matching file
-            
-            # Get standard format
-            standard_format = self.standard_formats.get(task.file_type, "")
-            if not standard_format:
-                return False
-            
-            # Customize format for this repository
-            customized_format = self._customize_format(standard_format, task.repo_name)
-            
-            # Create backup
-            backup_path = file_path.with_suffix(file_path.suffix + ".backup")
-            file_path.rename(backup_path)
-            
-            # Write standardized content
-            with file_path.open("w", encoding="utf-8") as f:
-                f.write(customized_format)
-            
-            return True
-            
-        except Exception as e:
-            print(f"Error standardizing {task.repo_name} - {task.file_type}: {e}")
-            return False
+1. 🔍 ANALYZE THE PROJECT:
+   - Review the codebase structure
+   - Understand installation requirements
+   - Identify key usage patterns
+
+2. 📝 CREATE COMPREHENSIVE README:
+   - Use the standard README template as a guide
+   - Fill in [PROJECT_NAME] with "{task.repo_name}"
+   - Write actual project description based on code
+   - Document real installation steps
+   - Provide concrete usage examples
+   - Include actual project structure
+
+3. 🎯 FOCUS ON ACCURACY:
+   - Don't use placeholder text
+   - Base everything on actual repository content
+   - Ensure README matches the real project"""
     
     def _customize_format(self, format_template: str, repo_name: str) -> str:
         """Customize format template for specific repository"""
@@ -599,11 +628,11 @@ Generated: {time.strftime('%Y-%m-%d %H:%M:%S')}
     
     def run_standardization_cycle(self):
         """Run one standardization cycle"""
-        print("🤖 Autonomous Standardization Cycle")
+        print("🤖 Autonomous Agent Instruction Cycle")
         print("=" * 50)
         
         # Analyze all repositories
-        print("📊 Analyzing repository standards...")
+        print("📊 Analyzing repository documentation needs...")
         all_repos = []
         for agent_repos in self.repo_monitor.agent_repos.values():
             all_repos.extend(agent_repos)
@@ -621,32 +650,32 @@ Generated: {time.strftime('%Y-%m-%d %H:%M:%S')}
         avg_compliance = total_compliance / len(unique_repos[:5]) if unique_repos[:5] else 0
         print(f"📊 Average Compliance: {avg_compliance:.1f}%")
         
-        # Create standardization plan
+        # Create instruction plan
         plan = self.create_standardization_plan()
         print("\n" + plan)
         
-        # Execute standardization tasks
+        # Generate agent instructions
         if avg_compliance < 80:  # If compliance is low
-            print("🚨 Low compliance detected! Executing standardization tasks...")
+            print("🚨 Low compliance detected! Generating agent instructions...")
             self.execute_standardization_tasks(max_tasks=3)
         else:
-            print("✅ High compliance maintained. No standardization needed.")
+            print("✅ High compliance maintained. No instructions needed.")
         
         # Save state
         self._save_state()
         
-        print("✅ Standardization cycle completed")
+        print("✅ Agent instruction cycle completed")
 
 def main():
-    """Main standardization execution"""
+    """Main agent instruction execution"""
     standardizer = AutonomousStandardization()
     
     try:
         standardizer.run_standardization_cycle()
     except KeyboardInterrupt:
-        print("\n🛑 Standardization interrupted by user")
+        print("\n🛑 Agent instruction cycle interrupted by user")
     except Exception as e:
-        print(f"❌ Standardization error: {e}")
+        print(f"❌ Agent instruction error: {e}")
 
 if __name__ == "__main__":
     main()

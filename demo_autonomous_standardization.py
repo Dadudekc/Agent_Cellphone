@@ -14,8 +14,8 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 from fsm import AutonomousStandardization
 
 def demo_autonomous_standardization():
-    """Demo autonomous standardization capabilities"""
-    print("🤖 Autonomous Standardization Demo - CAPTAIN + SWARM")
+    """Demo autonomous agent instruction capabilities"""
+    print("🤖 Autonomous Agent Instruction Demo - CAPTAIN + SWARM")
     print("=" * 60)
     
     # Initialize autonomous standardization
@@ -70,20 +70,20 @@ def demo_autonomous_standardization():
         except Exception as e:
             print(f"📁 {repo}: Error analyzing - {e}")
     
-    print("\n🎯 Executing Standardization Cycle:")
+    print("\n🎯 Executing Agent Instruction Cycle:")
     print("-" * 40)
     
-    # Run standardization cycle
+    # Run agent instruction cycle
     standardizer.run_standardization_cycle()
     
     print("\n✅ Demo Complete!")
-    print("\nThe Autonomous Standardization System now provides:")
-    print("• Automatic PRD format standardization")
-    print("• Automatic TASK_LIST format standardization")
-    print("• Automatic README format standardization")
+    print("\nThe Autonomous Agent Instruction System now provides:")
+    print("• Detailed PRD creation instructions for agents")
+    print("• Detailed TASK_LIST creation instructions for agents")
+    print("• Detailed README creation instructions for agents")
     print("• Compliance monitoring across all repositories")
-    print("• SWARM-based task execution")
-    print("• Real-time standardization maintenance")
+    print("• SWARM-based instruction generation")
+    print("• Real-time document quality monitoring")
 
 if __name__ == "__main__":
     demo_autonomous_standardization()
