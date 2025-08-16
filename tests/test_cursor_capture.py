@@ -4,19 +4,15 @@ Test script for Cursor AI Response Capture System
 Tests the database reading and message extraction functionality
 """
 
-import sys
 import json
 from pathlib import Path
-
-# Add src to path
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 def test_cursor_storage_path():
     """Test finding the Cursor workspace storage directory"""
     print("🧪 Testing Cursor workspace storage path...")
     
     try:
-        from cursor_capture.db_reader import cursor_workspace_storage
+        from src.cursor_capture.db_reader import cursor_workspace_storage
         storage_path = cursor_workspace_storage()
         print(f"✅ Cursor storage path: {storage_path}")
         
@@ -58,7 +54,7 @@ def test_database_finding():
     print("\n🧪 Testing database finding...")
     
     try:
-        from cursor_capture.db_reader import find_state_db_for_workspace
+        from src.cursor_capture.db_reader import find_state_db_for_workspace
         
         # Test with a sample workspace path
         test_workspace = "D:/repos/project-A"
@@ -78,7 +74,7 @@ def test_message_extraction():
     print("\n🧪 Testing message extraction...")
     
     try:
-        from cursor_capture.db_reader import extract_messages
+        from src.cursor_capture.db_reader import extract_messages
         
         # Test with sample chat data
         sample_data = {
@@ -102,46 +98,65 @@ def test_message_extraction():
     except Exception as e:
         print(f"❌ Error extracting messages: {e}")
 
-def test_watcher_initialization():
-    """Test CursorDBWatcher initialization"""
-    print("\n🧪 Testing CursorDBWatcher initialization...")
+def test_agent_workspace_finding():
+    """Test finding agent workspaces"""
+    print("\n🧪 Testing agent workspace finding...")
     
     try:
-        from cursor_capture.watcher import CursorDBWatcher
+        from src.cursor_capture.db_reader import find_agent_workspaces
         
-        # Test with sample agent map
-        test_agent_map = {
-            "Agent-1": {"workspace_root": "D:/repos/project-A"},
-            "Agent-2": {"workspace_root": "D:/repos/project-B"}
-        }
+        workspaces = find_agent_workspaces()
+        print(f"✅ Found {len(workspaces)} agent workspaces")
         
-        watcher = CursorDBWatcher(agent_map=test_agent_map)
-        print("✅ CursorDBWatcher initialized successfully")
-        
-        # Test stats
-        stats = watcher.get_stats()
-        print(f"✅ Watcher stats: {stats}")
-        
+        for agent, workspace in workspaces.items():
+            print(f"   {agent}: {workspace}")
+            
     except Exception as e:
-        print(f"❌ Error initializing watcher: {e}")
+        print(f"❌ Error finding agent workspaces: {e}")
 
-def main():
-    """Run all tests"""
-    print("🚀 Testing Cursor AI Response Capture System")
-    print("=" * 60)
+def test_full_workflow():
+    """Test the complete workflow from workspace to messages"""
+    print("\n🧪 Testing complete workflow...")
+    
+    try:
+        from src.cursor_capture.db_reader import cursor_workspace_storage, find_agent_workspaces, extract_messages
+        
+        # Get storage path
+        storage_path = cursor_workspace_storage()
+        print(f"✅ Storage path: {storage_path}")
+        
+        # Find agent workspaces
+        agent_workspaces = find_agent_workspaces()
+        print(f"✅ Agent workspaces: {len(agent_workspaces)} found")
+        
+        # Test with first available workspace
+        if agent_workspaces:
+            first_agent = list(agent_workspaces.keys())[0]
+            workspace_path = agent_workspaces[first_agent]
+            print(f"✅ Testing with workspace: {workspace_path}")
+            
+            # Try to extract messages
+            try:
+                messages = extract_messages(workspace_path)
+                print(f"✅ Extracted {len(messages)} messages from {first_agent}")
+            except Exception as e:
+                print(f"⚠️  Could not extract messages (may need Cursor to be open): {e}")
+        else:
+            print("⚠️  No agent workspaces found to test")
+            
+    except Exception as e:
+        print(f"❌ Error in full workflow test: {e}")
+
+if __name__ == "__main__":
+    print("🧪 Running Cursor Capture System Tests\n")
+    print("=" * 50)
     
     test_cursor_storage_path()
     test_workspace_mapping()
     test_database_finding()
     test_message_extraction()
-    test_watcher_initialization()
+    test_agent_workspace_finding()
+    test_full_workflow()
     
-    print("\n" + "=" * 60)
+    print("\n" + "=" * 50)
     print("✅ All tests completed!")
-    print("\n💡 To test with real data:")
-    print("   1. Open a workspace in Cursor")
-    print("   2. Have a chat conversation")
-    print("   3. Run the overnight runner with --cursor-db-capture-enabled")
-
-if __name__ == "__main__":
-    main()

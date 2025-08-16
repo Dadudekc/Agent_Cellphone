@@ -46,12 +46,12 @@ def run_dream_os_gui():
     print("📱 Starting PyQt interface...")
     
     try:
-        subprocess.run([sys.executable, "gui/dream_os_gui.py"], check=True)
+        subprocess.run([sys.executable, "src/gui/dream_os_gui_v2.py"], check=True)
     except subprocess.CalledProcessError as e:
         print(f"❌ Error launching GUI: {e}")
         print("💡 Make sure PyQt5 is installed: pip install PyQt5")
     except FileNotFoundError:
-        print("❌ GUI file not found: gui/dream_os_gui.py")
+        print("❌ GUI file not found: src/gui/dream_os_gui_v2.py")
     except KeyboardInterrupt:
         print("\n👋 GUI closed by user")
 
@@ -61,11 +61,11 @@ def run_simple_gui():
     print("📱 Starting Tkinter interface...")
     
     try:
-        subprocess.run([sys.executable, "simple_gui.py"], check=True)
+        subprocess.run([sys.executable, "src/gui/two_agent_horizontal_gui.py"], check=True)
     except subprocess.CalledProcessError as e:
-        print(f"❌ Error launching GUI: {e}")
+        print(f"❌ Error running GUI: {e}")
     except FileNotFoundError:
-        print("❌ GUI file not found: simple_gui.py")
+        print("❌ GUI file not found: src/gui/two_agent_horizontal_gui.py")
     except KeyboardInterrupt:
         print("\n👋 GUI closed by user")
 
@@ -73,7 +73,7 @@ def run_test_harness():
     """Run the CLI test harness."""
     print("🧪 Launching Test Harness...")
     try:
-        subprocess.run([sys.executable, "test_harness.py", "--mode", "demo"], check=True)
+        subprocess.run([sys.executable, "cli_test_harness.py", "--mode", "demo"], check=True)
     except subprocess.CalledProcessError as e:
         print(f"❌ Error running test harness: {e}")
     except KeyboardInterrupt:
@@ -83,7 +83,7 @@ def run_coordinate_finder():
     """Run the coordinate finder utility."""
     print("📍 Launching Coordinate Finder...")
     try:
-        subprocess.run([sys.executable, "core/utils/coordinate_finder.py", "--mode", "find"], check=True)
+        subprocess.run([sys.executable, "src/core/utils/coordinate_finder.py", "--mode", "find"], check=True)
     except subprocess.CalledProcessError as e:
         print(f"❌ Error running coordinate finder: {e}")
     except KeyboardInterrupt:
@@ -93,7 +93,7 @@ def run_diagnostic_test():
     """Run the diagnostic test."""
     print("🔧 Running Diagnostic Test...")
     try:
-        subprocess.run([sys.executable, "diagnostic_test.py"], check=True)
+        subprocess.run([sys.executable, "tests/diagnostic_test.py"], check=True)
     except subprocess.CalledProcessError as e:
         print(f"❌ Error running diagnostic test: {e}")
     except KeyboardInterrupt:
