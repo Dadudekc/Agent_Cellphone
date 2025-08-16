@@ -58,18 +58,20 @@ class TestMLRobotUtils:
     def test_auto_generate_save_path_valid_csv(self):
         """Test auto_generate_save_path with valid CSV file"""
         input_path = "test_data.csv"
-        base_dir = "/tmp"
+        base_dir = os.path.join("tmp")
         
         result = self.utils.auto_generate_save_path(input_path, base_dir)
         
-        assert result.startswith("/tmp/test_data_processed_")
+        # Use os.path.normpath for cross-platform compatibility
+        expected_start = os.path.normpath(os.path.join("tmp", "test_data_processed_"))
+        assert result.startswith(expected_start)
         assert result.endswith(".csv")
         assert "test_data_processed_" in result
     
     def test_auto_generate_save_path_invalid_file(self):
         """Test auto_generate_save_path with non-CSV file"""
         input_path = "test_data.txt"
-        base_dir = "/tmp"
+        base_dir = os.path.join("tmp")
         
         with pytest.raises(ValueError, match="Input file is not a CSV file"):
             self.utils.auto_generate_save_path(input_path, base_dir)
