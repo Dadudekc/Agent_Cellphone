@@ -53,11 +53,11 @@ class EnhancedCaptureConfig:
     cursor_db_max_age: int = 300  # seconds
     
     # File monitoring
-    file_watch_root: str = "agent_workspaces"
+    file_watch_root: str = os.environ.get("AGENT_FILE_ROOT", "D:\\repos\\Dadudekc")
     response_filename: str = "response.txt"
     
     # Output routing
-    workflow_inbox: str = "agent_workspaces/Agent-5/inbox"  # For workflow engine
+    workflow_inbox: str = os.environ.get("AGENT_WORKFLOW_INBOX", "D:\\repos\\Dadudekc\\Agent-5\\inbox")  # For workflow engine
     fsm_inbox: str = "runtime/agent_comms/inbox"           # For FSM bridge
     
     # Advanced processing

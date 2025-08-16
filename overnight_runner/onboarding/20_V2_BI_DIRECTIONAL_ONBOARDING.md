@@ -318,3 +318,4 @@ def process_custom_event(event_data: Dict) -> None:
 4. Customize [Configuration](#configuration) for your environment
 
 [Back to Index](00_INDEX.md) | [Previous: Standard Onboarding](01_GETTING_STARTED.md)
+

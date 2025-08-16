@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Dict, Any
 
 # Configuration
-INBOX_ROOT = Path("agent_workspaces/Agent-5/inbox")
+INBOX_ROOT = Path("D:/repos/Dadudekc/Agent-5/inbox")
 OUTBOX_ROOT = Path("communications/overnight_YYYYMMDD_/Agent-5/fsm_update_inbox")
 
 def ensure_outbox():

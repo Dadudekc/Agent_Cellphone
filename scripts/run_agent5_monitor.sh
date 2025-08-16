@@ -9,7 +9,7 @@ echo
 # Set environment variables
 export AGENT_STALL_SEC=1200
 export AGENT_CHECK_SEC=5
-export AGENT_FILE_ROOT=agent_workspaces
+export AGENT_FILE_ROOT=D:\\repos\\Dadudekc
 export AGENT_FSM_ENABLED=1
 export AGENT_RESCUE_COOLDOWN_SEC=300
 export AGENT_ACTIVE_GRACE_SEC=300

@@ -21,7 +21,7 @@ cursor_db:
 # Export Chat Fallback
 export_chat:
   enabled: true
-  monitor_directory: "agent_workspaces/exports"
+  monitor_directory: "D:/repos/Dadudekc/exports"
   file_patterns:
     - "*.json"
     - "*.md"
@@ -38,7 +38,7 @@ copy_response:
 # File Monitoring Fallback
 file:
   enabled: true
-  watch_root: "agent_workspaces"
+  watch_root: "D:/repos/Dadudekc"
   response_filename: "response.txt"
   poll_interval: 1.0  # seconds
   clear_after_read: true
@@ -46,7 +46,7 @@ file:
 # Output Routing
 routing:
   # For workflow engine integration
-  workflow_inbox: "agent_workspaces/Agent-5/inbox"
+  workflow_inbox: "D:/repos/Dadudekc/Agent-5/inbox"
   
   # For FSM bridge integration  
   fsm_inbox: "runtime/agent_comms/inbox"

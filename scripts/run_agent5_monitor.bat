@@ -9,7 +9,7 @@ echo.
 REM Set environment variables
 set AGENT_STALL_SEC=1200
 set AGENT_CHECK_SEC=5
-set AGENT_FILE_ROOT=agent_workspaces
+set AGENT_FILE_ROOT=D:\\repos\\Dadudekc
 set AGENT_FSM_ENABLED=1
 set AGENT_RESCUE_COOLDOWN_SEC=300
 set AGENT_ACTIVE_GRACE_SEC=300

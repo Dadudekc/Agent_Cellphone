@@ -14,7 +14,7 @@ from urllib import request, error
 FSM_ROOT = Path("fsm_data")
 TASKS_DIR = FSM_ROOT / "tasks"
 WORKFLOWS_DIR = FSM_ROOT / "workflows"
-INBOX_ROOT = Path("agent_workspaces")
+INBOX_ROOT = Path("D:/repos/Dadudekc")
 REPO_ROOT = Path("D:/repos/Dadudekc")
 
 

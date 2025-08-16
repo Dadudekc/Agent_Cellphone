@@ -430,7 +430,8 @@ class TwoAgentHorizontalGUI(QMainWindow):
         for agent_id in ["agent-1", "agent-2"]:
             try:
                 # Check agent's status.json file
-                status_file = os.path.join("agent_workspaces", agent_id, "status.json")
+                workspace_root = os.environ.get("AGENT_FILE_ROOT", "D:\\repos\\Dadudekc")
+                status_file = os.path.join(workspace_root, agent_id, "status.json")
                 if os.path.exists(status_file):
                     with open(status_file, 'r') as f:
                         status_data = json.load(f)
@@ -552,7 +553,8 @@ class TwoAgentHorizontalGUI(QMainWindow):
         self.log_message("System", "Getting system status...")
         for agent_id in ["agent-1", "agent-2"]:
             try:
-                status_file = os.path.join("agent_workspaces", agent_id, "status.json")
+                workspace_root = os.environ.get("AGENT_FILE_ROOT", "D:\\repos\\Dadudekc")
+                status_file = os.path.join(workspace_root, agent_id, "status.json")
                 if os.path.exists(status_file):
                     with open(status_file, 'r') as f:
                         status_data = json.load(f)

@@ -38,8 +38,9 @@ def main():
     print("=" * 60)
     
     # Check if we're in the right directory
-    if not Path("agent_workspaces").exists():
-        print("❌ Error: agent_workspaces directory not found. Please run this script from the project root.")
+    workspace_root = os.environ.get("AGENT_FILE_ROOT", "D:\\repos\\Dadudekc")
+    if not Path(workspace_root).exists():
+        print(f"❌ Error: {workspace_root} directory not found. Please run this script from the project root.")
         return False
     
     # Step 1: Add all changes

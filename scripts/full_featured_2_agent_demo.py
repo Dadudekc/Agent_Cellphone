@@ -41,7 +41,8 @@ def run_cmd(cmd, explain=None, pause=True):
     return result
 
 def print_agent_status(agent_id):
-    status_file = Path(f'agent_workspaces/{agent_id}/status.json')
+    workspace_root = os.environ.get("AGENT_FILE_ROOT", "D:\\repos\\Dadudekc")
+    status_file = Path(f'{workspace_root}/{agent_id}/status.json')
     print(f"\n📋 {agent_id} status.json:")
     if status_file.exists():
         try:
@@ -54,7 +55,8 @@ def print_agent_status(agent_id):
         print(f"No status.json found for {agent_id}")
 
 def print_agent_log(agent_id, lines=10):
-    log_dir = Path(f'agent_workspaces/{agent_id}/logs')
+    workspace_root = os.environ.get("AGENT_FILE_ROOT", "D:\\repos\\Dadudekc")
+    log_dir = Path(f'{workspace_root}/{agent_id}/logs')
     if not log_dir.exists():
         print(f"No logs directory for {agent_id}")
         return
@@ -73,7 +75,8 @@ def print_agent_log(agent_id, lines=10):
         print(f"Could not read log for {agent_id}: {e}")
 
 def print_agent_tasks(agent_id):
-    tasks_dir = Path(f'agent_workspaces/{agent_id}/inbox/tasks')
+    workspace_root = os.environ.get("AGENT_FILE_ROOT", "D:\\repos\\Dadudekc")
+    tasks_dir = Path(f'{workspace_root}/{agent_id}/inbox/tasks')
     if not tasks_dir.exists():
         print(f"No tasks directory for {agent_id}")
         return

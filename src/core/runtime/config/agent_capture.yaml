@@ -18,7 +18,7 @@ cursor_db:
 # Export chat fallback
 export_chat:
   enabled: true
-  monitor_directory: "agent_workspaces/exports"
+  monitor_directory: "D:/repos/Dadudekc/exports"
   file_patterns:
     - "*.json"
     - "*.md"

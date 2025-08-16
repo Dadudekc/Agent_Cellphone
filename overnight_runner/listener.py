@@ -57,7 +57,7 @@ def main() -> int:
     args = parse_args()
     _load_env_file(args.env_file)
     agent = args.agent
-    inbox_dir = args.inbox or os.path.join("agent_workspaces", agent, "inbox")
+    inbox_dir = args.inbox or os.path.join(os.environ.get("AGENT_FILE_ROOT", "D:\\repos\\Dadudekc"), agent, "inbox")
     devlog_webhook = args.devlog_webhook or os.environ.get("DISCORD_WEBHOOK_URL")
     devlog_username = args.devlog_username or os.environ.get("DEVLOG_USERNAME", "Agent Devlog")
     devlog_use_embed = bool(args.devlog_embed)
@@ -65,8 +65,8 @@ def main() -> int:
     pipeline = MessagePipeline()
     router = CommandRouter()
 
-    # Simple per-agent state file under agent_workspaces/Agent-X/state.json
-    state_dir = Path("agent_workspaces") / agent
+    # Simple per-agent state file under D:\repos\Dadudekc\Agent-X\state.json
+    state_dir = Path(os.environ.get("AGENT_FILE_ROOT", "D:\\repos\\Dadudekc")) / agent
     state_dir.mkdir(parents=True, exist_ok=True)
     state_path = state_dir / "state.json"
 

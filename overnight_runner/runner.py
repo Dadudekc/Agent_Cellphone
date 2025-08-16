@@ -146,7 +146,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--comm-root", default="D:/repos/Dadudekc/communications", help="central communications root (non-invasive)")
     p.add_argument("--create-comm-folders", action="store_true", help="create central communications folders and kickoff notes")
     # Agent workspace root for inbox/outbox and per-agent prompts
-    p.add_argument("--workspace-root", default="agent_workspaces", help="root folder for agent workspaces")
+    p.add_argument("--workspace-root", default="D:/repos/Dadudekc", help="root folder for agent workspaces")
     # Single‑repo focus options
     p.add_argument("--single-repo-mode", action="store_true", help="Focus all agents on a single repository until beta‑ready")
     p.add_argument("--focus-repo", help="Repository name to focus when in single‑repo mode. If omitted, the first alphabetical repo from --assign-root is used.")
@@ -357,10 +357,10 @@ def build_tailored_message(agent: str, tag: MsgTag, contracts: List[dict]) -> st
     return f"{agent} continue on {task_id}: {title}."
 
 
-def read_agent_state(agent: str) -> Dict[str, str]:
-    """Read agent_workspaces/Agent-X/state.json written by the listener."""
+def read_agent_state(agent: str, workspace_root: str = "D:/repos/Dadudekc") -> Dict[str, str]:
+    """Read workspace_root/Agent-X/state.json written by the listener."""
     try:
-        p = Path("agent_workspaces") / agent / "state.json"
+        p = Path(workspace_root) / agent / "state.json"
         if not p.exists():
             return {}
         import json as _j
@@ -369,8 +369,8 @@ def read_agent_state(agent: str) -> Dict[str, str]:
         return {}
 
 
-def is_recently_active(agent: str, active_grace_sec: int) -> bool:
-    st = read_agent_state(agent)
+def is_recently_active(agent: str, active_grace_sec: int, workspace_root: str = "D:/repos/Dadudekc") -> bool:
+    st = read_agent_state(agent, workspace_root)
     updated = st.get("updated")
     if not updated:
         return False
@@ -383,9 +383,9 @@ def is_recently_active(agent: str, active_grace_sec: int) -> bool:
         return False
 
 
-def is_stalled(agent: str, stalled_threshold_sec: int) -> bool:
+def is_stalled(agent: str, stalled_threshold_sec: int, workspace_root: str = "D:/repos/Dadudekc") -> bool:
     """True if agent hasn't updated state.json within stalled_threshold_sec. Missing file counts as stalled."""
-    st = read_agent_state(agent)
+    st = read_agent_state(agent, workspace_root)
     updated = st.get("updated")
     if not updated:
         return True
@@ -728,7 +728,7 @@ def main() -> int:
                     "focus_repo": focus_repo,
                     "timestamp": _t.strftime("%Y-%m-%dT%H:%M:%S"),
                 }
-                inbox = _P("agent_workspaces") / args.fsm_agent / "inbox"
+                inbox = _P(args.workspace_root) / args.fsm_agent / "inbox"
                 inbox.mkdir(parents=True, exist_ok=True)
                 fn = inbox / f"fsm_request_{_t.strftime('%Y%m%d_%H%M%S')}.json"
                 fn.write_text(_j.dumps(payload, indent=2), encoding="utf-8")
@@ -760,7 +760,7 @@ def main() -> int:
             from pathlib import Path as _P  # already imported above
             def _recent():
                 try:
-                    p = _P("agent_workspaces") / agent / "state.json"
+                    p = _P(args.workspace_root) / agent / "state.json"
                     if not p.exists():
                         return False
                     import json as _j
@@ -778,7 +778,7 @@ def main() -> int:
             stalled = False
             if args.__dict__.get("rescue_on_stall"):
                 try:
-                    stalled = is_stalled(agent, args.__dict__.get("stalled_threshold_sec", 1200))
+                    stalled = is_stalled(agent, args.__dict__.get("stalled_threshold_sec", 1200), args.workspace_root)
                 except Exception:
                     stalled = False
             # 3) per-agent global cooldown: avoid sending too frequently to the same agent

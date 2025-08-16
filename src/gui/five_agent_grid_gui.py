@@ -210,9 +210,10 @@ class FiveAgentGridGUI(QMainWindow):
 
     def update_agent_statuses(self) -> None:
         # Lightweight placeholder – integrate OnboardingIntegration as needed
+        workspace_root = os.environ.get("AGENT_FILE_ROOT", "D:\\repos\\Dadudekc")
         for agent_id in ["agent-1", "agent-2", "agent-3", "agent-4", "agent-5"]:
             try:
-                status_file = os.path.join("agent_workspaces", agent_id, "status.json")
+                status_file = os.path.join(workspace_root, agent_id, "status.json")
                 if os.path.exists(status_file):
                     data = json.load(open(status_file, 'r'))
                     status = data.get('status', 'unknown')
@@ -328,7 +329,8 @@ class FiveAgentGridGUI(QMainWindow):
     def send_fsm_request(self) -> None:
         self.log_message("System", "Sending FSM request to Agent-5...")
         try:
-            inbox = os.path.join(os.getcwd(), "agent_workspaces", "Agent-5", "inbox")
+            workspace_root = os.environ.get("AGENT_FILE_ROOT", "D:\\repos\\Dadudekc")
+            inbox = os.path.join(workspace_root, "Agent-5", "inbox")
             os.makedirs(inbox, exist_ok=True)
             payload = {
                 "type": "fsm_request",
@@ -391,7 +393,8 @@ class FiveAgentGridGUI(QMainWindow):
         for agent_id in self._selected_or_all():
             # Lightweight file-based status probe consistent with update_agent_statuses
             try:
-                status_file = os.path.join("agent_workspaces", agent_id, "status.json")
+                workspace_root = os.environ.get("AGENT_FILE_ROOT", "D:\\repos\\Dadudekc")
+                status_file = os.path.join(workspace_root, agent_id, "status.json")
                 if os.path.exists(status_file):
                     data = json.load(open(status_file, 'r', encoding='utf-8'))
                     status = data.get('status', 'unknown')

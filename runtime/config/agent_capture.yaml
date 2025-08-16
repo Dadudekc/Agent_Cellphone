@@ -1,6 +1,6 @@
 default_strategy: file   # one of: file | clipboard | ocr
 file:
-  watch_root: "agent_workspaces"
+  watch_root: "D:/repos/Dadudekc"
   response_filename: "response.txt"
 clipboard:
   poll_ms: 500

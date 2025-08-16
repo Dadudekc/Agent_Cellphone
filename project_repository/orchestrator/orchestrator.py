@@ -12,7 +12,7 @@ log = logging.getLogger("orchestrator")
 class Orchestrator:
     def __init__(self, repo_root: Path):
         self.repo_root = repo_root
-        self.ws_mgr = WorkspaceManager(repo_root, repo_root / "agent_workspaces")
+        self.ws_mgr = WorkspaceManager(repo_root, Path("D:/repos/Dadudekc"))
         self.branch_mgr = BranchManager(repo_root)
         self.prd_watch = PRDWatcher(repo_root / "PRDs")
         self.router = TaskRouter()

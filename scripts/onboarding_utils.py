@@ -33,11 +33,11 @@ AGENT_INFO = {
             "Quality assurance and strategic planning"
         ],
         "leadership": "You are the team leader and coordinator.",
-        "onboarding_path": "agent_workspaces/onboarding/README.md",
+        "onboarding_path": "D:/repos/Dadudekc/onboarding/README.md",
         "priority_docs": [
-            "agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md",
-            "agent_workspaces/onboarding/protocols/agent_protocols.md",
-            "agent_workspaces/onboarding/training_documents/onboarding_checklist.md"
+            "D:/repos/Dadudekc/onboarding/training_documents/agent_roles_and_responsibilities.md",
+            "D:/repos/Dadudekc/onboarding/protocols/agent_protocols.md",
+            "D:/repos/Dadudekc/onboarding/training_documents/onboarding_checklist.md"
         ]
     },
     "Agent-2": {
@@ -50,11 +50,11 @@ AGENT_INFO = {
             "Code review and quality assurance"
         ],
         "leadership": "You are the technical lead and architect.",
-        "onboarding_path": "agent_workspaces/onboarding/README.md",
+        "onboarding_path": "D:/repos/Dadudekc/onboarding/README.md",
         "priority_docs": [
-            "agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md",
-            "agent_workspaces/onboarding/training_documents/development_standards.md",
-            "agent_workspaces/onboarding/training_documents/tools_and_technologies.md"
+            "D:/repos/Dadudekc/onboarding/training_documents/agent_roles_and_responsibilities.md",
+            "D:/repos/Dadudekc/onboarding/training_documents/development_standards.md",
+            "D:/repos/Dadudekc/onboarding/training_documents/tools_and_technologies.md"
         ]
     },
     "Agent-3": {
@@ -67,11 +67,11 @@ AGENT_INFO = {
             "Data quality assurance and governance"
         ],
         "leadership": "You are the data and analytics expert.",
-        "onboarding_path": "agent_workspaces/onboarding/README.md",
+        "onboarding_path": "D:/repos/Dadudekc/onboarding/README.md",
         "priority_docs": [
-            "agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md",
-            "agent_workspaces/onboarding/training_documents/development_standards.md",
-            "agent_workspaces/onboarding/protocols/workflow_protocols.md"
+            "D:/repos/Dadudekc/onboarding/training_documents/agent_roles_and_responsibilities.md",
+            "D:/repos/Dadudekc/onboarding/training_documents/development_standards.md",
+            "D:/repos/Dadudekc/onboarding/protocols/workflow_protocols.md"
         ]
     },
     "Agent-4": {
@@ -84,11 +84,11 @@ AGENT_INFO = {
             "Performance optimization and scaling"
         ],
         "leadership": "You are the infrastructure and operations expert.",
-        "onboarding_path": "agent_workspaces/onboarding/README.md",
+        "onboarding_path": "D:/repos/Dadudekc/onboarding/README.md",
         "priority_docs": [
-            "agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md",
-            "agent_workspaces/onboarding/training_documents/tools_and_technologies.md",
-            "agent_workspaces/onboarding/protocols/command_reference.md"
+            "D:/repos/Dadudekc/onboarding/training_documents/agent_roles_and_responsibilities.md",
+            "D:/repos/Dadudekc/onboarding/training_documents/tools_and_technologies.md",
+            "D:/repos/Dadudekc/onboarding/protocols/command_reference.md"
         ]
     },
     "Agent-5": {
@@ -101,11 +101,11 @@ AGENT_INFO = {
             "Model evaluation and deployment"
         ],
         "leadership": "You are the AI and machine learning expert.",
-        "onboarding_path": "agent_workspaces/onboarding/README.md",
+        "onboarding_path": "D:/repos/Dadudekc/onboarding/README.md",
         "priority_docs": [
-            "agent_workspaces/onboarding/training_documents/agent_roles_and_responsibilities.md",
-            "agent_workspaces/onboarding/training_documents/development_standards.md",
-            "agent_workspaces/onboarding/training_documents/best_practices.md"
+            "D:/repos/Dadudekc/onboarding/training_documents/agent_roles_and_responsibilities.md",
+            "D:/repos/Dadudekc/onboarding/training_documents/development_standards.md",
+            "D:/repos/Dadudekc/onboarding/training_documents/best_practices.md"
         ]
     },
     "Agent-6": {
