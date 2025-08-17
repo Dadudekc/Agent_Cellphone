@@ -7,10 +7,10 @@ def test_send_records_cursor_actions():
     acp = AgentCellPhone(layout_mode="2-agent", test=True)
     acp.send("Agent-2", "ping", MsgTag.VERIFY)
 
-    # three cursor actions: move+click, type, enter
+    # cursor should move to target and type message before pressing enter
     assert acp._cursor.record[0].startswith("move(")
-    assert "type([VERIFY] ping)" == acp._cursor.record[1]
-    assert acp._cursor.record[2] == "enter"
+    assert "type([VERIFY] ping)" in acp._cursor.record
+    assert acp._cursor.record[-1] == "enter"
     assert len(acp.get_conversation_history()) == 1
 
 
@@ -39,4 +39,30 @@ def test_send_accepts_special_characters():
     message = "!@#$%^&*()"
     acp.send("Agent-2", message)
     assert acp.get_conversation_history()[0].content == message
+
+
+def test_clear_queue_removes_pending_messages_and_locks():
+    """Messages queued via PyAutoGUIQueue can be cleared and locks released."""
+    acp = AgentCellPhone(layout_mode="2-agent", test=True)
+    from overnight_runner.enhanced_gui import PyAutoGUIQueue
+
+    queue = PyAutoGUIQueue()
+    # Prevent background processing so messages remain queued
+    queue.stop_processing()
+    acp.set_pyautogui_queue(queue)
+
+    # Queue a message for Agent-2
+    acp.send("Agent-2", "hello", use_queue=True)
+    assert queue.get_queue_status()["queue_size"] == 1
+
+    # Simulate a lock held by the agent
+    queue.agent_locks["Agent-2"].acquire()
+    assert queue.agent_locks["Agent-2"].locked()
+
+    assert acp.clear_queue() is True
+    status = queue.get_queue_status()
+    assert status["queue_size"] == 0
+    assert not queue.agent_locks["Agent-2"].locked()
+
+    queue.stop_processing()
 

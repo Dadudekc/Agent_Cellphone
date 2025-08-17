@@ -429,18 +429,20 @@ class AgentCellPhone:
 
     def clear_queue(self) -> bool:
         """Clear the PyAutoGUI message queue.
-        
+
         Returns:
             True if queue was cleared, False otherwise
         """
         if not self._pyautogui_queue:
             return False
-        
+
         try:
-            # This would need to be implemented in the PyAutoGUIQueue class
-            # For now, we'll just log the request
-            log.info("Queue clear requested (not yet implemented)")
-            return False
+            result = self._pyautogui_queue.clear_queue()
+            if result:
+                log.info("PyAutoGUI queue cleared")
+            else:
+                log.warning("PyAutoGUI queue clear failed")
+            return result
         except Exception as e:
             log.error("Queue clear error: %s", e)
             return False
