@@ -7,6 +7,33 @@ Tests the database reading and message extraction functionality
 import json
 from pathlib import Path
 
+
+def test_cursor_watcher_outputs_no_partial_files(tmp_path, monkeypatch):
+    """Ensure CursorDBWatcher writes files atomically without leaving partial files."""
+    from src.cursor_capture import watcher as watcher_mod
+    from src.cursor_capture.watcher import CursorDBWatcher
+
+    inbox = tmp_path / "inbox"
+    seen_dir = tmp_path / ".seen"
+    inbox.mkdir()
+    seen_dir.mkdir()
+
+    monkeypatch.setattr(watcher_mod, "INBOX", inbox)
+    monkeypatch.setattr(watcher_mod, "SEEN_DIR", seen_dir)
+
+    def fake_read_assistant_messages(ws, seen):
+        return [{"sig": "1", "text": "hi", "ts": 1}]
+
+    monkeypatch.setattr(watcher_mod, "read_assistant_messages", fake_read_assistant_messages)
+
+    w = CursorDBWatcher({"Agent-1": {"workspace_root": "dummy"}})
+    w._check_all_agents()
+
+    files = list(inbox.glob("assistant_*.json"))
+    assert len(files) == 1, "expected one output file"
+    json.loads(files[0].read_text())
+    assert not list(inbox.glob("*.tmp")), "temporary file should not remain"
+
 def test_cursor_storage_path():
     """Test finding the Cursor workspace storage directory"""
     print("🧪 Testing Cursor workspace storage path...")

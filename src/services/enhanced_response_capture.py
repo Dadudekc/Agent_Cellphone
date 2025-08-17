@@ -13,6 +13,7 @@ import re
 import threading
 import asyncio
 from pathlib import Path
+from ..utils import atomic_write
 from dataclasses import dataclass
 from typing import Optional, Dict, Callable, List, Any
 from enum import Enum
@@ -302,7 +303,7 @@ class EnhancedResponseCapture:
             }
             
             out_file = Path(self.config.workflow_inbox) / f"response_{int(time.time()*1000)}_{response.agent}.json"
-            out_file.write_text(json.dumps(envelope, ensure_ascii=False, indent=2), encoding="utf-8")
+            atomic_write(out_file, json.dumps(envelope, ensure_ascii=False, indent=2))
             
         except Exception as e:
             print(f"[ENHANCED_CAPTURE] Error routing to workflow: {e}")
@@ -322,7 +323,7 @@ class EnhancedResponseCapture:
             }
             
             out_file = Path(self.config.fsm_inbox) / f"response_{int(time.time()*1000)}_{response.agent}.json"
-            out_file.write_text(json.dumps(envelope, ensure_ascii=False, indent=2), encoding="utf-8")
+            atomic_write(out_file, json.dumps(envelope, ensure_ascii=False, indent=2))
             
         except Exception as e:
             print(f"[ENHANCED_CAPTURE] Error routing to FSM: {e}")
