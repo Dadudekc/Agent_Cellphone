@@ -32,7 +32,7 @@ class CollaborativeExecutionSystem:
     """
     
     def __init__(self):
-        self.agents = ["Agent-1", "Agent-2", "Agent-3", "Agent-4"]
+        self.agents = ["Agent-1", "Agent-2", "Agent-3", "Agent-4", "Agent-5"]
         self.acp = AgentCellPhone(agent_id="Collaborative-Execution-System", layout_mode="5-agent")
         self._stop = threading.Event()
         self._start_time = time.time()
@@ -91,6 +91,17 @@ class CollaborativeExecutionSystem:
                     "Develop collaborative learning systems",
                     "Implement secure multi-agent communication protocols",
                     "Create systems that improve all agents' capabilities"
+                ]
+            },
+            "Agent-5": {
+                "focus": "Overall coordination and verification",
+                "responsibilities": [
+                    "Coordinate overall process and verification",
+                    "Monitor progress across all collaboration streams",
+                    "Coordinate handoffs and dependencies between agents",
+                    "Verify quality and completeness of deliverables",
+                    "Facilitate continuous improvement and iteration",
+                    "Serve as CAPTAIN for the collaborative system"
                 ]
             }
         }
@@ -179,6 +190,11 @@ class CollaborativeExecutionSystem:
    • {self.agent_roles['Agent-4']['focus']}
    • Ensure communication protocols and security
    • Develop collaborative learning systems
+
+🔹 Agent-5: Overall Coordination & Verification (CAPTAIN)
+   • {self.agent_roles['Agent-5']['focus']}
+   • Coordinate overall process and verification
+   • Monitor progress and verify quality of deliverables
 
 🔄 COLLABORATION EXECUTION PROCESS:
 1. ALL agents must work together on this objective
