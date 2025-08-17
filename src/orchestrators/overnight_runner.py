@@ -13,15 +13,33 @@ DIGEST_MD = REPORTS_DIR / "digest.md"
 DIGEST_JSON = REPORTS_DIR / "digest.json"
 
 try:
-    import yaml  # pyyaml
-except Exception:
-    print("Missing dependency: pyyaml", file=sys.stderr); sys.exit(2)
+    import yaml  # type: ignore
+except Exception:  # pragma: no cover - optional dependency
+    yaml = None  # type: ignore
+    # We don't raise or exit here so that modules which only need helper
+    # functions (e.g. tests for ``run_guard``) can still import this module
+    # without requiring the optional ``pyyaml`` package.
 
 def sh(cmd, cwd=None, capture=False) -> subprocess.CompletedProcess:
     return subprocess.run(cmd if isinstance(cmd, list) else cmd.split(),
                           cwd=cwd, text=True, capture_output=capture, check=False)
 
-def load_yaml(p): return yaml.safe_load(open(p, "r", encoding="utf-8"))
+def load_yaml(p):
+    """Load a YAML file.
+
+    Falls back to JSON parsing when ``pyyaml`` isn't available.  This keeps the
+    module usable in minimal environments while still supporting the expected
+    YAML syntax when the dependency is installed.
+    """
+    text = open(p, "r", encoding="utf-8").read()
+    if yaml is not None:
+        return yaml.safe_load(text)
+    # Fallback: try JSON so simple dict-like configs still load during tests
+    try:
+        import json
+        return json.loads(text)
+    except Exception as exc:  # pragma: no cover - depends on file contents
+        raise RuntimeError("YAML parsing requires pyyaml to be installed") from exc
 
 @dataclass
 class Task:

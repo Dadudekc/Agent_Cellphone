@@ -61,11 +61,11 @@ def _log(msg: str):
 class MonitorConfig:
     """Configuration for the Agent-5 monitor"""
     agents: List[str]
-    stall_threshold_sec: int = 600   # 10 minutes - FIXED: realistic stall threshold
-    warn_threshold_sec: int = 480    # 8 minutes - FIXED: warn before stall
-    normal_response_time: int = 300  # 5 minutes - FIXED: normal agent response time
+    stall_threshold_sec: int = 1200  # 20 minutes - realistic stall threshold
+    warn_threshold_sec: int = 480    # 8 minutes - warn before stall
+    normal_response_time: int = 300  # 5 minutes - normal agent response time
     warn_ratio: float = 0.8
-    check_every_sec: int = 30        # FIXED: check every 30 seconds instead of 5
+    check_every_sec: int = 5         # check every 5 seconds by default
     file_watch_root: str = "agent_workspaces"
     file_response_name: str = "response.txt"
     inbox_root: str = "runtime/agent_comms/inbox"

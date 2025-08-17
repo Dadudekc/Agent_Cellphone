@@ -1,9 +1,9 @@
 {
   "paths": {
-    "agent_workspaces": "D:\\repos\\Dadudekc",
+    "agent_workspaces": "agent_workspaces",
     "gui_root": "gui",
     "examples_root": "examples",
-    "runtime_config": "src/runtime/config"
+    "runtime_config": "runtime/config"
   },
   "environment": {
     "log_level": "INFO",

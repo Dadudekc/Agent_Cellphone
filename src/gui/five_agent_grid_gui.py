@@ -15,11 +15,231 @@ import subprocess
 import json
 from datetime import datetime
 
-from PyQt5.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
-    QLabel, QPushButton, QGroupBox, QFrame, QTextEdit, QFileDialog, QListWidget, QListWidgetItem
-)
-from PyQt5.QtCore import Qt, QTimer
+# ---------------------------------------------------------------------------
+# Optional PyQt5 dependency
+#
+# The full GUI relies on PyQt5, but our automated tests run in a minimal
+# environment where the library may not be available.  To keep the module
+# importable we provide lightweight stubs when PyQt5 can't be imported.  The
+# stubs implement just enough of the API for tests to exercise non-visual
+# behaviour (like filesystem interactions) without requiring the real GUI
+# toolkit.
+try:  # pragma: no cover - exercised indirectly by tests
+    from PyQt5.QtWidgets import (
+        QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
+        QLabel, QPushButton, QGroupBox, QFrame, QTextEdit, QFileDialog, QListWidget, QListWidgetItem
+    )
+    from PyQt5.QtCore import Qt, QTimer
+except Exception:  # pragma: no cover - fallback for environments without PyQt5
+    import types, sys as _sys
+
+    class _Base:
+        def __getattr__(self, name):
+            def _dummy(*a, **kw):
+                return None
+            return _dummy
+
+    class _Signal:
+        def __init__(self):
+            self._callbacks = []
+
+        def connect(self, fn):
+            self._callbacks.append(fn)
+
+        def emit(self, *a, **kw):
+            for fn in list(self._callbacks):
+                fn(*a, **kw)
+
+    class QWidget(_Base):
+        def __init__(self, parent=None, *a, **kw):
+            self._children = []
+            if isinstance(parent, QWidget):
+                parent._children.append(self)
+
+        def findChildren(self, cls):
+            res = []
+
+            def walk(w):
+                for c in getattr(w, "_children", []):
+                    if isinstance(c, cls):
+                        res.append(c)
+                    walk(c)
+
+            walk(self)
+            return res
+
+    class QLabel(QWidget):
+        def __init__(self, text="", parent=None):
+            super().__init__(parent)
+            self._text = text
+
+        def text(self):
+            return self._text
+
+        def setText(self, t):
+            self._text = t
+
+    class QPushButton(QWidget):
+        def __init__(self, text="", parent=None):
+            super().__init__(parent)
+            self._text = text
+            self._enabled = True
+            self.clicked = _Signal()
+
+        def text(self):
+            return self._text
+
+        def setText(self, t):
+            self._text = t
+
+        def isEnabled(self):
+            return self._enabled
+
+        def setEnabled(self, v):
+            self._enabled = bool(v)
+
+        def click(self):
+            self.clicked.emit()
+
+    class QVBoxLayout(QWidget):
+        def addWidget(self, w):
+            self._children.append(w)
+
+        def addLayout(self, l):
+            self._children.append(l)
+
+        def setContentsMargins(self, *a):
+            pass
+
+        def setSpacing(self, *a):
+            pass
+
+    class QHBoxLayout(QVBoxLayout):
+        pass
+
+    class QGridLayout(QVBoxLayout):
+        def addWidget(self, w, r=None, c=None):
+            super().addWidget(w)
+
+    class QMainWindow(QWidget):
+        def __init__(self, *a, **kw):
+            super().__init__()
+            self._central = None
+            self._status = QWidget(self)
+
+        def setCentralWidget(self, w):
+            self._central = w
+            self._children.append(w)
+
+        def statusBar(self):
+            return self._status
+
+    class QTextEdit(QWidget):
+        def __init__(self, parent=None):
+            super().__init__(parent)
+            self._buf = []
+
+        def append(self, text):
+            self._buf.append(text)
+
+        def toPlainText(self):
+            return "\n".join(self._buf)
+
+        def clear(self):
+            self._buf = []
+
+        def setReadOnly(self, *a):
+            pass
+
+        class _ScrollBar:
+            def setValue(self, v):
+                pass
+
+            def maximum(self):
+                return 0
+
+        def verticalScrollBar(self):
+            return QTextEdit._ScrollBar()
+
+    class QListWidget(QWidget):
+        pass
+
+    class QListWidgetItem(QWidget):
+        pass
+
+    class QGroupBox(QWidget):
+        pass
+
+    class QFrame(QWidget):
+        pass
+
+    class QProgressBar(QWidget):
+        pass
+
+    class QLineEdit(QWidget):
+        pass
+
+    class QComboBox(QWidget):
+        pass
+
+    class QFileDialog:
+        @staticmethod
+        def getSaveFileName(*a, **kw):
+            return ("", "")
+
+    class QTimer:
+        def __init__(self, *a, **kw):
+            self.timeout = _Signal()
+
+        def start(self, *a, **kw):
+            pass
+
+    class QApplication:
+        _instance = None
+
+        def __init__(self, *a, **kw):
+            QApplication._instance = self
+
+        @classmethod
+        def instance(cls):
+            return cls._instance
+
+        def processEvents(self):
+            pass
+
+    class Qt:
+        pass
+
+    qtwidgets = types.ModuleType("PyQt5.QtWidgets")
+    qtwidgets.QApplication = QApplication
+    qtwidgets.QMainWindow = QMainWindow
+    qtwidgets.QWidget = QWidget
+    qtwidgets.QVBoxLayout = QVBoxLayout
+    qtwidgets.QHBoxLayout = QHBoxLayout
+    qtwidgets.QGridLayout = QGridLayout
+    qtwidgets.QLabel = QLabel
+    qtwidgets.QPushButton = QPushButton
+    qtwidgets.QGroupBox = QGroupBox
+    qtwidgets.QFrame = QFrame
+    qtwidgets.QTextEdit = QTextEdit
+    qtwidgets.QFileDialog = QFileDialog
+    qtwidgets.QListWidget = QListWidget
+    qtwidgets.QListWidgetItem = QListWidgetItem
+    qtwidgets.QProgressBar = QProgressBar
+    qtwidgets.QLineEdit = QLineEdit
+    qtwidgets.QComboBox = QComboBox
+
+    qtcore = types.ModuleType("PyQt5.QtCore")
+    qtcore.Qt = Qt
+    qtcore.QTimer = QTimer
+
+    pyqt5 = types.ModuleType("PyQt5")
+    pyqt5.QtWidgets = qtwidgets
+    pyqt5.QtCore = qtcore
+
+    _sys.modules.setdefault("PyQt5", pyqt5)
+    _sys.modules.setdefault("PyQt5.QtWidgets", qtwidgets)
+    _sys.modules.setdefault("PyQt5.QtCore", qtcore)
 
 # Import paths
 current_dir = os.path.dirname(__file__)
@@ -210,7 +430,9 @@ class FiveAgentGridGUI(QMainWindow):
 
     def update_agent_statuses(self) -> None:
         # Lightweight placeholder – integrate OnboardingIntegration as needed
-        workspace_root = os.environ.get("AGENT_FILE_ROOT", "D:\\repos\\Dadudekc")
+        workspace_root = os.environ.get(
+            "AGENT_FILE_ROOT", os.path.join(project_root, "agent_workspaces")
+        )
         for agent_id in ["agent-1", "agent-2", "agent-3", "agent-4", "agent-5"]:
             try:
                 status_file = os.path.join(workspace_root, agent_id, "status.json")
@@ -329,7 +551,9 @@ class FiveAgentGridGUI(QMainWindow):
     def send_fsm_request(self) -> None:
         self.log_message("System", "Sending FSM request to Agent-5...")
         try:
-            workspace_root = os.environ.get("AGENT_FILE_ROOT", "D:\\repos\\Dadudekc")
+            workspace_root = os.environ.get(
+                "AGENT_FILE_ROOT", os.path.join(project_root, "agent_workspaces")
+            )
             inbox = os.path.join(workspace_root, "Agent-5", "inbox")
             os.makedirs(inbox, exist_ok=True)
             payload = {
@@ -393,7 +617,9 @@ class FiveAgentGridGUI(QMainWindow):
         for agent_id in self._selected_or_all():
             # Lightweight file-based status probe consistent with update_agent_statuses
             try:
-                workspace_root = os.environ.get("AGENT_FILE_ROOT", "D:\\repos\\Dadudekc")
+                workspace_root = os.environ.get(
+                    "AGENT_FILE_ROOT", os.path.join(project_root, "agent_workspaces")
+                )
                 status_file = os.path.join(workspace_root, agent_id, "status.json")
                 if os.path.exists(status_file):
                     data = json.load(open(status_file, 'r', encoding='utf-8'))
