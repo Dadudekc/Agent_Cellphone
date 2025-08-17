@@ -4,6 +4,7 @@ import time
 from pathlib import Path
 from typing import Dict, List
 from .db_reader import read_assistant_messages
+from ..utils import atomic_write
 
 # Configuration
 INBOX = Path("agent_workspaces/Agent-5/inbox")
@@ -100,9 +101,9 @@ class CursorDBWatcher:
                         }
                     }
                     
-                    # Write to inbox
+                    # Write to inbox atomically
                     out = INBOX / f"assistant_{int(time.time()*1000)}_{agent}.json"
-                    out.write_text(json.dumps(env, ensure_ascii=False, indent=2), encoding="utf-8")
+                    atomic_write(out, json.dumps(env, ensure_ascii=False, indent=2))
                     
                     print(f"[CURSOR_WATCHER] Captured AI response from {agent}: {len(m['text'])} chars")
                 
