@@ -65,6 +65,10 @@ class EnhancedCaptureConfig:
     enable_sentiment_analysis: bool = True
     enable_task_extraction: bool = True
 
+    # OCR settings
+    ocr_dpi_scale: float = 1.0
+    ocr_preprocess: Optional[Callable[[Any], Any]] = None
+
 class AIResponse:
     """Enhanced AI response with analysis"""
     def __init__(self, agent: str, text: str, timestamp: float, source: str = "unknown"):
@@ -272,18 +276,34 @@ class EnhancedResponseCapture:
         """Capture using OCR on output area"""
         if not (pyautogui and pytesseract and Image):
             return None
-        
+
         try:
             # Get agent coordinates
             agent_coords = self.coords.get(agent, {})
-            if not agent_coords:
+            region = agent_coords.get("output_area") if agent_coords else None
+            if not region:
                 return None
-            
-            # Take screenshot and extract text
-            # This would need proper coordinate mapping
-            return None
-        except Exception:
-            pass
+
+            # Apply DPI scaling if configured
+            scale = getattr(self.config, "ocr_dpi_scale", 1.0) or 1.0
+            x = int(region.get("x", 0) * scale)
+            y = int(region.get("y", 0) * scale)
+            w = int(region.get("width", 0) * scale)
+            h = int(region.get("height", 0) * scale)
+
+            # Take screenshot
+            img = pyautogui.screenshot(region=(x, y, w, h))
+
+            # Optional preprocessing
+            preprocess = getattr(self.config, "ocr_preprocess", None)
+            if callable(preprocess):
+                img = preprocess(img)
+
+            text = pytesseract.image_to_string(img).strip()
+            if text:
+                return AIResponse(agent, text, time.time(), "ocr")
+        except Exception as e:
+            print(f"[ENHANCED_CAPTURE] OCR capture error: {e}")
         return None
     
     def _route_to_workflow(self, response: AIResponse):
