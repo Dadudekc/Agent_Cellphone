@@ -429,57 +429,87 @@ class AgentCellPhone:
 
     def clear_queue(self) -> bool:
         """Clear the PyAutoGUI message queue.
-        
+
         Returns:
             True if queue was cleared, False otherwise
         """
         if not self._pyautogui_queue:
             return False
-        
+
         try:
-            # This would need to be implemented in the PyAutoGUIQueue class
-            # For now, we'll just log the request
-            log.info("Queue clear requested (not yet implemented)")
-            return False
+            result = self._pyautogui_queue.clear_queue()
+            if result:
+                log.info("PyAutoGUI queue cleared")
+            else:
+                log.warning("PyAutoGUI queue clear failed")
+            return result
         except Exception as e:
             log.error("Queue clear error: %s", e)
             return False
 
     # private helpers ────────────────────
     def _listen_loop(self) -> None:
-        """Main listening loop for incoming messages."""
-        while self._listening:
-            try:
-                # Simulate checking for incoming messages
-                # In a real implementation, this would monitor the agent's input/output
-                time.sleep(0.1)
-                
-                # For demo purposes, we'll simulate incoming messages after a delay
-                if not hasattr(self, '_demo_messages_sent'):
-                    self._demo_messages_sent = True
-                    # Simulate some incoming messages after a delay
-                    threading.Timer(2.0, self._simulate_incoming_messages).start()
-                    
-            except Exception as e:
-                log.error("Error in listen loop: %s", e)
+        """Main listening loop for incoming messages.
 
-    def _simulate_incoming_messages(self) -> None:
-        """Simulate incoming messages for demo purposes."""
-        if self._agent_id == "Agent-1":
-            # Agent-1 receives responses from Agent-3 and Agent-4
-            self._handle_incoming_message(AgentMessage("Agent-3", self._agent_id, "I'll create the GUI components. What API endpoints do you need?", MsgTag.REPLY))
-            time.sleep(1)
-            self._handle_incoming_message(AgentMessage("Agent-4", self._agent_id, "I'll handle the integration layer. Ready to connect API and GUI.", MsgTag.REPLY))
-        elif self._agent_id == "Agent-3":
-            # Agent-3 receives from Agent-1 and Agent-4
-            self._handle_incoming_message(AgentMessage("Agent-1", self._agent_id, "API endpoints ready: GET/POST/PUT/DELETE /resume. Please integrate into GUI.", MsgTag.COORDINATE))
-            time.sleep(1)
-            self._handle_incoming_message(AgentMessage("Agent-4", self._agent_id, "Integration utilities ready. I'll provide data binding for your GUI.", MsgTag.REPLY))
-        elif self._agent_id == "Agent-4":
-            # Agent-4 receives from Agent-1 and Agent-3
-            self._handle_incoming_message(AgentMessage("Agent-1", self._agent_id, "API validation endpoints added. Ready for integration testing.", MsgTag.REPLY))
-            time.sleep(1)
-            self._handle_incoming_message(AgentMessage("Agent-3", self._agent_id, "GUI components created: ResumeForm, ResumeList, ResumeView. Ready for API binding.", MsgTag.REPLY))
+        Polls the response capture inbox (if configured) and the agent's
+        filesystem inbox for JSON envelopes. Each new envelope is parsed and
+        dispatched via `_handle_incoming_message`.
+        """
+        # Allow tests to override inbox directories
+        if hasattr(self, "_inbox_override"):
+            inbox_dirs = [Path(p) for p in self._inbox_override]
+        else:
+            inbox_dirs: List[Path] = []
+            if self._response_capture:
+                try:
+                    inbox_dirs.append(Path(self._response_capture.cfg.inbox_root))
+                except Exception:
+                    pass
+            inbox_dirs.append(REPO_ROOT / "agent_workspaces" / self._agent_id / "inbox")
+
+        seen: set[Path] = set()
+        while self._listening:
+            for inbox in inbox_dirs:
+                try:
+                    if not inbox.exists():
+                        continue
+                    for msg_file in sorted(inbox.glob("*.json")):
+                        if msg_file in seen:
+                            continue
+                        try:
+                            envelope = json.loads(msg_file.read_text(encoding="utf-8"))
+                        except Exception as e:
+                            log.error("Failed to read envelope %s: %s", msg_file, e)
+                            seen.add(msg_file)
+                            continue
+
+                        from_agent = self._fmt_id(envelope.get("from", ""))
+                        to_agent = self._fmt_id(envelope.get("to", self._agent_id))
+                        if to_agent != self._agent_id:
+                            seen.add(msg_file)
+                            continue
+
+                        content = (
+                            envelope.get("summary")
+                            or envelope.get("content")
+                            or envelope.get("message")
+                            or json.dumps(envelope.get("payload", {}))
+                        )
+                        tag_str = str(envelope.get("type", "")).upper()
+                        tag = MsgTag[tag_str] if tag_str in MsgTag.__members__ else MsgTag.NORMAL
+
+                        self._handle_incoming_message(
+                            AgentMessage(from_agent, to_agent, content, tag)
+                        )
+                        seen.add(msg_file)
+                        try:
+                            msg_file.unlink()
+                        except Exception:
+                            pass
+                except Exception as e:
+                    log.error("Error processing inbox %s: %s", inbox, e)
+
+            time.sleep(0.5)
 
     def _handle_incoming_message(self, message: AgentMessage) -> None:
         """Handle an incoming message."""

@@ -13,6 +13,7 @@ import re
 import threading
 import asyncio
 from pathlib import Path
+from ..utils import atomic_write
 from dataclasses import dataclass
 from typing import Optional, Dict, Callable, List, Any
 from enum import Enum
@@ -64,6 +65,10 @@ class EnhancedCaptureConfig:
     enable_conversation_analysis: bool = True
     enable_sentiment_analysis: bool = True
     enable_task_extraction: bool = True
+
+    # OCR settings
+    ocr_dpi_scale: float = 1.0
+    ocr_preprocess: Optional[Callable[[Any], Any]] = None
 
 class AIResponse:
     """Enhanced AI response with analysis"""
@@ -272,18 +277,34 @@ class EnhancedResponseCapture:
         """Capture using OCR on output area"""
         if not (pyautogui and pytesseract and Image):
             return None
-        
+
         try:
             # Get agent coordinates
             agent_coords = self.coords.get(agent, {})
-            if not agent_coords:
+            region = agent_coords.get("output_area") if agent_coords else None
+            if not region:
                 return None
-            
-            # Take screenshot and extract text
-            # This would need proper coordinate mapping
-            return None
-        except Exception:
-            pass
+
+            # Apply DPI scaling if configured
+            scale = getattr(self.config, "ocr_dpi_scale", 1.0) or 1.0
+            x = int(region.get("x", 0) * scale)
+            y = int(region.get("y", 0) * scale)
+            w = int(region.get("width", 0) * scale)
+            h = int(region.get("height", 0) * scale)
+
+            # Take screenshot
+            img = pyautogui.screenshot(region=(x, y, w, h))
+
+            # Optional preprocessing
+            preprocess = getattr(self.config, "ocr_preprocess", None)
+            if callable(preprocess):
+                img = preprocess(img)
+
+            text = pytesseract.image_to_string(img).strip()
+            if text:
+                return AIResponse(agent, text, time.time(), "ocr")
+        except Exception as e:
+            print(f"[ENHANCED_CAPTURE] OCR capture error: {e}")
         return None
     
     def _route_to_workflow(self, response: AIResponse):
@@ -302,7 +323,7 @@ class EnhancedResponseCapture:
             }
             
             out_file = Path(self.config.workflow_inbox) / f"response_{int(time.time()*1000)}_{response.agent}.json"
-            out_file.write_text(json.dumps(envelope, ensure_ascii=False, indent=2), encoding="utf-8")
+            atomic_write(out_file, json.dumps(envelope, ensure_ascii=False, indent=2))
             
         except Exception as e:
             print(f"[ENHANCED_CAPTURE] Error routing to workflow: {e}")
@@ -322,7 +343,7 @@ class EnhancedResponseCapture:
             }
             
             out_file = Path(self.config.fsm_inbox) / f"response_{int(time.time()*1000)}_{response.agent}.json"
-            out_file.write_text(json.dumps(envelope, ensure_ascii=False, indent=2), encoding="utf-8")
+            atomic_write(out_file, json.dumps(envelope, ensure_ascii=False, indent=2))
             
         except Exception as e:
             print(f"[ENHANCED_CAPTURE] Error routing to FSM: {e}")
