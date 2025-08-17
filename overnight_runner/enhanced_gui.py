@@ -70,6 +70,42 @@ class PyAutoGUIQueue:
         self.processing = False
         if self.processing_thread:
             self.processing_thread.join(timeout=1)
+
+    def clear_queue(self) -> bool:
+        """Purge all pending messages and release agent locks.
+
+        Returns:
+            bool: True if the queue was cleared without error, False otherwise.
+        """
+        try:
+            # Stop processing to avoid race conditions while clearing
+            self.stop_processing()
+
+            # Drain all pending messages
+            while not self.message_queue.empty():
+                try:
+                    self.message_queue.get_nowait()
+                    self.message_queue.task_done()
+                except queue.Empty:
+                    break
+
+            # Release any agent locks that might still be held
+            for lock in self.agent_locks.values():
+                try:
+                    if lock.locked():
+                        lock.release()
+                except Exception:
+                    # If a lock can't be released (shouldn't happen with normal
+                    # threading.Lock), continue clearing the rest
+                    continue
+
+            return True
+        except Exception as e:
+            print(f"Error clearing queue: {e}")
+            return False
+        finally:
+            # Restart processing so new messages can be handled
+            self.start_processing()
     
     def _process_queue(self):
         """Process messages from the queue one at a time."""
