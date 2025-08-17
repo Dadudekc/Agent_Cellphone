@@ -1,0 +1,35 @@
+{
+  "project_root": "D:\\Agent_Cellphone",
+  "total_files": 1490,
+  "referenced_files": 1468,
+  "orphaned_files": 9,
+  "orphan_categories": {
+    "python_files": [],
+    "documentation": [],
+    "scripts": [],
+    "configs": [],
+    "other": [
+      "logs\\overnight_20250809212834.err",
+      "logs\\overnight_20250809_213102.err",
+      "logs\\overnight_latest.pid",
+      "src\\gui\\logo.png",
+      "config\\.env",
+      "config\\env.example",
+      "config\\Makefile",
+      "src\\gui\\1logo.png",
+      "logs\\overnight_20250810_014728.err"
+    ]
+  },
+  "all_orphaned_files": [
+    "config\\.env",
+    "config\\Makefile",
+    "config\\env.example",
+    "logs\\overnight_20250809212834.err",
+    "logs\\overnight_20250809_213102.err",
+    "logs\\overnight_20250810_014728.err",
+    "logs\\overnight_latest.pid",
+    "src\\gui\\1logo.png",
+    "src\\gui\\logo.png"
+  ],
+  "analysis_timestamp": "D:\\Agent_Cellphone"
+}

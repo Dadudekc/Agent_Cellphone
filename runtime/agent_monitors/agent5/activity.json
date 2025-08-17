@@ -1,33 +1,42 @@
 {
-  "ts": "2025-08-17T00:40:47.541068+00:00",
+  "ts": "2025-08-17T11:06:19.436446+00:00",
   "last_activity": {
-    "Agent-1": 1755391196.8761857,
-    "Agent-2": 1755391196.7961147,
-    "Agent-3": 1755391196.7961147,
-    "Agent-4": 1755391196.7961147
+    "Agent-1": 1755428265.8624463,
+    "Agent-2": 1755428286.4577906,
+    "Agent-3": 1755428348.053791,
+    "Agent-4": 1755428381.6374993,
+    "Agent-5": 1755428265.8324182
   },
   "last_rescue": {
-    "Agent-1": 1755391196.8761857
+    "Agent-1": 1755428748.0849285,
+    "Agent-2": 1755428286.4577906,
+    "Agent-3": 1755428348.053791,
+    "Agent-4": 1755428381.6374993,
+    "Agent-5": 1755428760.4382892
   },
   "config": {
     "agents": [
       "Agent-1",
       "Agent-2",
       "Agent-3",
-      "Agent-4"
+      "Agent-4",
+      "Agent-5"
     ],
-    "stall_threshold_sec": 300,
+    "stall_threshold_sec": 600,
+    "warn_threshold_sec": 480,
+    "normal_response_time": 300,
     "warn_ratio": 0.8,
-    "check_every_sec": 5,
+    "check_every_sec": 30,
     "file_watch_root": "agent_workspaces",
     "file_response_name": "response.txt",
     "inbox_root": "runtime/agent_comms/inbox",
     "fsm_enabled": true,
-    "rescue_cooldown_sec": 60,
-    "active_grace_sec": 60,
+    "rescue_cooldown_sec": 300,
+    "active_grace_sec": 300,
+    "onboarding_grace_period": 600,
     "use_db_lane": false,
     "workspace_map_path": "src/runtime/config/agent_workspace_map.json",
     "test_mode": false
   },
-  "uptime_sec": 50.92211675643921
+  "uptime_sec": 513.6570763587952
 }

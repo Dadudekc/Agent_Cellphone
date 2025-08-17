@@ -1,0 +1,200 @@
+{
+  "2-agent": {
+    "Agent-1": {
+      "input_box": {
+        "x": -1399,
+        "y": 486
+      },
+      "starter_location_box": {
+        "x": -1306,
+        "y": 180
+      }
+    },
+    "Agent-2": {
+      "input_box": {
+        "x": -303,
+        "y": 486
+      },
+      "starter_location_box": {
+        "x": -394,
+        "y": 179
+      }
+    }
+  },
+  "4-agent": {
+    "Agent-1": {
+      "input_box": {
+        "x": -1399,
+        "y": 486
+      },
+      "starter_location_box": {
+        "x": -1306,
+        "y": 180
+      }
+    },
+    "Agent-2": {
+      "input_box": {
+        "x": -303,
+        "y": 486
+      },
+      "starter_location_box": {
+        "x": -394,
+        "y": 179
+      }
+    },
+    "Agent-3": {
+      "input_box": {
+        "x": -1292,
+        "y": 1005
+      },
+      "starter_location_box": {
+        "x": -1336,
+        "y": 697
+      }
+    },
+    "Agent-4": {
+      "input_box": {
+        "x": -328,
+        "y": 1008
+      },
+      "starter_location_box": {
+        "x": -332,
+        "y": 680
+      }
+    }
+  },
+  "5-agent": {
+    "Agent-1": {
+      "starter_location_box": {
+        "x": 1703,
+        "y": 555
+      },
+      "input_box": {
+        "x": 1703,
+        "y": 555
+      }
+    },
+    "Agent-2": {
+      "starter_location_box": {
+        "x": 1703,
+        "y": 555
+      },
+      "input_box": {
+        "x": 1703,
+        "y": 555
+      }
+    },
+    "Agent-3": {
+      "starter_location_box": {
+        "x": 1703,
+        "y": 555
+      },
+      "input_box": {
+        "x": 1706,
+        "y": 555
+      }
+    },
+    "Agent-4": {
+      "starter_location_box": {
+        "x": 1760,
+        "y": 929
+      },
+      "input_box": {
+        "x": 1759,
+        "y": 927
+      }
+    },
+    "Agent-5": {
+      "starter_location_box": {
+        "x": 1759,
+        "y": 927
+      },
+      "input_box": {
+        "x": 1759,
+        "y": 927
+      }
+    }
+  },
+  "8-agent": {
+    "Agent-1": {
+      "input_box": {
+        "x": -1399,
+        "y": 486
+      },
+      "starter_location_box": {
+        "x": -1306,
+        "y": 180
+      }
+    },
+    "Agent-2": {
+      "input_box": {
+        "x": -303,
+        "y": 486
+      },
+      "starter_location_box": {
+        "x": -394,
+        "y": 179
+      }
+    },
+    "Agent-3": {
+      "input_box": {
+        "x": -1292,
+        "y": 1005
+      },
+      "starter_location_box": {
+        "x": -1336,
+        "y": 697
+      }
+    },
+    "Agent-4": {
+      "input_box": {
+        "x": -328,
+        "y": 1008
+      },
+      "starter_location_box": {
+        "x": -332,
+        "y": 680
+      }
+    },
+    "Agent-5": {
+      "input_box": {
+        "x": 1587,
+        "y": 940
+      },
+      "starter_location_box": {
+        "x": 1630,
+        "y": 109
+      }
+    },
+    "Agent-6": {
+      "input_box": {
+        "x": 1587,
+        "y": 486
+      },
+      "starter_location_box": {
+        "x": 1630,
+        "y": 180
+      }
+    },
+    "Agent-7": {
+      "input_box": {
+        "x": -1399,
+        "y": 1005
+      },
+      "starter_location_box": {
+        "x": -1306,
+        "y": 697
+      }
+    },
+    "Agent-8": {
+      "input_box": {
+        "x": -303,
+        "y": 1005
+      },
+      "starter_location_box": {
+        "x": -394,
+        "y": 697
+      }
+    }
+  }
+}

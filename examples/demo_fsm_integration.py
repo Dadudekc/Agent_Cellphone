@@ -22,7 +22,7 @@ def demo_fsm_integration():
     temp_root = Path(tempfile.mkdtemp(prefix="fsm_integration_demo_"))
     fsm_root = temp_root / "fsm_data"
     inbox_root = temp_root / "runtime/fsm_bridge/outbox"
-    outbox_root = temp_root / "communications/overnight_20250815_/Agent-5/verifications"
+    outbox_root = temp_root / "communications/OVERNIGHT_COORDINATION/overnight_20250815_/Agent-5/verifications"
     
     # Create directory structure
     fsm_root.mkdir(parents=True, exist_ok=True)

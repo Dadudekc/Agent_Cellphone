@@ -57,7 +57,7 @@ def _read_inbox_messages(agent: str, limit: int = 10) -> List[Dict[str, Any]]:
     try:
         inbox_dir = INBOX_ROOT / agent / "inbox"
         if not inbox_dir.exists():
-            return []
+        return []
         
         messages = []
         for filepath in sorted(inbox_dir.glob("fsm_message_*.json"), reverse=True):
@@ -86,8 +86,8 @@ def _scan_repositories_for_tasks() -> List[Dict[str, Any]]:
     
     if not REPO_ROOT.exists():
         print(f"⚠️  Repository root {REPO_ROOT} does not exist")
-        return tasks
-    
+    return tasks
+
     try:
         for repo in sorted(REPO_ROOT.iterdir()):
             if not repo.is_dir() or repo.name.startswith('.'):
@@ -209,8 +209,8 @@ def get_fsm_status(agent: str) -> Dict[str, Any]:
         if state_file.exists():
             try:
                 current_state = json.loads(state_file.read_text(encoding='utf-8'))
-            except Exception:
-                pass
+    except Exception:
+        pass
         
         return {
             "agent": agent,

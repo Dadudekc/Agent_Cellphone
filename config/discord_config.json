@@ -1,32 +1,45 @@
 {
-  "token": "YOUR_DISCORD_BOT_TOKEN_HERE",
-  "guild_id": "YOUR_GUILD_ID_HERE",
-  "channels": {
-    "coordination": "auto-mode-coordination",
-    "technical": "technical-assessment",
-    "qa": "quality-assurance",
-    "community": "community-engagement",
-    "user_support": "auto-mode-support"
-  },
-  "auto_mode": {
-    "bot_name": "Auto Mode Coordinator",
-    "bot_status": "Coordinating Auto Mode operations",
-    "coordination_enabled": true,
-    "democratic_voting": true,
-    "auto_routing": true
-  },
-  "notifications": {
-    "system_status": true,
-    "agent_activity": true,
-    "coordination_events": true,
-    "user_alerts": true,
-    "performance_metrics": true
-  },
-  "commands": {
-    "prefix": "!",
-    "auto_mode_status": "!status",
-    "agent_status": "!agents",
-    "coordination_status": "!coordination",
-    "help": "!help"
+  "discord_config": {
+    "description": "Discord webhook configuration for agent updates and rescue messages",
+    "version": "1.0",
+    "last_updated": "2025-01-15",
+    "webhooks": {
+      "agent_updates": {
+        "url": "YOUR_DISCORD_WEBHOOK_URL_HERE",
+        "description": "Webhook for agent work updates and status messages",
+        "enabled": true
+      },
+      "rescue_messages": {
+        "url": "YOUR_DISCORD_WEBHOOK_URL_HERE",
+        "description": "Webhook for agent stall detection and rescue messages",
+        "enabled": true
+      },
+      "error_monitoring": {
+        "url": "YOUR_DISCORD_WEBHOOK_URL_HERE",
+        "description": "Webhook for error monitoring and critical alerts",
+        "enabled": true
+      }
+    },
+    "message_settings": {
+      "update_interval": 1800,
+      "rescue_check_interval": 300,
+      "health_check_interval": 300,
+      "max_message_length": 2000
+    },
+    "notification_channels": {
+      "agent_status": "#agent-status",
+      "rescue_alerts": "#rescue-alerts",
+      "work_updates": "#work-updates",
+      "error_logs": "#error-logs"
+    },
+    "setup_instructions": [
+      "1. Create Discord webhooks in your server",
+      "2. Replace 'YOUR_DISCORD_WEBHOOK_URL_HERE' with actual webhook URLs",
+      "3. Ensure the webhook channels exist and have proper permissions",
+      "4. Test the webhooks by running a test message",
+      "5. Monitor the logs to ensure messages are being sent successfully"
+    ]
   }
 }
+
+

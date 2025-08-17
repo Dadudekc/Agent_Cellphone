@@ -1,21 +1,25 @@
 {
-  "ts": "2025-08-17T00:40:42.688001+00:00",
+  "ts": "2025-08-17T11:05:48.084928+00:00",
   "agents": {
     "Agent-1": {
-      "age_sec": 45.81181526184082,
-      "status": "active"
+      "age_sec": 482.22248220443726,
+      "status": "warning"
     },
     "Agent-2": {
-      "age_sec": 45.89188623428345,
-      "status": "active"
+      "age_sec": 461.6271378993988,
+      "status": "idle"
     },
     "Agent-3": {
-      "age_sec": 45.89188623428345,
-      "status": "active"
+      "age_sec": 400.03113746643066,
+      "status": "idle"
     },
     "Agent-4": {
-      "age_sec": 45.89188623428345,
-      "status": "active"
+      "age_sec": 366.44742918014526,
+      "status": "idle"
+    },
+    "Agent-5": {
+      "age_sec": 482.25251030921936,
+      "status": "warning"
     }
   }
 }

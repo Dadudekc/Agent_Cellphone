@@ -39,6 +39,16 @@ class RepositoryActivityMonitor:
     
     def __init__(self, repos_root: str = "D:/repos/Dadudekc"):
         self.repos_root = Path(repos_root)
+        
+        # Always initialize agent_repos as fallback
+        self.agent_repos = {
+            "Agent-1": ["AI_Debugger_Assistant", "DigitalDreamscape", "FreeRideInvestor", "Hive-Mind", "MeTuber", "osrsAIagent", "osrsbot"],
+            "Agent-2": ["Auto_Blogger", "Dream.os", "FreeWork", "IT_help_desk", "NewSims4ModProject", "practice", "projectscanner"],
+            "Agent-3": ["DaDudeKC-Website", "DreamVault", "FreerideinvestorWebsite", "LSTMmodel_trainer", "machinelearningproject", "MLRobotmaker"],
+            "Agent-4": ["DaDudekC", "FocusForge", "HCshinobi", "SWARM", "TradingRobotPlug", "ultimate_trading_intelligence"],
+            "Agent-5": ["CAPTAIN"]  # Special role
+        }
+        
         # Import here to avoid circular imports
         try:
             from src.core.project_focus_manager import ProjectFocusManager
@@ -48,13 +58,6 @@ class RepositoryActivityMonitor:
             # Fallback to hardcoded config if import fails
             self.project_manager = None
             self.use_dynamic_config = False
-            self.agent_repos = {
-                "Agent-1": ["AI_Debugger_Assistant", "DigitalDreamscape", "FreeRideInvestor", "Hive-Mind", "MeT"],
-                "Agent-2": ["Auto_Blogger", "Dream.os", "FreeWork", "IT_help_desk", "NewSims4ModProject"],
-                "Agent-3": ["DaDudeKC-Website", "DreamVault", "FreerideinvestorWebsite", "LSTMmodel_trainer"],
-                "Agent-4": ["DaDudekC", "FocusForge", "HCshinobi", "MLRobotmaker", "SWARM"],
-                "Agent-5": ["CAPTAIN"]  # Special role
-            }
         
         self.cache = {}
         self.cache_ttl = 60  # 1 minute cache
