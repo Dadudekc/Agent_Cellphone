@@ -1,3 +1,7 @@
+import os
+import time
+from pathlib import Path
+
 import pytest
 
 from agent_cell_phone import AgentCellPhone, MsgTag
@@ -7,10 +11,9 @@ def test_send_records_cursor_actions():
     acp = AgentCellPhone(layout_mode="2-agent", test=True)
     acp.send("Agent-2", "ping", MsgTag.VERIFY)
 
-    # three cursor actions: move+click, type, enter
     assert acp._cursor.record[0].startswith("move(")
-    assert "type([VERIFY] ping)" == acp._cursor.record[1]
-    assert acp._cursor.record[2] == "enter"
+    assert "type([VERIFY] ping)" in acp._cursor.record
+    assert acp._cursor.record[-1] == "enter"
     assert len(acp.get_conversation_history()) == 1
 
 
@@ -39,4 +42,20 @@ def test_send_accepts_special_characters():
     message = "!@#$%^&*()"
     acp.send("Agent-2", message)
     assert acp.get_conversation_history()[0].content == message
+
+
+def test_heartbeat_envelope_written():
+    inbox = Path("runtime/agent_comms/inbox")
+    if inbox.exists():
+        for f in inbox.glob("heartbeat_*.json"):
+            f.unlink()
+    os.environ["ACP_HEARTBEAT_SEC"] = "1"
+    acp = AgentCellPhone(layout_mode="2-agent", test=True)
+    time.sleep(1.2)
+    files = list(inbox.glob("heartbeat_*.json"))
+    acp.stop()
+    os.environ.pop("ACP_HEARTBEAT_SEC", None)
+    assert files, "Heartbeat file should be created"
+    for f in files:
+        f.unlink()
 

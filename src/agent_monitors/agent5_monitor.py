@@ -253,7 +253,25 @@ class Agent5Monitor:
     def _update_activity_from_files(self, agents: List[str]):
         """Update activity timestamps from file modification times"""
         root = Path(self.cfg.file_watch_root)
-        
+
+        # Process heartbeat envelopes
+        inbox = Path(self.cfg.inbox_root)
+        if inbox.exists():
+            for hb in inbox.glob("heartbeat_*.json"):
+                try:
+                    data = json.loads(hb.read_text(encoding="utf-8"))
+                    agent = data.get("agent")
+                    ts = float(data.get("ts") or 0)
+                    if agent in agents and ts:
+                        self.last_activity[agent] = max(self.last_activity.get(agent, 0.0), ts)
+                except Exception:
+                    pass
+                finally:
+                    try:
+                        hb.unlink()
+                    except Exception:
+                        pass
+
         for agent in agents:
             ws = root / agent
             # Prefer state.json; fallback to response.txt

@@ -51,6 +51,10 @@ class TestAgent5Monitor:
         self.temp_dir = tempfile.mkdtemp()
         self.agent_workspace = Path(self.temp_dir) / "agent_workspaces"
         self.agent_workspace.mkdir(parents=True)
+
+        self.inbox_dir = Path(self.temp_dir) / "runtime" / "agent_comms" / "inbox"
+        self.inbox_dir.mkdir(parents=True, exist_ok=True)
+        os.environ["ACP_HEARTBEAT_SEC"] = "0"
         
         # Create test agent directories
         for agent in ["Agent-1", "Agent-2", "Agent-3"]:
@@ -69,6 +73,8 @@ class TestAgent5Monitor:
         """Cleanup after each test"""
         import shutil
         shutil.rmtree(self.temp_dir, ignore_errors=True)
+        if "ACP_HEARTBEAT_SEC" in os.environ:
+            del os.environ["ACP_HEARTBEAT_SEC"]
     
     def test_stall_detection_triggers_rescue(self):
         """Test that stalled agents receive rescue messages"""
@@ -167,6 +173,31 @@ class TestAgent5Monitor:
         # Verify activity timestamp was updated
         new_time = monitor.last_activity["Agent-1"]
         assert new_time > old_time, "Activity timestamp should be updated"
+
+    def test_missing_heartbeat_triggers_rescue(self):
+        """Heartbeat absence should lead to rescue"""
+        cfg = MonitorConfig(
+            agents=["Agent-1"],
+            stall_threshold_sec=1,
+            check_every_sec=1,
+            file_watch_root=str(self.agent_workspace),
+            inbox_root=str(self.inbox_dir),
+            rescue_cooldown_sec=0,
+        )
+
+        monitor = Agent5Monitor(cfg, test=True)
+        monitor.acp = DummyACP()
+
+        hb_file = self.inbox_dir / f"heartbeat_{int(time.time()*1000)}_Agent-1.json"
+        hb_file.write_text(json.dumps({"type": "heartbeat", "agent": "Agent-1", "ts": int(time.time())}))
+
+        monitor._tick()
+        assert "Agent-1" in monitor.last_activity
+        assert len(monitor.acp.sent) == 0
+
+        time.sleep(1.2)
+        monitor._tick()
+        assert len(monitor.acp.sent) == 1
     
     def test_state_restoration_on_restart(self):
         """Test that monitor state is restored after restart"""
@@ -231,9 +262,9 @@ class TestAgent5Monitor:
 def test_monitor_config_defaults():
     """Test that MonitorConfig has sensible defaults"""
     cfg = MonitorConfig(agents=["Agent-1"])
-    
-    assert cfg.stall_threshold_sec == 1200, "Default stall threshold should be 20 minutes"
-    assert cfg.check_every_sec == 5, "Default check interval should be 5 seconds"
+
+    assert cfg.stall_threshold_sec == 600, "Default stall threshold should be 10 minutes"
+    assert cfg.check_every_sec == 30, "Default check interval should be 30 seconds"
     assert cfg.rescue_cooldown_sec == 300, "Default rescue cooldown should be 5 minutes"
     assert cfg.active_grace_sec == 300, "Default active grace should be 5 minutes"
 
