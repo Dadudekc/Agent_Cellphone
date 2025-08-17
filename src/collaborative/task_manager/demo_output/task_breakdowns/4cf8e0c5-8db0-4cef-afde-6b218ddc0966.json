@@ -1,0 +1,84 @@
+{
+  "breakdown_id": "4cf8e0c5-8db0-4cef-afde-6b218ddc0966",
+  "original_task_id": "TASK_TESTING_001",
+  "original_title": "Testing & Quality Assurance",
+  "original_description": "Implement comprehensive testing strategy and automation",
+  "components": [
+    {
+      "component_id": "a968c2ae-e00d-4ac9-b5ea-57f8645dfad5",
+      "parent_task_id": "TASK_TESTING_001",
+      "title": "Testing & Quality Assurance - Analysis & Planning",
+      "description": "Requirements analysis and planning",
+      "task_type": "TaskType.TESTING",
+      "complexity": "TaskComplexity.SIMPLE",
+      "priority": "TaskPriority.NORMAL",
+      "estimated_hours": 2.6666666666666665,
+      "required_skills": [
+        "testing"
+      ],
+      "dependencies": [],
+      "assigned_agent": "Agent-2",
+      "status": "assigned",
+      "created_at": "2025-08-17T04:46:44.472914",
+      "updated_at": "2025-08-17T04:46:44.472914"
+    },
+    {
+      "component_id": "a367c16c-d507-4692-b6d1-81a0d46dae4b",
+      "parent_task_id": "TASK_TESTING_001",
+      "title": "Testing & Quality Assurance - Core Development",
+      "description": "Main development and implementation",
+      "task_type": "TaskType.DEVELOPMENT",
+      "complexity": "TaskComplexity.SIMPLE",
+      "priority": "TaskPriority.NORMAL",
+      "estimated_hours": 2.6666666666666665,
+      "required_skills": [
+        "automation"
+      ],
+      "dependencies": [
+        "a968c2ae-e00d-4ac9-b5ea-57f8645dfad5"
+      ],
+      "assigned_agent": "Agent-2",
+      "status": "assigned",
+      "created_at": "2025-08-17T04:46:44.472914",
+      "updated_at": "2025-08-17T04:46:44.472914"
+    },
+    {
+      "component_id": "1db12bd1-6f29-470f-98be-f5d86089902a",
+      "parent_task_id": "TASK_TESTING_001",
+      "title": "Testing & Quality Assurance - Testing & Validation",
+      "description": "Testing and quality assurance",
+      "task_type": "TaskType.DEVELOPMENT",
+      "complexity": "TaskComplexity.SIMPLE",
+      "priority": "TaskPriority.NORMAL",
+      "estimated_hours": 2.6666666666666665,
+      "required_skills": [
+        "python"
+      ],
+      "dependencies": [
+        "a367c16c-d507-4692-b6d1-81a0d46dae4b"
+      ],
+      "assigned_agent": "Agent-1",
+      "status": "assigned",
+      "created_at": "2025-08-17T04:46:44.472914",
+      "updated_at": "2025-08-17T04:46:44.472914"
+    }
+  ],
+  "total_estimated_hours": 8.0,
+  "critical_path": [
+    "a968c2ae-e00d-4ac9-b5ea-57f8645dfad5",
+    "a367c16c-d507-4692-b6d1-81a0d46dae4b",
+    "1db12bd1-6f29-470f-98be-f5d86089902a"
+  ],
+  "resource_allocation": {
+    "Agent-2": [
+      "a968c2ae-e00d-4ac9-b5ea-57f8645dfad5",
+      "a367c16c-d507-4692-b6d1-81a0d46dae4b"
+    ],
+    "Agent-1": [
+      "1db12bd1-6f29-470f-98be-f5d86089902a"
+    ]
+  },
+  "optimization_score": 0.8999999999999999,
+  "created_at": "2025-08-17T04:46:44.472914",
+  "updated_at": "2025-08-17T04:46:44.472914"
+}

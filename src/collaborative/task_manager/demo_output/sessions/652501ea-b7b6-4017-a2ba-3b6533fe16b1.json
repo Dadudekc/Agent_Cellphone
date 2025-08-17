@@ -1,0 +1,35 @@
+{
+  "session_id": "652501ea-b7b6-4017-a2ba-3b6533fe16b1",
+  "title": "Enterprise Web Application Development",
+  "description": "Collaborative development of enterprise web application with optimization",
+  "participants": [
+    "Agent-1",
+    "Agent-2",
+    "Agent-3",
+    "Agent-4"
+  ],
+  "mode": "CollaborationMode.OPTIMIZED",
+  "workflows": [
+    "8ae22532-18cb-4c6c-a9fa-9b04dce5fe59",
+    "8d998fd5-e399-4106-bce2-b9708cc2c56c",
+    "7c4d99e2-face-4fb8-a4d5-57362ec52da7",
+    "aeeb06fd-227d-43d3-80a2-c34e24289c63"
+  ],
+  "task_breakdowns": [
+    "0e6ea8b5-53fe-48e1-9a39-5a42a6fae276",
+    "5878ea33-bd92-46d0-a51f-000d89c947bb",
+    "4cf8e0c5-8db0-4cef-afde-6b218ddc0966",
+    "a0dc60bb-95c0-4130-b974-4e89905babf0"
+  ],
+  "start_time": "2025-08-17T04:46:44.336789",
+  "end_time": null,
+  "efficiency_score": 0.35150000000000003,
+  "performance_metrics": [
+    "0f9b992c-29db-45b7-ac5d-a648729731b6",
+    "c574a023-ecd8-4e75-990c-fa54a56ff788",
+    "41c52db9-bad2-4781-afcd-7d9d7ced42fa",
+    "3a385a55-870d-429f-99b5-368cb9390b70"
+  ],
+  "created_at": "2025-08-17T04:46:44.336789",
+  "updated_at": "2025-08-17T04:46:45.209605"
+}

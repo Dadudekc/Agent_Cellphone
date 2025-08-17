@@ -1,0 +1,12 @@
+{
+  "metric_id": "41c52db9-bad2-4781-afcd-7d9d7ced42fa",
+  "metric_type": "task_completion_rate",
+  "value": 0.9,
+  "unit": "ratio",
+  "timestamp": "2025-08-17T04:46:45.018433",
+  "context": {
+    "phase": "development"
+  },
+  "trend": "stable",
+  "impact_score": 0.9
+}

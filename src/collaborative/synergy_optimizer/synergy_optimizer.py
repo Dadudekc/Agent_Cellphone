@@ -675,3 +675,4 @@ class SynergyOptimizer:
 synergy_optimizer = SynergyOptimizer()
 
 
+

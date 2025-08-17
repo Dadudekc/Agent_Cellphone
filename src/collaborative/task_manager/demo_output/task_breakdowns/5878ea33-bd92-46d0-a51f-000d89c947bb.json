@@ -1,0 +1,104 @@
+{
+  "breakdown_id": "5878ea33-bd92-46d0-a51f-000d89c947bb",
+  "original_task_id": "TASK_FRONTEND_001",
+  "original_title": "Frontend Development",
+  "original_description": "Create responsive user interface with modern design",
+  "components": [
+    {
+      "component_id": "9e25baa2-1249-482d-b004-0fc078bc0f9a",
+      "parent_task_id": "TASK_FRONTEND_001",
+      "title": "Frontend Development - Requirements Analysis",
+      "description": "Detailed requirements gathering and analysis",
+      "task_type": "TaskType.DEVELOPMENT",
+      "complexity": "TaskComplexity.SIMPLE",
+      "priority": "TaskPriority.HIGH",
+      "estimated_hours": 3.0,
+      "required_skills": [
+        "frontend"
+      ],
+      "dependencies": [],
+      "assigned_agent": "Agent-4",
+      "status": "assigned",
+      "created_at": "2025-08-17T04:46:44.425870",
+      "updated_at": "2025-08-17T04:46:44.425870"
+    },
+    {
+      "component_id": "4870107e-dd6a-43f0-b45c-e9b557196d52",
+      "parent_task_id": "TASK_FRONTEND_001",
+      "title": "Frontend Development - Architecture Design",
+      "description": "System architecture and design",
+      "task_type": "TaskType.DEVELOPMENT",
+      "complexity": "TaskComplexity.SIMPLE",
+      "priority": "TaskPriority.HIGH",
+      "estimated_hours": 3.0,
+      "required_skills": [
+        "javascript"
+      ],
+      "dependencies": [
+        "9e25baa2-1249-482d-b004-0fc078bc0f9a"
+      ],
+      "assigned_agent": "Agent-4",
+      "status": "assigned",
+      "created_at": "2025-08-17T04:46:44.425870",
+      "updated_at": "2025-08-17T04:46:44.425870"
+    },
+    {
+      "component_id": "5eae0158-f8ed-49b4-aeef-05e3c1b60e70",
+      "parent_task_id": "TASK_FRONTEND_001",
+      "title": "Frontend Development - Core Implementation",
+      "description": "Main development implementation",
+      "task_type": "TaskType.DEVELOPMENT",
+      "complexity": "TaskComplexity.SIMPLE",
+      "priority": "TaskPriority.HIGH",
+      "estimated_hours": 3.0,
+      "required_skills": [
+        "design"
+      ],
+      "dependencies": [
+        "4870107e-dd6a-43f0-b45c-e9b557196d52"
+      ],
+      "assigned_agent": "Agent-4",
+      "status": "assigned",
+      "created_at": "2025-08-17T04:46:44.425870",
+      "updated_at": "2025-08-17T04:46:44.425870"
+    },
+    {
+      "component_id": "db2869af-ceaa-4838-9910-9d9dc4affd2a",
+      "parent_task_id": "TASK_FRONTEND_001",
+      "title": "Frontend Development - Integration & Testing",
+      "description": "Integration and comprehensive testing",
+      "task_type": "TaskType.DEVELOPMENT",
+      "complexity": "TaskComplexity.SIMPLE",
+      "priority": "TaskPriority.HIGH",
+      "estimated_hours": 3.0,
+      "required_skills": [],
+      "dependencies": [
+        "5eae0158-f8ed-49b4-aeef-05e3c1b60e70"
+      ],
+      "assigned_agent": "Agent-1",
+      "status": "assigned",
+      "created_at": "2025-08-17T04:46:44.425870",
+      "updated_at": "2025-08-17T04:46:44.425870"
+    }
+  ],
+  "total_estimated_hours": 12.0,
+  "critical_path": [
+    "9e25baa2-1249-482d-b004-0fc078bc0f9a",
+    "4870107e-dd6a-43f0-b45c-e9b557196d52",
+    "5eae0158-f8ed-49b4-aeef-05e3c1b60e70",
+    "db2869af-ceaa-4838-9910-9d9dc4affd2a"
+  ],
+  "resource_allocation": {
+    "Agent-4": [
+      "9e25baa2-1249-482d-b004-0fc078bc0f9a",
+      "4870107e-dd6a-43f0-b45c-e9b557196d52",
+      "5eae0158-f8ed-49b4-aeef-05e3c1b60e70"
+    ],
+    "Agent-1": [
+      "db2869af-ceaa-4838-9910-9d9dc4affd2a"
+    ]
+  },
+  "optimization_score": 0.8575,
+  "created_at": "2025-08-17T04:46:44.425870",
+  "updated_at": "2025-08-17T04:46:44.425870"
+}

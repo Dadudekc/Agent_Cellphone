@@ -1,0 +1,12 @@
+{
+  "metric_id": "3a385a55-870d-429f-99b5-368cb9390b70",
+  "metric_type": "resource_utilization",
+  "value": 0.85,
+  "unit": "ratio",
+  "timestamp": "2025-08-17T04:46:45.040452",
+  "context": {
+    "phase": "development"
+  },
+  "trend": "stable",
+  "impact_score": 0.8
+}

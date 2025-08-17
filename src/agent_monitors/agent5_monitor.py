@@ -61,15 +61,18 @@ def _log(msg: str):
 class MonitorConfig:
     """Configuration for the Agent-5 monitor"""
     agents: List[str]
-    stall_threshold_sec: int = 1200  # 20 minutes
+    stall_threshold_sec: int = 600   # 10 minutes - FIXED: realistic stall threshold
+    warn_threshold_sec: int = 480    # 8 minutes - FIXED: warn before stall
+    normal_response_time: int = 300  # 5 minutes - FIXED: normal agent response time
     warn_ratio: float = 0.8
-    check_every_sec: int = 5
+    check_every_sec: int = 30        # FIXED: check every 30 seconds instead of 5
     file_watch_root: str = "agent_workspaces"
     file_response_name: str = "response.txt"
     inbox_root: str = "runtime/agent_comms/inbox"
     fsm_enabled: bool = True
-    rescue_cooldown_sec: int = 300  # 5 minutes between rescues
-    active_grace_sec: int = 300  # 5 minutes before considered idle
+    rescue_cooldown_sec: int = 300   # 5 minutes between rescues
+    active_grace_sec: int = 300      # 5 minutes before considered idle
+    onboarding_grace_period: int = 600  # 10 minutes grace during onboarding
     use_db_lane: bool = False
     workspace_map_path: str = "src/runtime/config/agent_workspace_map.json"
     test_mode: bool = False  # Enable test mode for testing
@@ -221,12 +224,26 @@ class Agent5Monitor:
         
         for agent in agents:
             age = now - self.last_activity.get(agent, 0.0)
-            status = "active" if age < self.cfg.active_grace_sec else ("idle" if age < self.cfg.stall_threshold_sec else "stalled")
+            
+            # FIXED: Better status determination with realistic timing
+            if age < self.cfg.active_grace_sec:
+                status = "active"
+            elif age < self.cfg.warn_threshold_sec:
+                status = "idle"
+            elif age < self.cfg.stall_threshold_sec:
+                status = "warning"
+            else:
+                status = "stalled"
+                
             metrics["agents"][agent] = {"age_sec": age, "status": status}
 
-            # Check for stalls and send rescues
+            # FIXED: Progressive stall detection with realistic timing
             if age >= self.cfg.stall_threshold_sec:
+                # Agent is stalled - send rescue
                 self._rescue(agent)
+            elif age >= self.cfg.warn_threshold_sec:
+                # Agent might be stalling - send warning nudge
+                self._send_stall_warning(agent)
 
         self._write_metrics(metrics)
         self._write_health(True, "running")
@@ -257,6 +274,35 @@ class Agent5Monitor:
                 self.last_activity[agent] = max(self.last_activity.get(agent, 0.0), float(mtime))
 
     # ---- rescue path ----
+    def _send_stall_warning(self, agent: str):
+        """Send Shift+Backspace nudge for potential stall (before full rescue)"""
+        now = time.time()
+        
+        # Check cooldown to prevent spam
+        if (now - self.last_rescue.get(agent, 0.0)) < self.cfg.rescue_cooldown_sec:
+            return
+            
+        try:
+            # Send gentle warning with Shift+Backspace nudge
+            warning_msg = (
+                f"[STALL WARNING] {agent}, you appear to be taking longer than usual to respond.\n"
+                f"Sending Shift+Backspace nudge to ensure your terminal is responsive.\n"
+                f"Please confirm you are working on your task."
+            )
+            
+            # Use progressive escalation with nudge flag
+            if hasattr(self.acp, 'progressive_escalation'):
+                self.acp.progressive_escalation(agent, warning_msg, MsgTag.RESCUE)
+            else:
+                # Fallback to direct send with nudge flag
+                self.acp.send(agent, warning_msg, MsgTag.RESCUE, False, True)
+            
+            self.last_rescue[agent] = now
+            _log(f"stall warning sent -> {agent}")
+            
+        except Exception as e:
+            _log(f"stall warning failed -> {agent}: {e}")
+    
     def _rescue(self, agent: str):
         """Send rescue message to stalled agent using progressive escalation"""
         now = time.time()
@@ -357,15 +403,18 @@ def main():
     # Load configuration from environment
     cfg = MonitorConfig(
         agents=agents,
-        stall_threshold_sec=int(os.environ.get("AGENT_STALL_SEC", "1200")),
+        stall_threshold_sec=int(os.environ.get("AGENT_STALL_SEC", "600")),      # FIXED: 10 minutes
+        warn_threshold_sec=int(os.environ.get("AGENT_WARN_SEC", "480")),        # FIXED: 8 minutes
+        normal_response_time=int(os.environ.get("AGENT_RESPONSE_SEC", "300")),  # FIXED: 5 minutes
         warn_ratio=float(os.environ.get("AGENT_WARN_RATIO", "0.8")),
-        check_every_sec=int(os.environ.get("AGENT_CHECK_SEC", "5")),
+        check_every_sec=int(os.environ.get("AGENT_CHECK_SEC", "30")),           # FIXED: 30 seconds
         file_watch_root=os.environ.get("AGENT_FILE_ROOT", "agent_workspaces"),
         file_response_name=os.environ.get("AGENT_FILE_NAME", "response.txt"),
         inbox_root=os.environ.get("AGENT_INBOX_ROOT", "runtime/agent_comms/inbox"),
         fsm_enabled=os.environ.get("AGENT_FSM_ENABLED", "1") == "1",
         rescue_cooldown_sec=int(os.environ.get("AGENT_RESCUE_COOLDOWN_SEC", "300")),
         active_grace_sec=int(os.environ.get("AGENT_ACTIVE_GRACE_SEC", "300")),
+        onboarding_grace_period=int(os.environ.get("AGENT_ONBOARDING_SEC", "600")),  # FIXED: 10 minutes
         use_db_lane=os.environ.get("AGENT_USE_DB_LANE", "0") == "1",
         workspace_map_path=os.environ.get("AGENT_WORKSPACE_MAP", "src/runtime/config/agent_workspace_map.json"),
     )

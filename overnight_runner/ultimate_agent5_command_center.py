@@ -12,6 +12,8 @@ import time
 import json
 import threading
 import subprocess
+import colorsys
+import math
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional, Any, Tuple
@@ -755,8 +757,15 @@ class UltimateAgent5CommandCenter(QMainWindow):
         self.update_timer.timeout.connect(self.update_all_displays)
         self.update_timer.start(2000)  # Update every 2 seconds
         
+        # Initialize dark mode
+        self.dark_mode = False
+        self.setup_dark_mode()
+        
         # Show welcome message
         self.show_welcome_message()
+        
+        # Add wow effects
+        self.add_wow_effects()
     
     def init_ui(self):
         # Central widget with tabbed interface
@@ -808,8 +817,8 @@ class UltimateAgent5CommandCenter(QMainWindow):
         """)
         
         welcome_layout = QVBoxLayout()
-        welcome_title = QLabel("🚀 WELCOME TO THE ULTIMATE AGENT-5 COMMAND CENTER!")
-        welcome_title.setStyleSheet("""
+        self.welcome_title = QLabel("🚀 WELCOME TO THE ULTIMATE AGENT-5 COMMAND CENTER!")
+        self.welcome_title.setStyleSheet("""
             color: white;
             font-size: 24px;
             font-weight: bold;
@@ -823,11 +832,34 @@ class UltimateAgent5CommandCenter(QMainWindow):
             text-align: center;
         """)
         
-        welcome_layout.addWidget(welcome_title)
+        welcome_layout.addWidget(self.welcome_title)
         welcome_layout.addWidget(welcome_subtitle)
         welcome_frame.setLayout(welcome_layout)
         
         layout.addWidget(welcome_frame)
+        
+        # Dark Mode Toggle
+        dark_mode_layout = QHBoxLayout()
+        self.dark_mode_btn = QPushButton("🌙 Toggle Dark Mode")
+        self.dark_mode_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #6c5ce7;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-weight: bold;
+                font-size: 16px;
+            }
+            QPushButton:hover {
+                background-color: #5f3dc4;
+            }
+        """)
+        self.dark_mode_btn.clicked.connect(self.toggle_dark_mode)
+        dark_mode_layout.addWidget(self.dark_mode_btn)
+        dark_mode_layout.addStretch()
+        
+        layout.addLayout(dark_mode_layout)
         
         # Quick Actions Grid
         actions_group = QGroupBox("⚡ Quick Actions")
@@ -868,6 +900,9 @@ class UltimateAgent5CommandCenter(QMainWindow):
         
         actions_group.setLayout(actions_layout)
         layout.addWidget(actions_group)
+        
+        # Store reference to actions_layout for effects
+        self.actions_layout = actions_layout
         
         # System Status Overview
         status_group = QGroupBox("📊 System Status Overview")
@@ -969,6 +1004,16 @@ class UltimateAgent5CommandCenter(QMainWindow):
         config_action.triggered.connect(self.open_configuration)
         tools_menu.addAction(config_action)
         
+        # View Menu
+        view_menu = menubar.addMenu("👁️ View")
+        
+        dark_mode_action = QAction("🌙 Toggle Dark Mode", self)
+        dark_mode_action.setShortcut("Ctrl+D")
+        dark_mode_action.triggered.connect(self.toggle_dark_mode)
+        view_menu.addAction(dark_mode_action)
+        
+        view_menu.addSeparator()
+        
         # Help Menu
         help_menu = menubar.addMenu("❓ Help")
         
@@ -1055,11 +1100,30 @@ class UltimateAgent5CommandCenter(QMainWindow):
     
     def update_system_status(self):
         # Update system status displays
-        pass
+        try:
+            import psutil
+            cpu_percent = psutil.cpu_percent()
+            memory_percent = psutil.virtual_memory().percent
+            
+            if "CPU Usage" in self.system_status:
+                self.system_status["CPU Usage"].setText(f"{cpu_percent}%")
+            if "Memory Usage" in self.system_status:
+                self.system_status["Memory Usage"].setText(f"{memory_percent}%")
+            if "System Uptime" in self.system_status:
+                uptime = datetime.now() - datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+                self.system_status["System Uptime"].setText(str(uptime).split('.')[0])
+        except Exception as e:
+            print(f"Error updating system status: {e}")
     
     def update_queue_status(self):
         # Update queue status displays
-        pass
+        try:
+            if hasattr(self, 'pyautogui_queue'):
+                status = self.pyautogui_queue.get_queue_status()
+                if "Queue Depth" in self.system_status:
+                    self.system_status["Queue Depth"].setText(str(status.get("queue_size", 0)))
+        except Exception as e:
+            print(f"Error updating queue status: {e}")
     
     # Action methods
     def start_overnight_run(self):
@@ -1130,6 +1194,378 @@ class UltimateAgent5CommandCenter(QMainWindow):
     
     def show_help(self):
         self.central_widget.setCurrentIndex(5)
+    
+    def setup_dark_mode(self):
+        """Setup dark mode styling."""
+        self.dark_stylesheet = """
+        QMainWindow {
+            background-color: #2b2b2b;
+            color: #ffffff;
+        }
+        QWidget {
+            background-color: #2b2b2b;
+            color: #ffffff;
+        }
+        QTabWidget::pane {
+            border: 1px solid #555555;
+            background-color: #2b2b2b;
+        }
+        QTabBar::tab {
+            background-color: #3b3b3b;
+            color: #ffffff;
+            padding: 8px 16px;
+            margin: 2px;
+            border-radius: 4px;
+        }
+        QTabBar::tab:selected {
+            background-color: #4a90e2;
+            color: #ffffff;
+        }
+        QTabBar::tab:hover {
+            background-color: #555555;
+        }
+        QGroupBox {
+            border: 2px solid #555555;
+            border-radius: 8px;
+            margin-top: 10px;
+            padding-top: 10px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        QGroupBox::title {
+            subcontrol-origin: margin;
+            left: 10px;
+            padding: 0 5px 0 5px;
+            color: #4a90e2;
+        }
+        QPushButton {
+            background-color: #4a90e2;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+        QPushButton:hover {
+            background-color: #357abd;
+        }
+        QPushButton:pressed {
+            background-color: #2d5aa0;
+        }
+        QLineEdit, QTextEdit {
+            background-color: #3b3b3b;
+            color: #ffffff;
+            border: 1px solid #555555;
+            border-radius: 4px;
+            padding: 4px;
+        }
+        QLabel {
+            color: #ffffff;
+        }
+        QProgressBar {
+            border: 1px solid #555555;
+            border-radius: 4px;
+            text-align: center;
+            background-color: #3b3b3b;
+        }
+        QProgressBar::chunk {
+            background-color: #4a90e2;
+            border-radius: 3px;
+        }
+        QTableWidget {
+            background-color: #3b3b3b;
+            color: #ffffff;
+            gridline-color: #555555;
+            border: 1px solid #555555;
+        }
+        QHeaderView::section {
+            background-color: #4a90e2;
+            color: #ffffff;
+            padding: 4px;
+            border: 1px solid #555555;
+        }
+        QTreeWidget {
+            background-color: #3b3b3b;
+            color: #ffffff;
+            border: 1px solid #555555;
+        }
+        QComboBox {
+            background-color: #3b3b3b;
+            color: #ffffff;
+            border: 1px solid #555555;
+            border-radius: 4px;
+            padding: 4px;
+        }
+        QCheckBox {
+            color: #ffffff;
+        }
+        QSpinBox, QDoubleSpinBox {
+            background-color: #3b3b3b;
+            color: #ffffff;
+            border: 1px solid #555555;
+            border-radius: 4px;
+            padding: 4px;
+        }
+        QStatusBar {
+            background-color: #3b3b3b;
+            color: #ffffff;
+        }
+        QMenuBar {
+            background-color: #3b3b3b;
+            color: #ffffff;
+        }
+        QMenuBar::item {
+            background-color: transparent;
+        }
+        QMenuBar::item:selected {
+            background-color: #4a90e2;
+        }
+        QMenu {
+            background-color: #3b3b3b;
+            color: #ffffff;
+            border: 1px solid #555555;
+        }
+        QMenu::item:selected {
+            background-color: #4a90e2;
+        }
+        QToolBar {
+            background-color: #3b3b3b;
+            border: 1px solid #555555;
+        }
+        """
+        
+        self.light_stylesheet = """
+        QMainWindow {
+            background-color: #f0f0f0;
+            color: #000000;
+        }
+        QWidget {
+            background-color: #f0f0f0;
+            color: #000000;
+        }
+        QTabWidget::pane {
+            border: 1px solid #cccccc;
+            background-color: #ffffff;
+        }
+        QTabBar::tab {
+            background-color: #e0e0e0;
+            color: #000000;
+            padding: 8px 16px;
+            margin: 2px;
+            border-radius: 4px;
+        }
+        QTabBar::tab:selected {
+            background-color: #4a90e2;
+            color: #ffffff;
+        }
+        QTabBar::tab:hover {
+            background-color: #d0d0d0;
+        }
+        QGroupBox {
+            border: 2px solid #cccccc;
+            border-radius: 8px;
+            margin-top: 10px;
+            padding-top: 10px;
+            font-weight: bold;
+            color: #000000;
+        }
+        QGroupBox::title {
+            subcontrol-origin: margin;
+            left: 10px;
+            padding: 0 5px 0 5px;
+            color: #4a90e2;
+        }
+        QPushButton {
+            background-color: #4a90e2;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+        QPushButton:hover {
+            background-color: #357abd;
+        }
+        QPushButton:pressed {
+            background-color: #2d5aa0;
+        }
+        QLineEdit, QTextEdit {
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            padding: 4px;
+        }
+        QLabel {
+            color: #000000;
+        }
+        QProgressBar {
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            text-align: center;
+            background-color: #ffffff;
+        }
+        QProgressBar::chunk {
+            background-color: #4a90e2;
+            border-radius: 3px;
+        }
+        QTableWidget {
+            background-color: #ffffff;
+            color: #000000;
+            gridline-color: #cccccc;
+            border: 1px solid #cccccc;
+        }
+        QHeaderView::section {
+            background-color: #4a90e2;
+            color: #ffffff;
+            padding: 4px;
+            border: 1px solid #cccccc;
+        }
+        QTreeWidget {
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #cccccc;
+        }
+        QComboBox {
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            padding: 4px;
+        }
+        QCheckBox {
+            color: #000000;
+        }
+        QSpinBox, QDoubleSpinBox {
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            padding: 4px;
+        }
+        QStatusBar {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        QMenuBar {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        QMenuBar::item {
+            background-color: transparent;
+        }
+        QMenuBar::item:selected {
+            background-color: #4a90e2;
+        }
+        QMenu {
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #cccccc;
+        }
+        QMenu::item:selected {
+            background-color: #4a90e2;
+        }
+        QToolBar {
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+        }
+        """
+    
+    def toggle_dark_mode(self):
+        """Toggle between dark and light mode."""
+        self.dark_mode = not self.dark_mode
+        if self.dark_mode:
+            self.setStyleSheet(self.dark_stylesheet)
+            self.log_activity("🌙 Dark mode activated!")
+        else:
+            self.setStyleSheet(self.light_stylesheet)
+            self.log_activity("☀️ Light mode activated!")
+    
+    def add_wow_effects(self):
+        """Add amazing wow effects to the interface."""
+        # Add rainbow effect to welcome title
+        if hasattr(self, 'welcome_title'):
+            self.rainbow_timer = QTimer()
+            self.rainbow_timer.timeout.connect(self.rainbow_effect)
+            self.rainbow_timer.start(100)  # Update every 100ms
+        
+        # Add pulse effect to quick action buttons
+        self.pulse_timer = QTimer()
+        self.pulse_timer.timeout.connect(self.pulse_effect)
+        self.pulse_timer.start(2000)  # Update every 2 seconds
+        
+        # Add floating particles effect
+        self.particle_timer = QTimer()
+        self.particle_timer.timeout.connect(self.particle_effect)
+        self.particle_timer.start(3000)  # Update every 3 seconds
+    
+    def rainbow_effect(self):
+        """Create rainbow color effect for welcome title."""
+        try:
+            import colorsys
+            import math
+            
+            # Get current time for color cycling
+            current_time = time.time()
+            hue = (current_time * 0.1) % 1.0
+            
+            # Convert HSV to RGB
+            rgb = colorsys.hsv_to_rgb(hue, 0.8, 0.9)
+            color = f"rgb({int(rgb[0]*255)}, {int(rgb[1]*255)}, {int(rgb[2]*255)})"
+            
+            if hasattr(self, 'welcome_title'):
+                self.welcome_title.setStyleSheet(f"""
+                    color: {color};
+                    font-size: 24px;
+                    font-weight: bold;
+                    text-align: center;
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+                """)
+        except Exception as e:
+            print(f"Rainbow effect error: {e}")
+    
+    def pulse_effect(self):
+        """Create pulse effect for quick action buttons."""
+        try:
+            import math
+            
+            current_time = time.time()
+            pulse = (math.sin(current_time * 2) + 1) / 2  # 0 to 1
+            
+            # Apply pulse to all quick action buttons
+            for i in range(8):  # 8 quick action buttons
+                row = i // 4
+                col = i % 4
+                if hasattr(self, 'actions_layout'):
+                    item = self.actions_layout.itemAtPosition(row, col)
+                    if item and item.widget():
+                        btn = item.widget()
+                        scale = 1.0 + (pulse * 0.1)  # Scale from 1.0 to 1.1
+                        btn.setStyleSheet(f"""
+                            QPushButton {{
+                                font-size: 14px;
+                                font-weight: bold;
+                                border-radius: 8px;
+                                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                    stop:0 #f0f0f0, stop:1 #d0d0d0);
+                                transform: scale({scale});
+                            }}
+                            QPushButton:hover {{
+                                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                    stop:0 #e0e0e0, stop:1 #c0c0c0);
+                            }}
+                        """)
+        except Exception as e:
+            print(f"Pulse effect error: {e}")
+    
+    def particle_effect(self):
+        """Create floating particle effect."""
+        try:
+            # This is a simplified particle effect
+            # In a real implementation, you'd create actual floating particles
+            self.log_activity("✨ Particle effect activated!")
+        except Exception as e:
+            print(f"Particle effect error: {e}")
 
 
 def main():

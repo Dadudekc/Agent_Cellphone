@@ -1,0 +1,112 @@
+{
+  "workflow_id": "8839a920-7792-407f-a949-b07c46e370b3",
+  "title": "Web Application Development Workflow",
+  "description": "Complete workflow for building enterprise web application",
+  "stages": [
+    "WorkflowStage.INITIATION",
+    "WorkflowStage.PLANNING",
+    "WorkflowStage.EXECUTION",
+    "WorkflowStage.COLLABORATION",
+    "WorkflowStage.REVIEW",
+    "WorkflowStage.COMPLETION"
+  ],
+  "current_stage": "WorkflowStage.REVIEW",
+  "participants": [
+    "Agent-1",
+    "Agent-2",
+    "Agent-3"
+  ],
+  "dependencies": [],
+  "metrics": [
+    {
+      "metric_id": "c80014da-5731-41b4-a568-de4b89a4f952",
+      "workflow_id": "8839a920-7792-407f-a949-b07c46e370b3",
+      "metric_type": "planning_time",
+      "value": 2.5,
+      "unit": "hours",
+      "timestamp": "2025-08-17T04:46:26.458914",
+      "context": {
+        "phase": "development"
+      },
+      "trend": "stable"
+    },
+    {
+      "metric_id": "2319f00f-c689-4a78-9fe6-6799e8812a8c",
+      "workflow_id": "8839a920-7792-407f-a949-b07c46e370b3",
+      "metric_type": "development_time",
+      "value": 8.0,
+      "unit": "hours",
+      "timestamp": "2025-08-17T04:46:26.471926",
+      "context": {
+        "phase": "development"
+      },
+      "trend": "stable"
+    },
+    {
+      "metric_id": "5fc228f0-f4b1-45f1-8745-3d53f764f316",
+      "workflow_id": "8839a920-7792-407f-a949-b07c46e370b3",
+      "metric_type": "testing_time",
+      "value": 3.0,
+      "unit": "hours",
+      "timestamp": "2025-08-17T04:46:26.483937",
+      "context": {
+        "phase": "development"
+      },
+      "trend": "stable"
+    },
+    {
+      "metric_id": "0c1ef4ef-1d2f-48ff-9685-e7a6005881fa",
+      "workflow_id": "8839a920-7792-407f-a949-b07c46e370b3",
+      "metric_type": "quality_score",
+      "value": 85.0,
+      "unit": "percentage",
+      "timestamp": "2025-08-17T04:46:26.492945",
+      "context": {
+        "phase": "development"
+      },
+      "trend": "stable"
+    },
+    {
+      "metric_id": "5e415bf5-61f3-47ed-87f7-61357fff268f",
+      "workflow_id": "8839a920-7792-407f-a949-b07c46e370b3",
+      "metric_type": "collaboration_efficiency",
+      "value": 0.78,
+      "unit": "ratio",
+      "timestamp": "2025-08-17T04:46:26.501954",
+      "context": {
+        "phase": "development"
+      },
+      "trend": "stable"
+    },
+    {
+      "metric_id": "27806314-774a-4900-a5dc-4338c376f8d5",
+      "workflow_id": "8839a920-7792-407f-a949-b07c46e370b3",
+      "metric_type": "code_coverage",
+      "value": 92.0,
+      "unit": "percentage",
+      "timestamp": "2025-08-17T04:46:26.516970",
+      "context": {
+        "phase": "development"
+      },
+      "trend": "stable"
+    }
+  ],
+  "patterns": [],
+  "optimizations": [
+    {
+      "optimization_id": "ea666a0c-5133-4264-833a-713e2b9bc6bf",
+      "workflow_id": "8839a920-7792-407f-a949-b07c46e370b3",
+      "optimization_type": "parallelization",
+      "description": "Parallelize review stage to reduce bottlenecks",
+      "expected_improvement": 0.2,
+      "implementation_effort": 0.3,
+      "priority": "medium",
+      "created_at": "2025-08-17T04:46:26.657094",
+      "implemented": false
+    }
+  ],
+  "efficiency_score": 0.18876,
+  "created_at": "2025-08-17T04:46:26.436895",
+  "updated_at": "2025-08-17T04:46:26.657094",
+  "completed_at": null
+}

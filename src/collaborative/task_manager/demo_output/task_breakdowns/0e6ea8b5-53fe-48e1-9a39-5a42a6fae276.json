@@ -1,0 +1,102 @@
+{
+  "breakdown_id": "0e6ea8b5-53fe-48e1-9a39-5a42a6fae276",
+  "original_task_id": "TASK_BACKEND_001",
+  "original_title": "Backend API Development",
+  "original_description": "Develop RESTful API with user management and authentication",
+  "components": [
+    {
+      "component_id": "e3c677ac-7f51-4009-80c9-f8cb2f1d699b",
+      "parent_task_id": "TASK_BACKEND_001",
+      "title": "Backend API Development - Requirements Analysis",
+      "description": "Detailed requirements gathering and analysis",
+      "task_type": "TaskType.DEVELOPMENT",
+      "complexity": "TaskComplexity.SIMPLE",
+      "priority": "TaskPriority.HIGH",
+      "estimated_hours": 4.0,
+      "required_skills": [
+        "python"
+      ],
+      "dependencies": [],
+      "assigned_agent": "Agent-1",
+      "status": "assigned",
+      "created_at": "2025-08-17T04:46:44.385836",
+      "updated_at": "2025-08-17T04:46:44.385836"
+    },
+    {
+      "component_id": "ea0e794b-2bdf-4d3f-8117-1dc3c474c46e",
+      "parent_task_id": "TASK_BACKEND_001",
+      "title": "Backend API Development - Architecture Design",
+      "description": "System architecture and design",
+      "task_type": "TaskType.DEVELOPMENT",
+      "complexity": "TaskComplexity.SIMPLE",
+      "priority": "TaskPriority.HIGH",
+      "estimated_hours": 4.0,
+      "required_skills": [
+        "development"
+      ],
+      "dependencies": [
+        "e3c677ac-7f51-4009-80c9-f8cb2f1d699b"
+      ],
+      "assigned_agent": "Agent-1",
+      "status": "assigned",
+      "created_at": "2025-08-17T04:46:44.385836",
+      "updated_at": "2025-08-17T04:46:44.385836"
+    },
+    {
+      "component_id": "b18da397-12a6-4b78-972b-1dc43df22fb4",
+      "parent_task_id": "TASK_BACKEND_001",
+      "title": "Backend API Development - Core Implementation",
+      "description": "Main development implementation",
+      "task_type": "TaskType.DEVELOPMENT",
+      "complexity": "TaskComplexity.SIMPLE",
+      "priority": "TaskPriority.HIGH",
+      "estimated_hours": 4.0,
+      "required_skills": [
+        "architecture"
+      ],
+      "dependencies": [
+        "ea0e794b-2bdf-4d3f-8117-1dc3c474c46e"
+      ],
+      "assigned_agent": "Agent-1",
+      "status": "assigned",
+      "created_at": "2025-08-17T04:46:44.385836",
+      "updated_at": "2025-08-17T04:46:44.385836"
+    },
+    {
+      "component_id": "fbd28e37-18d4-4386-965a-f3af75a4449c",
+      "parent_task_id": "TASK_BACKEND_001",
+      "title": "Backend API Development - Integration & Testing",
+      "description": "Integration and comprehensive testing",
+      "task_type": "TaskType.DEVELOPMENT",
+      "complexity": "TaskComplexity.SIMPLE",
+      "priority": "TaskPriority.HIGH",
+      "estimated_hours": 4.0,
+      "required_skills": [],
+      "dependencies": [
+        "b18da397-12a6-4b78-972b-1dc43df22fb4"
+      ],
+      "assigned_agent": "Agent-1",
+      "status": "assigned",
+      "created_at": "2025-08-17T04:46:44.385836",
+      "updated_at": "2025-08-17T04:46:44.385836"
+    }
+  ],
+  "total_estimated_hours": 16.0,
+  "critical_path": [
+    "e3c677ac-7f51-4009-80c9-f8cb2f1d699b",
+    "ea0e794b-2bdf-4d3f-8117-1dc3c474c46e",
+    "b18da397-12a6-4b78-972b-1dc43df22fb4",
+    "fbd28e37-18d4-4386-965a-f3af75a4449c"
+  ],
+  "resource_allocation": {
+    "Agent-1": [
+      "e3c677ac-7f51-4009-80c9-f8cb2f1d699b",
+      "ea0e794b-2bdf-4d3f-8117-1dc3c474c46e",
+      "b18da397-12a6-4b78-972b-1dc43df22fb4",
+      "fbd28e37-18d4-4386-965a-f3af75a4449c"
+    ]
+  },
+  "optimization_score": 0.8575,
+  "created_at": "2025-08-17T04:46:44.385836",
+  "updated_at": "2025-08-17T04:46:44.385836"
+}

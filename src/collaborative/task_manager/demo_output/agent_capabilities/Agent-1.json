@@ -1,0 +1,16 @@
+{
+  "agent_id": "Agent-1",
+  "primary_skills": [
+    "python",
+    "development"
+  ],
+  "secondary_skills": [
+    "architecture"
+  ],
+  "experience_level": 0.9,
+  "current_workload": 0.0,
+  "availability": 1.0,
+  "collaboration_preference": [],
+  "performance_history": {},
+  "last_updated": "2025-08-17T04:46:44.349801"
+}

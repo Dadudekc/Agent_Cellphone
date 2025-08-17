@@ -1,0 +1,75 @@
+{
+  "auto_mode": {
+    "system_name": "Agent Cellphone Auto Mode",
+    "version": "1.0.0",
+    "status": "ACTIVE",
+    "coordination_mode": "DEMOCRATIC",
+    "auto_scaling": true,
+    "max_repositories": 100,
+    "description": "Replaces confusing 'Overnight System' with clear, user-friendly automation"
+  },
+  "agents": {
+    "agent_1": {
+      "role": "Beta Workflow Coordinator & Auto Mode Setup Specialist",
+      "status": "ACTIVE",
+      "capabilities": ["coordination", "discord_integration", "auto_mode_setup", "user_onboarding"],
+      "specialty": "Simplifying complex systems for new users",
+      "auto_mode_focus": "Setup automation and user experience"
+    },
+    "agent_2": {
+      "role": "Technical Assessment Specialist",
+      "status": "ACTIVE",
+      "capabilities": ["technical_analysis", "quality_assurance", "repository_analysis", "beta_readiness"],
+      "specialty": "Technical evaluation and repository assessment",
+      "auto_mode_focus": "Automated technical analysis"
+    },
+    "agent_3": {
+      "role": "Quality Assurance Coordinator",
+      "status": "ACTIVE",
+      "capabilities": ["testing", "ci_cd", "quality_gates", "automated_qa"],
+      "specialty": "Quality assurance and testing automation",
+      "auto_mode_focus": "Automated quality gates"
+    },
+    "agent_4": {
+      "role": "Community Engagement Manager",
+      "status": "ACTIVE",
+      "capabilities": ["user_feedback", "community_management", "documentation", "user_support"],
+      "specialty": "Community building and user support",
+      "auto_mode_focus": "User experience and community engagement"
+    }
+  },
+  "coordination": {
+    "discord_integration": true,
+    "auto_routing": true,
+    "escalation_protocols": true,
+    "performance_monitoring": true,
+    "democratic_decision_making": true,
+    "description": "Advanced coordination systems for seamless agent collaboration"
+  },
+  "auto_scaling": {
+    "enabled": true,
+    "max_repositories": 100,
+    "scaling_thresholds": {
+      "phase_1": 25,
+      "phase_2": 50,
+      "phase_3": 75,
+      "phase_4": 100
+    },
+    "description": "Automatically scales coordination based on repository count"
+  },
+  "user_experience": {
+    "setup_time": "30 minutes",
+    "automation_level": "high",
+    "documentation_quality": "comprehensive",
+    "ease_of_use": "excellent",
+    "description": "Designed for maximum user experience and ease of implementation"
+  },
+  "features": {
+    "progressive_escalation": true,
+    "stall_detection": true,
+    "response_monitoring": true,
+    "onboarding_protection": true,
+    "realistic_timing": true,
+    "description": "All the power of the original system with improved user experience"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "metric_id": "0f9b992c-29db-45b7-ac5d-a648729731b6",
+  "metric_type": "collaboration_efficiency",
+  "value": 0.82,
+  "unit": "ratio",
+  "timestamp": "2025-08-17T04:46:44.704146",
+  "context": {
+    "phase": "development"
+  },
+  "trend": "stable",
+  "impact_score": 0.8
+}

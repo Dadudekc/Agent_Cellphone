@@ -1,0 +1,32 @@
+{
+  "token": "YOUR_DISCORD_BOT_TOKEN_HERE",
+  "guild_id": "YOUR_GUILD_ID_HERE",
+  "channels": {
+    "coordination": "auto-mode-coordination",
+    "technical": "technical-assessment",
+    "qa": "quality-assurance",
+    "community": "community-engagement",
+    "user_support": "auto-mode-support"
+  },
+  "auto_mode": {
+    "bot_name": "Auto Mode Coordinator",
+    "bot_status": "Coordinating Auto Mode operations",
+    "coordination_enabled": true,
+    "democratic_voting": true,
+    "auto_routing": true
+  },
+  "notifications": {
+    "system_status": true,
+    "agent_activity": true,
+    "coordination_events": true,
+    "user_alerts": true,
+    "performance_metrics": true
+  },
+  "commands": {
+    "prefix": "!",
+    "auto_mode_status": "!status",
+    "agent_status": "!agents",
+    "coordination_status": "!coordination",
+    "help": "!help"
+  }
+}

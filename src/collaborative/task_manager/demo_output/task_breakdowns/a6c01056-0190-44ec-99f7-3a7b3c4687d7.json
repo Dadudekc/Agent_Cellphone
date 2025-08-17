@@ -1,0 +1,152 @@
+{
+  "breakdown_id": "a6c01056-0190-44ec-99f7-3a7b3c4687d7",
+  "original_task_id": "TASK_WEB_APP_001",
+  "original_title": "Build Enterprise Web Application",
+  "original_description": "Create a full-stack enterprise web application with user management, API, and frontend",
+  "components": [
+    {
+      "component_id": "e9d76e47-7e4e-4a83-8f12-4a0d8c376858",
+      "parent_task_id": "TASK_WEB_APP_001",
+      "title": "Build Enterprise Web Application - Strategic Planning",
+      "description": "High-level strategic planning and analysis",
+      "task_type": "TaskType.DEVELOPMENT",
+      "complexity": "TaskComplexity.SIMPLE",
+      "priority": "high",
+      "estimated_hours": 4.0,
+      "required_skills": [
+        "python"
+      ],
+      "dependencies": [],
+      "assigned_agent": "Agent-1",
+      "status": "assigned",
+      "created_at": "2025-08-17T04:46:26.167650",
+      "updated_at": "2025-08-17T04:46:26.167650"
+    },
+    {
+      "component_id": "80378906-bf64-4814-a74a-e7ae0cb7b0cf",
+      "parent_task_id": "TASK_WEB_APP_001",
+      "title": "Build Enterprise Web Application - Requirements Engineering",
+      "description": "Comprehensive requirements engineering",
+      "task_type": "TaskType.DEVELOPMENT",
+      "complexity": "TaskComplexity.SIMPLE",
+      "priority": "high",
+      "estimated_hours": 4.0,
+      "required_skills": [
+        "javascript"
+      ],
+      "dependencies": [
+        "e9d76e47-7e4e-4a83-8f12-4a0d8c376858"
+      ],
+      "assigned_agent": "Agent-2",
+      "status": "assigned",
+      "created_at": "2025-08-17T04:46:26.167650",
+      "updated_at": "2025-08-17T04:46:26.167650"
+    },
+    {
+      "component_id": "b9aff719-46e2-4123-8e29-b64b35dc0536",
+      "parent_task_id": "TASK_WEB_APP_001",
+      "title": "Build Enterprise Web Application - Architecture & Design",
+      "description": "System architecture and detailed design",
+      "task_type": "TaskType.TESTING",
+      "complexity": "TaskComplexity.SIMPLE",
+      "priority": "high",
+      "estimated_hours": 4.0,
+      "required_skills": [
+        "testing"
+      ],
+      "dependencies": [
+        "80378906-bf64-4814-a74a-e7ae0cb7b0cf"
+      ],
+      "assigned_agent": "Agent-2",
+      "status": "assigned",
+      "created_at": "2025-08-17T04:46:26.167650",
+      "updated_at": "2025-08-17T04:46:26.167650"
+    },
+    {
+      "component_id": "4ff58986-6652-4752-a3f1-fa85f6b66c36",
+      "parent_task_id": "TASK_WEB_APP_001",
+      "title": "Build Enterprise Web Application - Core Development",
+      "description": "Main development implementation",
+      "task_type": "TaskType.ANALYSIS",
+      "complexity": "TaskComplexity.SIMPLE",
+      "priority": "high",
+      "estimated_hours": 4.0,
+      "required_skills": [
+        "analysis"
+      ],
+      "dependencies": [
+        "b9aff719-46e2-4123-8e29-b64b35dc0536"
+      ],
+      "assigned_agent": "Agent-3",
+      "status": "assigned",
+      "created_at": "2025-08-17T04:46:26.167650",
+      "updated_at": "2025-08-17T04:46:26.167650"
+    },
+    {
+      "component_id": "de912723-a9ff-4619-9d5f-5c9a3b7a99d7",
+      "parent_task_id": "TASK_WEB_APP_001",
+      "title": "Build Enterprise Web Application - Integration & Testing",
+      "description": "Integration and comprehensive testing",
+      "task_type": "TaskType.DEVELOPMENT",
+      "complexity": "TaskComplexity.SIMPLE",
+      "priority": "high",
+      "estimated_hours": 4.0,
+      "required_skills": [
+        "architecture"
+      ],
+      "dependencies": [
+        "4ff58986-6652-4752-a3f1-fa85f6b66c36"
+      ],
+      "assigned_agent": "Agent-1",
+      "status": "assigned",
+      "created_at": "2025-08-17T04:46:26.167650",
+      "updated_at": "2025-08-17T04:46:26.167650"
+    },
+    {
+      "component_id": "b4c73544-df2c-4cea-9886-e2189860ccec",
+      "parent_task_id": "TASK_WEB_APP_001",
+      "title": "Build Enterprise Web Application - Deployment & Validation",
+      "description": "Deployment and final validation",
+      "task_type": "TaskType.DEVELOPMENT",
+      "complexity": "TaskComplexity.SIMPLE",
+      "priority": "high",
+      "estimated_hours": 4.0,
+      "required_skills": [
+        "automation"
+      ],
+      "dependencies": [
+        "de912723-a9ff-4619-9d5f-5c9a3b7a99d7"
+      ],
+      "assigned_agent": "Agent-2",
+      "status": "assigned",
+      "created_at": "2025-08-17T04:46:26.167650",
+      "updated_at": "2025-08-17T04:46:26.167650"
+    }
+  ],
+  "total_estimated_hours": 24.0,
+  "critical_path": [
+    "e9d76e47-7e4e-4a83-8f12-4a0d8c376858",
+    "80378906-bf64-4814-a74a-e7ae0cb7b0cf",
+    "b9aff719-46e2-4123-8e29-b64b35dc0536",
+    "4ff58986-6652-4752-a3f1-fa85f6b66c36",
+    "de912723-a9ff-4619-9d5f-5c9a3b7a99d7",
+    "b4c73544-df2c-4cea-9886-e2189860ccec"
+  ],
+  "resource_allocation": {
+    "Agent-1": [
+      "e9d76e47-7e4e-4a83-8f12-4a0d8c376858",
+      "de912723-a9ff-4619-9d5f-5c9a3b7a99d7"
+    ],
+    "Agent-2": [
+      "80378906-bf64-4814-a74a-e7ae0cb7b0cf",
+      "b9aff719-46e2-4123-8e29-b64b35dc0536",
+      "b4c73544-df2c-4cea-9886-e2189860ccec"
+    ],
+    "Agent-3": [
+      "4ff58986-6652-4752-a3f1-fa85f6b66c36"
+    ]
+  },
+  "optimization_score": 0.8749999999999999,
+  "created_at": "2025-08-17T04:46:26.167650",
+  "updated_at": "2025-08-17T04:46:26.167650"
+}

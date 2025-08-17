@@ -1,0 +1,12 @@
+{
+  "metric_id": "c574a023-ecd8-4e75-990c-fa54a56ff788",
+  "metric_type": "communication_effectiveness",
+  "value": 0.75,
+  "unit": "ratio",
+  "timestamp": "2025-08-17T04:46:44.973391",
+  "context": {
+    "phase": "development"
+  },
+  "trend": "stable",
+  "impact_score": 0.7
+}

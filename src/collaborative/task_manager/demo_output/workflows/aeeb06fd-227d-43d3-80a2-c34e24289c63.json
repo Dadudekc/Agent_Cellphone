@@ -1,0 +1,40 @@
+{
+  "workflow_id": "aeeb06fd-227d-43d3-80a2-c34e24289c63",
+  "title": "Workflow for Performance Optimization",
+  "description": "Collaborative workflow for task: Analyze and optimize application performance",
+  "stages": [
+    "WorkflowStage.INITIATION",
+    "WorkflowStage.PLANNING",
+    "WorkflowStage.EXECUTION",
+    "WorkflowStage.COLLABORATION",
+    "WorkflowStage.REVIEW",
+    "WorkflowStage.COMPLETION"
+  ],
+  "current_stage": "WorkflowStage.INITIATION",
+  "participants": [
+    "Agent-1",
+    "Agent-2",
+    "Agent-3",
+    "Agent-4"
+  ],
+  "dependencies": [],
+  "metrics": [],
+  "patterns": [],
+  "optimizations": [
+    {
+      "optimization_id": "e8419630-dd4b-420b-b718-f1d4cf1b1886",
+      "workflow_id": "aeeb06fd-227d-43d3-80a2-c34e24289c63",
+      "optimization_type": "communication_structure",
+      "description": "Implement structured communication protocols for large team",
+      "expected_improvement": 0.15,
+      "implementation_effort": 0.2,
+      "priority": "low",
+      "created_at": "2025-08-17T04:46:45.190589",
+      "implemented": false
+    }
+  ],
+  "efficiency_score": 0.0,
+  "created_at": "2025-08-17T04:46:44.635084",
+  "updated_at": "2025-08-17T04:46:45.190589",
+  "completed_at": null
+}

@@ -1,0 +1,62 @@
+{
+  "agents": {
+    "Agent-1": {
+      "capabilities": [
+        "coordination",
+        "knowledge_management"
+      ],
+      "public_key": null,
+      "registration_time": 1755423469.850258,
+      "status": "active",
+      "last_seen": 1755423469.8532617
+    },
+    "Agent-2": {
+      "capabilities": [
+        "task_breakdown",
+        "resource_allocation"
+      ],
+      "public_key": null,
+      "registration_time": 1755423469.850258,
+      "status": "active",
+      "last_seen": 1755423469.850258
+    },
+    "Agent-3": {
+      "capabilities": [
+        "data_analysis",
+        "technical_implementation"
+      ],
+      "public_key": null,
+      "registration_time": 1755423469.8512595,
+      "status": "active",
+      "last_seen": 1755423469.8512595
+    },
+    "Agent-4": {
+      "capabilities": [
+        "communication",
+        "security_protocols"
+      ],
+      "public_key": null,
+      "registration_time": 1755423469.8512595,
+      "status": "active",
+      "last_seen": 1755423469.8512595
+    },
+    "Agent-5": {
+      "capabilities": [
+        "task_execution",
+        "verification"
+      ],
+      "public_key": null,
+      "registration_time": 1755423469.85226,
+      "status": "active",
+      "last_seen": 1755423469.85226
+    }
+  },
+  "encryption_keys": {
+    "Agent-1": "9883c23dbbbf0ff188de8eb7547ff6789122cae3defe2a5fa061c30f70e3ada7",
+    "Agent-2": "c3573f238ae1e7da20af1e20738ffdbb634be3571dd50fcf0d072219aa89d64c",
+    "Agent-3": "2d4a65ac79c19487b7203963127bc726b8370789a120d65a6c62949e29a05f28",
+    "Agent-4": "fc40f21589e6e7ef2e70681032059daa8cf40495726a7002ff4d4d99312e4c21",
+    "Agent-5": "48680543ffef0a9c938ca5c9e9983858d822d4759625d8f646ba08c333196b90"
+  },
+  "timestamp": 1755423469.86327
+}

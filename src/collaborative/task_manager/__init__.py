@@ -17,15 +17,16 @@ __author__ = "Collaborative Task Framework"
 __status__ = "ACTIVE COLLABORATION"
 
 from .collaborative_task_manager import CollaborativeTaskManager
-from .resource_allocator import ResourceAllocator
-from .workflow_designer import WorkflowDesigner
-from .efficiency_optimizer import EfficiencyOptimizer
+from .enhanced_task_breakdown import EnhancedTaskBreakdown
+from .workflow_optimizer import WorkflowOptimizer
+from .enhanced_collaborative_system import EnhancedCollaborativeSystem
 
 __all__ = [
     "CollaborativeTaskManager",
-    "ResourceAllocator",
-    "WorkflowDesigner", 
-    "EfficiencyOptimizer"
+    "EnhancedTaskBreakdown",
+    "WorkflowOptimizer",
+    "EnhancedCollaborativeSystem"
 ]
+
 
 
