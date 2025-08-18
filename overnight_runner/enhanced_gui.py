@@ -37,7 +37,7 @@ class PyAutoGUIQueue:
     """Queue system for PyAutoGUI messaging to prevent conflicts when multiple agents/instances try to control PyAutoGUI simultaneously."""
     
     def __init__(self):
-        self.message_queue = queue.Queue()
+        self.message_queue = queue.PriorityQueue()
         self.processing = False
         self.agent_locks: Dict[str, threading.Lock] = {}
         self.processing_thread = None
@@ -49,9 +49,10 @@ class PyAutoGUIQueue:
             self.agent_locks[agent_id] = threading.Lock()
     
     def queue_message(self, agent_id: str, message: str, priority: int = 1) -> bool:
-        """Queue a message for an agent with priority (lower = higher priority)."""
+        """Queue a message for an agent with priority (lower numbers are processed first)."""
         try:
             self.add_agent(agent_id)
+            # Include timestamp to maintain order among messages with the same priority
             self.message_queue.put((priority, time.time(), agent_id, message))
             return True
         except Exception as e:
@@ -116,18 +117,18 @@ class PyAutoGUIQueue:
                     priority, timestamp, agent_id, message = self.message_queue.get(timeout=1)
                 except queue.Empty:
                     continue
-                
+
                 # Acquire lock for this agent
                 if agent_id in self.agent_locks:
                     with self.agent_locks[agent_id]:
-                        print(f"[QUEUE] Processing message for {agent_id}: {message[:50]}...")
-                        
+                        print(f"[QUEUE] Processing priority {priority} message for {agent_id}: {message[:50]}...")
+
                         # Simulate PyAutoGUI operation with delay
                         time.sleep(0.5)  # Simulate typing time
-                        
+
                         # Mark message as processed
                         self.message_queue.task_done()
-                        
+
                         print(f"[QUEUE] Completed message for {agent_id}")
                 
             except Exception as e:
