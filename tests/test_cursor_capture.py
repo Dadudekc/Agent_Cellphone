@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-"""
-Test script for Cursor AI Response Capture System
-Tests the database reading and message extraction functionality
-"""
+"""Tests for Cursor AI Response Capture System."""
 
 import json
 from pathlib import Path
@@ -34,156 +31,75 @@ def test_cursor_watcher_outputs_no_partial_files(tmp_path, monkeypatch):
     json.loads(files[0].read_text())
     assert not list(inbox.glob("*.tmp")), "temporary file should not remain"
 
-def test_cursor_storage_path():
-    """Test finding the Cursor workspace storage directory"""
-    print("🧪 Testing Cursor workspace storage path...")
-    
-    try:
-        from src.cursor_capture.db_reader import cursor_workspace_storage
-        storage_path = cursor_workspace_storage()
-        print(f"✅ Cursor storage path: {storage_path}")
-        
-        if storage_path.exists():
-            print(f"✅ Storage directory exists")
-            # List some workspace directories
-            workspace_dirs = list(storage_path.glob("*"))[:5]
-            print(f"✅ Found {len(workspace_dirs)} workspace directories")
-            for d in workspace_dirs:
-                print(f"   📁 {d.name}")
-        else:
-            print("❌ Storage directory does not exist")
-            
-    except Exception as e:
-        print(f"❌ Error finding storage path: {e}")
 
-def test_workspace_mapping():
-    """Test agent workspace mapping configuration"""
-    print("\n🧪 Testing agent workspace mapping...")
-    
-    map_path = Path("src/runtime/config/agent_workspace_map.json")
-    if map_path.exists():
-        try:
-            with open(map_path, 'r') as f:
-                mapping = json.load(f)
-            print(f"✅ Agent workspace map loaded: {len(mapping)} agents")
-            
-            for agent, config in mapping.items():
-                workspace = config.get("workspace_root", "unknown")
-                print(f"   {agent}: {workspace}")
-                
-        except Exception as e:
-            print(f"❌ Error loading workspace map: {e}")
-    else:
-        print(f"❌ Workspace map not found: {map_path}")
+def test_extract_messages_parses_chat_json():
+    """`extract_messages` normalizes chat JSON into messages."""
+    from src.cursor_capture.db_reader import extract_messages
 
-def test_database_finding():
-    """Test finding state.vscdb files for workspaces"""
-    print("\n🧪 Testing database finding...")
-    
-    try:
-        from src.cursor_capture.db_reader import find_state_db_for_workspace
-        
-        # Test with a sample workspace path
-        test_workspace = "D:/repos/project-A"
-        db_path = find_state_db_for_workspace(test_workspace)
-        
-        if db_path:
-            print(f"✅ Found database for {test_workspace}: {db_path}")
-        else:
-            print(f"⚠️  No database found for {test_workspace}")
-            print("   This is normal if the workspace hasn't been opened in Cursor")
-            
-    except Exception as e:
-        print(f"❌ Error finding database: {e}")
+    sample = {
+        "chats": [
+            {
+                "messages": [
+                    {"role": "assistant", "content": "Hello"},
+                    {"role": "user", "content": "Hi there"},
+                ]
+            }
+        ]
+    }
+    msgs = extract_messages(json.dumps(sample))
+    assert [m["role"] for m in msgs] == ["assistant", "user"]
+    assert [m["text"] for m in msgs] == ["Hello", "Hi there"]
 
-def test_message_extraction():
-    """Test message extraction from sample data"""
-    print("\n🧪 Testing message extraction...")
-    
-    try:
-        from src.cursor_capture.db_reader import extract_messages
-        
-        # Test with sample chat data
-        sample_data = {
-            "chats": [
-                {
-                    "messages": [
-                        {"role": "user", "content": "Hello, can you help me?"},
-                        {"role": "assistant", "content": "Of course! I'd be happy to help you with your question."},
-                        {"role": "user", "content": "Great, thanks!"}
-                    ]
-                }
-            ]
-        }
-        
-        messages = extract_messages(json.dumps(sample_data))
-        print(f"✅ Extracted {len(messages)} messages from sample data")
-        
-        for msg in messages:
-            print(f"   {msg['role']}: {msg['text'][:50]}...")
-            
-    except Exception as e:
-        print(f"❌ Error extracting messages: {e}")
 
-def test_agent_workspace_finding():
-    """Test finding agent workspaces"""
-    print("\n🧪 Testing agent workspace finding...")
-    
-    try:
-        from src.cursor_capture.db_reader import find_agent_workspaces
-        
-        workspaces = find_agent_workspaces()
-        print(f"✅ Found {len(workspaces)} agent workspaces")
-        
-        for agent, workspace in workspaces.items():
-            print(f"   {agent}: {workspace}")
-            
-    except Exception as e:
-        print(f"❌ Error finding agent workspaces: {e}")
+def test_find_state_db_for_workspace(tmp_path, monkeypatch):
+    """`find_state_db_for_workspace` locates the correct state DB."""
+    from src.cursor_capture import db_reader
 
-def test_full_workflow():
-    """Test the complete workflow from workspace to messages"""
-    print("\n🧪 Testing complete workflow...")
-    
-    try:
-        from src.cursor_capture.db_reader import cursor_workspace_storage, find_agent_workspaces, extract_messages
-        
-        # Get storage path
-        storage_path = cursor_workspace_storage()
-        print(f"✅ Storage path: {storage_path}")
-        
-        # Find agent workspaces
-        agent_workspaces = find_agent_workspaces()
-        print(f"✅ Agent workspaces: {len(agent_workspaces)} found")
-        
-        # Test with first available workspace
-        if agent_workspaces:
-            first_agent = list(agent_workspaces.keys())[0]
-            workspace_path = agent_workspaces[first_agent]
-            print(f"✅ Testing with workspace: {workspace_path}")
-            
-            # Try to extract messages
-            try:
-                messages = extract_messages(workspace_path)
-                print(f"✅ Extracted {len(messages)} messages from {first_agent}")
-            except Exception as e:
-                print(f"⚠️  Could not extract messages (may need Cursor to be open): {e}")
-        else:
-            print("⚠️  No agent workspaces found to test")
-            
-    except Exception as e:
-        print(f"❌ Error in full workflow test: {e}")
+    workspace_root = "C:/code/project"
+    storage = tmp_path / "storage"
+    target_dir = storage / "abc123"
+    target_dir.mkdir(parents=True)
+    (target_dir / "state.vscdb").touch()
+    (target_dir / "workspace.json").write_text(json.dumps({"folder": workspace_root}))
 
-if __name__ == "__main__":
-    print("🧪 Running Cursor Capture System Tests\n")
-    print("=" * 50)
-    
-    test_cursor_storage_path()
-    test_workspace_mapping()
-    test_database_finding()
-    test_message_extraction()
-    test_agent_workspace_finding()
-    test_full_workflow()
-    
-    print("\n" + "=" * 50)
-    print("✅ All tests completed!")
+    monkeypatch.setattr(db_reader, "cursor_workspace_storage", lambda: storage)
+    result = db_reader.find_state_db_for_workspace(workspace_root)
+    assert result == target_dir / "state.vscdb"
+
+
+def test_read_assistant_messages_filters_seen_and_role(monkeypatch):
+    """`read_assistant_messages` returns only new assistant messages."""
+    from src.cursor_capture import db_reader
+
+    sample = {
+        "chats": [
+            {
+                "messages": [
+                    {"role": "assistant", "content": "Hello"},
+                    {"role": "user", "content": "Hi"},
+                    {"role": "assistant", "content": "Another"},
+                ]
+            }
+        ]
+    }
+
+    # Mock out filesystem and database interactions
+    monkeypatch.setattr(db_reader, "find_state_db_for_workspace", lambda ws: Path("dummy"))
+
+    class DummyConn:
+        def close(self):
+            pass
+
+    monkeypatch.setattr(db_reader.sqlite3, "connect", lambda *a, **k: DummyConn())
+    monkeypatch.setattr(db_reader, "_query_items", lambda conn: [("key", json.dumps(sample))])
+
+    seen: set[str] = set()
+    msgs = db_reader.read_assistant_messages("any", seen)
+    assert len(msgs) == 2
+    assert all(m["role"] == "assistant" for m in msgs)
+
+    # Mark the first message as seen and ensure it's filtered out on subsequent call
+    seen.add(msgs[0]["sig"])
+    msgs2 = db_reader.read_assistant_messages("any", seen)
+    assert len(msgs2) == 1
+    assert msgs2[0]["text"] == "Another"
