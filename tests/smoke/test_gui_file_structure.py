@@ -5,14 +5,12 @@ These tests just verify that expected GUI files exist in the correct locations.
 """
 
 import os
-import sys
 from pathlib import Path
 
 import pytest
 
-# Ensure project root is on sys.path
+# Resolve project root once for all tests
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(PROJECT_ROOT))
 
 
 def test_gui_directory_exists():

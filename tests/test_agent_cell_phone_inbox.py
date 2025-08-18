@@ -3,7 +3,7 @@ import time
 
 import pytest
 
-from agent_cell_phone import AgentCellPhone, MsgTag
+from src.services.agent_cell_phone import AgentCellPhone, MsgTag
 
 
 def test_listen_loop_dispatches_file_inbox_messages(tmp_path):

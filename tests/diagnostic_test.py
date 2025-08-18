@@ -5,21 +5,13 @@ Run via: python tests/diagnostic_test.py
 """
 
 import time
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
-
-from services.agent_cell_phone import AgentCellPhone, MsgTag
-
-ROOT = Path(__file__).resolve().parents[1]
-SRC = ROOT / "src"
-sys.path.insert(0, str(SRC))
+from src.services.agent_cell_phone import AgentCellPhone, MsgTag
 
 def main() -> int:
     try:
-        from services.agent_cell_phone import AgentCellPhone  # type: ignore
-        from services.inter_agent_framework import InterAgentFramework  # type: ignore
+        from src.services.agent_cell_phone import AgentCellPhone  # type: ignore
+        from src.services.inter_agent_framework import InterAgentFramework  # type: ignore
     except Exception as e:
         print(f"[DIAG] import error: {e}")
         return 1

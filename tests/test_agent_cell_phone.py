@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from agent_cell_phone import AgentCellPhone, MsgTag
+from src.services.agent_cell_phone import AgentCellPhone, MsgTag
 
 
 def test_send_records_cursor_actions():
