@@ -10,10 +10,14 @@ analysis.
 from __future__ import annotations
 
 import json
+import logging
 import re
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Sequence
+
+
+logger = logging.getLogger(__name__)
 
 
 def _sanitize_filename(title: str) -> str:
@@ -49,6 +53,10 @@ def _serialise_message(message: Any, prompt_id: int) -> Dict[str, Any]:
         msg_prompt_id = getattr(message, "prompt_id", prompt_id)
         timestamp = getattr(message, "timestamp", None)
 
+    if role is None or content is None:
+        missing = [name for name, value in (("role", role), ("content", content)) if value is None]
+        raise ValueError(f"message missing required field(s): {', '.join(missing)}")
+
     if isinstance(timestamp, datetime):
         ts = timestamp.isoformat()
     else:
@@ -59,8 +67,7 @@ def _serialise_message(message: Any, prompt_id: int) -> Dict[str, Any]:
         "prompt_id": msg_prompt_id,
         "content": content,
     }
-    if role is not None:
-        data["role"] = role
+    data["role"] = role
     if to is not None:
         data["to"] = to
     return data
@@ -102,11 +109,18 @@ def save_conversation(
     filename = f"{timestamp}_{_sanitize_filename(title)}.json"
     file_path = convo_dir / filename
 
+    serialised_messages: List[Dict[str, Any]] = []
+    for i, m in enumerate(messages, 1):
+        try:
+            serialised_messages.append(_serialise_message(m, i))
+        except ValueError as exc:
+            logger.warning("Skipping invalid message %s: %s", i, exc)
+
     payload = {
         "title": title,
         "created_at": datetime.utcnow().isoformat(),
         "metadata": metadata or {},
-        "messages": [_serialise_message(m, i) for i, m in enumerate(messages, 1)],
+        "messages": serialised_messages,
     }
 
     file_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
