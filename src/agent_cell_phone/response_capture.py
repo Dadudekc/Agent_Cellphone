@@ -7,6 +7,8 @@ from pathlib import Path
 from dataclasses import dataclass
 from typing import Optional, Dict, Callable
 
+from ..utils import atomic_write
+
 try:
     import pyperclip
 except Exception:
@@ -129,8 +131,8 @@ class ResponseCapture:
         try:
             data = p.read_text(encoding="utf-8").strip()
             if data:
-                # Clear file after reading
-                p.write_text("", encoding="utf-8")
+                # Clear file after reading atomically
+                atomic_write(p, "")
                 return data
         except Exception:
             return None
@@ -190,7 +192,7 @@ class ResponseCapture:
             
             # Write to inbox directory
             out = Path(self.cfg.inbox_root) / f"response_{int(time.time()*1000)}_{agent}.json"
-            out.write_text(json.dumps(envelope, ensure_ascii=False, indent=2), encoding="utf-8")
+            atomic_write(out, json.dumps(envelope, ensure_ascii=False, indent=2))
             
             print(f"[CAPTURE] Captured response from {agent}: {payload.get('type', 'unknown')}")
             
