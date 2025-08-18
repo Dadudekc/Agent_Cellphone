@@ -168,8 +168,19 @@ class AgentCellPhone:
             log.error("No coordinates found for layout mode: %s", layout_mode)
             log.info("Available modes: %s", list(self._all_coords.keys()))
             sys.exit(1)
-            
-        log.debug("AgentCellPhone ready for %s (test=%s, layout=%s, queue=%s)", 
+
+        # Heartbeat system
+        try:
+            self._heartbeat_interval = float(os.environ.get("ACP_HEARTBEAT_SEC", "60") or 60)
+        except Exception:
+            self._heartbeat_interval = 60.0
+        self._hb_stop = threading.Event()
+        self._hb_thread: Optional[threading.Thread] = None
+        if self._heartbeat_interval > 0:
+            self._hb_thread = threading.Thread(target=self._heartbeat_loop, daemon=True)
+            self._hb_thread.start()
+
+        log.debug("AgentCellPhone ready for %s (test=%s, layout=%s, queue=%s)",
                  self._agent_id, test, layout_mode, self._queue_enabled)
 
     def set_pyautogui_queue(self, queue_instance) -> None:
@@ -446,6 +457,43 @@ class AgentCellPhone:
         except Exception as e:
             log.error("Queue clear error: %s", e)
             return False
+
+    def stop(self) -> None:
+        """Stop background threads and services."""
+        self.stop_listening()
+        self.stop_capture()
+        if self._hb_thread and self._hb_thread.is_alive():
+            self._hb_stop.set()
+            self._hb_thread.join(timeout=1)
+
+    def __del__(self):
+        try:
+            self.stop()
+        except Exception:
+            pass
+
+    # private helpers ────────────────────
+    def _heartbeat_loop(self) -> None:
+        while not self._hb_stop.is_set():
+            self._emit_heartbeat()
+            self._hb_stop.wait(self._heartbeat_interval)
+
+    def _emit_heartbeat(self) -> None:
+        """Write heartbeat envelope to inbox."""
+        try:
+            inbox = REPO_ROOT / "runtime" / "agent_comms" / "inbox"
+            inbox.mkdir(parents=True, exist_ok=True)
+            envelope = {
+                "type": "heartbeat",
+                "agent": self._agent_id,
+                "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                "ts": int(time.time()),
+                "payload": {"tag": "[HEARTBEAT]"}
+            }
+            fp = inbox / f"heartbeat_{int(time.time()*1000)}_{self._agent_id}.json"
+            fp.write_text(json.dumps(envelope, ensure_ascii=False, indent=2), encoding="utf-8")
+        except Exception as e:
+            log.debug("heartbeat emit failed: %s", e)
 
     # private helpers ────────────────────
     def _listen_loop(self) -> None:
