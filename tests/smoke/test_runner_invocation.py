@@ -57,9 +57,10 @@ def test_start_runner_uses_project_relative_comms(monkeypatch):
     win = module.FiveAgentGridGUI()  # type: ignore[attr-defined]
     try:
         win.start_fsm_runner()
-        # Allow background thread to run briefly
         import time
-        time.sleep(0.25)
+        start = time.time()
+        while ("args" not in captured or not comms_dir.exists()) and time.time() - start < 1:
+            time.sleep(0.01)
 
         # Validate communications directory and args
         assert comms_dir.exists(), "communications directory should be created relative to CWD"

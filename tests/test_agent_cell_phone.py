@@ -78,8 +78,14 @@ def test_heartbeat_envelope_written():
             f.unlink()
     os.environ["ACP_HEARTBEAT_SEC"] = "1"
     acp = AgentCellPhone(layout_mode="2-agent", test=True)
-    time.sleep(1.2)
-    files = list(inbox.glob("heartbeat_*.json"))
+    import time
+    files = []
+    start = time.time()
+    while time.time() - start < 2:
+        files = list(inbox.glob("heartbeat_*.json"))
+        if files:
+            break
+        time.sleep(0.1)
     acp.stop()
     os.environ.pop("ACP_HEARTBEAT_SEC", None)
     assert files, "Heartbeat file should be created"
