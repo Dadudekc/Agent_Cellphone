@@ -8,11 +8,9 @@ from pathlib import Path
 import pytest
 
 
-# Ensure project root is importable and run Qt offscreen
+# Resolve project root and run Qt offscreen
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
 
 # Stub pyautogui for headless safety
 sys.modules.setdefault("pyautogui", types.ModuleType("pyautogui"))

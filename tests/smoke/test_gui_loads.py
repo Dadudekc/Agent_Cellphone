@@ -5,9 +5,8 @@ from pathlib import Path
 
 import pytest
 
-# Ensure project root is on sys.path
+# Resolve project root once for all tests
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(PROJECT_ROOT))
 
 # Stub pyautogui to avoid display/permissions issues in CI
 sys.modules.setdefault("pyautogui", types.ModuleType("pyautogui"))

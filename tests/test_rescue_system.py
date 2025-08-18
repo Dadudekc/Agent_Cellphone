@@ -7,14 +7,10 @@ Demonstrates the stall detection and continuous work functionality
 import sys
 import asyncio
 import time
-from pathlib import Path
-
-# Add src to path for imports
-sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from core.agent_monitor import stall_detector, update_agent_activity
 from core.continuous_worker import continuous_worker
-from services.discord_service import post_discord_update
+from src.services.discord_service import post_discord_update
 
 async def test_rescue_system():
     """Test the rescue system components"""
