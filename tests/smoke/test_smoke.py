@@ -4,6 +4,11 @@ import types
 
 import pytest
 
+try:
+    import PyQt5  # noqa: F401
+except ImportError:
+    pytest.skip("PyQt5 not available", allow_module_level=True)
+
 # Add the src directory to the path so tests can import project modules
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 

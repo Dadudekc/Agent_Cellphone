@@ -14,6 +14,11 @@ import pytest
 
 from core.fsm_orchestrator import FSMOrchestrator
 
+try:
+    import PyQt5  # noqa: F401
+except ImportError:
+    pytest.skip("PyQt5 not available", allow_module_level=True)
+
 
 @pytest.fixture
 def temp_fsm_env():
