@@ -17,13 +17,7 @@ import pytest
 import os
 
 # Import the monitor
-try:
-    from src.agent_monitors.agent5_monitor import Agent5Monitor, MonitorConfig
-except ImportError:
-    # Fallback for test environment
-    import sys
-    sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-    from src.agent_monitors.agent5_monitor import Agent5Monitor, MonitorConfig
+from src.agent_monitors.agent5_monitor import Agent5Monitor, MonitorConfig
 
 class DummyACP:
     """Mock AgentCellPhone for testing"""
