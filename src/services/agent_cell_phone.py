@@ -16,6 +16,8 @@ from pathlib import Path
 from typing import Dict, Any, List, Optional, Callable
 import queue
 
+from ..core.inbox_listener import InboxListener
+
 try:
     import pyautogui  # mechanical control
     # Allow disabling failsafe via environment for controlled broadcasts
@@ -499,11 +501,12 @@ class AgentCellPhone:
     def _listen_loop(self) -> None:
         """Main listening loop for incoming messages.
 
-        Polls the response capture inbox (if configured) and the agent's
-        filesystem inbox for JSON envelopes. Each new envelope is parsed and
-        dispatched via `_handle_incoming_message`.
+        Hooks into :class:`InboxListener` for each inbox directory and
+        dispatches envelopes through ``_handle_incoming_message`` when
+        they arrive.
         """
-        # Allow tests to override inbox directories
+
+        # Determine which inbox directories to watch
         if hasattr(self, "_inbox_override"):
             inbox_dirs = [Path(p) for p in self._inbox_override]
         else:
@@ -515,49 +518,50 @@ class AgentCellPhone:
                     pass
             inbox_dirs.append(REPO_ROOT / "agent_workspaces" / self._agent_id / "inbox")
 
-        seen: set[Path] = set()
-        while self._listening:
-            for inbox in inbox_dirs:
+        listeners: List[InboxListener] = []
+
+        def _dispatch(data: Dict[str, Any]) -> None:
+            """Convert raw envelope dict into AgentMessage objects."""
+            try:
+                from_agent = self._fmt_id(str(data.get("from", "")))
+                to_agent = self._fmt_id(str(data.get("to", self._agent_id)))
+                if to_agent != self._agent_id:
+                    return
+
+                content = (
+                    data.get("summary")
+                    or data.get("content")
+                    or data.get("message")
+                    or json.dumps(data.get("payload", {}))
+                )
+                tag_str = str(data.get("type", "")).upper()
+                tag = MsgTag[tag_str] if tag_str in MsgTag.__members__ else MsgTag.NORMAL
+
+                self._handle_incoming_message(
+                    AgentMessage(from_agent, to_agent, content, tag)
+                )
+            except Exception as e:
+                log.error("Failed to process envelope: %s", e)
+
+        # Start an InboxListener for each directory
+        for inbox in inbox_dirs:
+            try:
+                listener = InboxListener(inbox_dir=str(inbox))
+                listener.on_message(_dispatch)
+                listener.start()
+                listeners.append(listener)
+            except Exception as e:
+                log.error("Failed to start inbox listener for %s: %s", inbox, e)
+
+        try:
+            while self._listening:
+                time.sleep(0.1)
+        finally:
+            for listener in listeners:
                 try:
-                    if not inbox.exists():
-                        continue
-                    for msg_file in sorted(inbox.glob("*.json")):
-                        if msg_file in seen:
-                            continue
-                        try:
-                            envelope = json.loads(msg_file.read_text(encoding="utf-8"))
-                        except Exception as e:
-                            log.error("Failed to read envelope %s: %s", msg_file, e)
-                            seen.add(msg_file)
-                            continue
-
-                        from_agent = self._fmt_id(envelope.get("from", ""))
-                        to_agent = self._fmt_id(envelope.get("to", self._agent_id))
-                        if to_agent != self._agent_id:
-                            seen.add(msg_file)
-                            continue
-
-                        content = (
-                            envelope.get("summary")
-                            or envelope.get("content")
-                            or envelope.get("message")
-                            or json.dumps(envelope.get("payload", {}))
-                        )
-                        tag_str = str(envelope.get("type", "")).upper()
-                        tag = MsgTag[tag_str] if tag_str in MsgTag.__members__ else MsgTag.NORMAL
-
-                        self._handle_incoming_message(
-                            AgentMessage(from_agent, to_agent, content, tag)
-                        )
-                        seen.add(msg_file)
-                        try:
-                            msg_file.unlink()
-                        except Exception:
-                            pass
-                except Exception as e:
-                    log.error("Error processing inbox %s: %s", inbox, e)
-
-            time.sleep(0.5)
+                    listener.stop()
+                except Exception:
+                    pass
 
     def _handle_incoming_message(self, message: AgentMessage) -> None:
         """Handle an incoming message."""
