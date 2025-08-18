@@ -23,7 +23,10 @@ from src.core.config import get_owner_path, get_repos_root, get_communications_r
 
 # Use configurable paths instead of hardcoded ones
 INBOX_ROOT = get_owner_path()
-REPO_ROOT = get_owner_path()
+REPO_ROOT = get_repos_root()
+FSM_ROOT = Path("fsm_data")
+TASKS_DIR = FSM_ROOT / "tasks"
+WORKFLOWS_DIR = FSM_ROOT / "workflows"
 
 
 def _P(path_str: str) -> Path:
@@ -57,7 +60,7 @@ def _read_inbox_messages(agent: str, limit: int = 10) -> List[Dict[str, Any]]:
     try:
         inbox_dir = INBOX_ROOT / agent / "inbox"
         if not inbox_dir.exists():
-        return []
+            return []
         
         messages = []
         for filepath in sorted(inbox_dir.glob("fsm_message_*.json"), reverse=True):
@@ -83,34 +86,34 @@ def _read_inbox_messages(agent: str, limit: int = 10) -> List[Dict[str, Any]]:
 def _scan_repositories_for_tasks() -> List[Dict[str, Any]]:
     """Scan all repositories for TASK_LIST.md entries and seed queued tasks."""
     tasks = []
-    
+
     if not REPO_ROOT.exists():
         print(f"⚠️  Repository root {REPO_ROOT} does not exist")
-    return tasks
+        return tasks
 
     try:
         for repo in sorted(REPO_ROOT.iterdir()):
             if not repo.is_dir() or repo.name.startswith('.'):
                 continue
-                
+
             tasklist_file = repo / "TASK_LIST.md"
             if not tasklist_file.exists():
                 continue
-            
+
             try:
                 # Read TASK_LIST.md and extract tasks
                 content = tasklist_file.read_text(encoding='utf-8')
-                
+
                 # Simple task extraction (can be enhanced)
                 lines = content.split('\n')
                 current_task = None
-                
+
                 for line in lines:
                     line = line.strip()
                     if line.startswith('## '):
                         if current_task:
                             tasks.append(current_task)
-                        
+
                         current_task = {
                             'repo': repo.name,
                             'title': line[3:],  # Remove '## '
@@ -121,17 +124,17 @@ def _scan_repositories_for_tasks() -> List[Dict[str, Any]]:
                     elif line.startswith('- ') and current_task:
                         if 'description' not in current_task:
                             current_task['description'] = line[2:]  # Remove '- '
-                
+
                 if current_task:
                     tasks.append(current_task)
-                    
+
             except Exception as e:
                 print(f"⚠️  Failed to process {tasklist_file}: {e}")
                 continue
-        
+
         print(f"✅ Scanned {len(tasks)} tasks from repositories")
         return tasks
-        
+
     except Exception as e:
         print(f"❌ Failed to scan repositories: {e}")
         return tasks
@@ -158,6 +161,76 @@ def _create_fsm_task(owner: str, task_data: Dict[str, Any]) -> Dict[str, Any]:
         "repo_path": str(get_repos_root() / task_data.get('repo', '')),
         "comm_root_path": str(get_communications_root()),
     }
+
+
+def handle_fsm_request(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Assign queued tasks to agents and drop messages into their inboxes."""
+    agents = payload.get("agents", [])
+    TASKS_DIR.mkdir(parents=True, exist_ok=True)
+    available: list[tuple[Path, Dict[str, Any]]] = []
+    for fp in sorted(TASKS_DIR.glob("*.json")):
+        data = json.loads(fp.read_text(encoding="utf-8"))
+        if data.get("state") == "queued" and not data.get("owner"):
+            available.append((fp, data))
+
+    assigned = 0
+    for agent in agents:
+        if not available:
+            break
+        fp, data = available.pop(0)
+        data["owner"] = agent
+        data["state"] = "assigned"
+        fp.write_text(json.dumps(data, indent=2), encoding="utf-8")
+        message = {
+            "type": "task",
+            "from": payload.get("from"),
+            "to": agent,
+            "task_id": data.get("task_id"),
+            "repo": data.get("repo"),
+            "intent": data.get("intent"),
+            "timestamp": datetime.now().isoformat(),
+        }
+        inbox_dir = INBOX_ROOT / agent / "inbox"
+        inbox_dir.mkdir(parents=True, exist_ok=True)
+        msg_fp = inbox_dir / f"task_{data.get('task_id')}.json"
+        msg_fp.write_text(json.dumps(message, indent=2), encoding="utf-8")
+        assigned += 1
+
+    return {"ok": True, "count": assigned}
+
+
+def handle_fsm_update(update: Dict[str, Any]) -> Dict[str, Any]:
+    """Persist task state updates and notify the captain."""
+    task_id = update.get("task_id")
+    if not task_id:
+        return {"ok": False, "error": "task_id required"}
+
+    TASKS_DIR.mkdir(parents=True, exist_ok=True)
+    fp = TASKS_DIR / f"{task_id}.json"
+    data: Dict[str, Any] = {}
+    if fp.exists():
+        data = json.loads(fp.read_text(encoding="utf-8"))
+    data.update({"task_id": task_id, "state": update.get("state")})
+    if update.get("evidence"):
+        data.setdefault("evidence", []).extend(update["evidence"])
+    fp.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+    captain = update.get("captain")
+    if captain:
+        verify_msg = {
+            "type": "verify",
+            "from": update.get("from"),
+            "task_id": task_id,
+            "state": update.get("state"),
+            "summary": update.get("summary"),
+            "timestamp": datetime.now().isoformat(),
+        }
+        inbox_dir = INBOX_ROOT / captain / "inbox"
+        inbox_dir.mkdir(parents=True, exist_ok=True)
+        verify_fp = inbox_dir / f"verify_{task_id}.json"
+        verify_fp.write_text(json.dumps(verify_msg, indent=2), encoding="utf-8")
+
+    return {"ok": True, "state": data.get("state")}
 
 
 def process_fsm_update(agent: str, update_data: Dict[str, Any]) -> bool:
@@ -209,8 +282,8 @@ def get_fsm_status(agent: str) -> Dict[str, Any]:
         if state_file.exists():
             try:
                 current_state = json.loads(state_file.read_text(encoding='utf-8'))
-    except Exception:
-        pass
+            except Exception:
+                pass
         
         return {
             "agent": agent,
