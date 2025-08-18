@@ -6,6 +6,18 @@ from pathlib import Path
 
 import pytest
 
+# Skip if PyQt5 unavailable
+try:
+    import PyQt5  # noqa: F401
+except ImportError:
+    pytest.skip("PyQt5 not available", allow_module_level=True)
+
+# Mark test as requiring a display
+pytestmark = pytest.mark.skipif(
+    not os.environ.get("DISPLAY"),
+    reason="Requires display",
+)
+
 # Ensure project root is on sys.path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
