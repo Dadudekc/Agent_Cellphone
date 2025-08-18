@@ -278,10 +278,26 @@ class EnhancedResponseCapture:
             agent_coords = self.coords.get(agent, {})
             if not agent_coords:
                 return None
-            
-            # Take screenshot and extract text
-            # This would need proper coordinate mapping
-            return None
+            rect = (
+                agent_coords.get("output_area")
+                or agent_coords.get("response_box")
+                or agent_coords
+            )
+            x = rect.get("x")
+            y = rect.get("y")
+            w = rect.get("width")
+            h = rect.get("height")
+            if None in (x, y, w, h):
+                return None
+
+            # Take screenshot of the agent's output region
+            image = pyautogui.screenshot(region=(x, y, w, h))
+
+            # Run OCR on the captured image
+            text = pytesseract.image_to_string(image)
+            text = text.strip()
+            if text:
+                return AIResponse(agent, text, time.time(), "ocr")
         except Exception:
             pass
         return None
