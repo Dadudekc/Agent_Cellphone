@@ -207,9 +207,7 @@ def demo_sequence(layout_mode: str = "2-agent"):
         
         if len(agents) >= 2:
             test_send_message("Agent-1", "Agent-2", "Hello from Agent-1!", layout_mode)
-            time.sleep(1)
             test_send_message("Agent-2", "Agent-1", "Hello from Agent-2!", layout_mode)
-            time.sleep(1)
         else:
             print(f"⚠️  {layout_mode} mode only has {len(agents)} agent(s), skipping individual sends")
         

@@ -340,7 +340,11 @@ class TestFSMOrchestratorIntegration:
         
         # Wait for monitoring to start
         import time
-        time.sleep(0.1)
+        start = time.time()
+        while not orchestrator.is_monitoring():
+            if time.time() - start > 1:
+                pytest.fail("monitor did not start in time")
+            time.sleep(0.01)
         assert orchestrator.is_monitoring()
         
         # Stop monitoring
