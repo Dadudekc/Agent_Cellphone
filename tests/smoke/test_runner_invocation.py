@@ -4,6 +4,7 @@ import os
 import sys
 import types
 import tempfile
+import threading
 from pathlib import Path
 
 import pytest
@@ -43,9 +44,12 @@ def test_start_runner_uses_project_relative_comms(monkeypatch):
     # Capture popen arguments and prevent actual run
     captured: dict[str, object] = {}
 
+    started = threading.Event()
+
     def fake_popen(args, cwd=None):  # noqa: ANN001
         captured["args"] = args
         captured["cwd"] = cwd
+        started.set()
         class _N: ...
         return _N()
 
@@ -57,9 +61,7 @@ def test_start_runner_uses_project_relative_comms(monkeypatch):
     win = module.FiveAgentGridGUI()  # type: ignore[attr-defined]
     try:
         win.start_fsm_runner()
-        # Allow background thread to run briefly
-        import time
-        time.sleep(0.25)
+        assert started.wait(timeout=1), "Runner thread did not start"
 
         # Validate communications directory and args
         assert comms_dir.exists(), "communications directory should be created relative to CWD"

@@ -1,4 +1,4 @@
-import time
+import threading
 
 from src.core.utils.watchdog import Watchdog
 
@@ -9,11 +9,14 @@ def test_watchdog_alerts_on_failure():
     def check():
         raise RuntimeError("fail")
 
+    triggered = threading.Event()
+
     def alert(exc: BaseException) -> None:
         alerts.append(str(exc))
+        triggered.set()
 
     wd = Watchdog(0.01, check, alert)
     wd.start()
-    time.sleep(0.03)
+    assert triggered.wait(timeout=1), "Watchdog did not report failure in time"
     wd.stop()
     assert alerts, "Watchdog did not report failure"

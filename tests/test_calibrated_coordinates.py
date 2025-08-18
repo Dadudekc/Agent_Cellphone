@@ -6,7 +6,7 @@ Tests the newly calibrated 5-agent mode coordinates to ensure they work correctl
 """
 
 import json
-import time
+import threading
 import sys
 from pathlib import Path
 from typing import Dict, Any
@@ -121,7 +121,7 @@ class CoordinateTester:
                 # Small break between agents
                 if agent_name != "Agent-5":
                     print("\n⏳ Moving to next agent in 2 seconds...")
-                    time.sleep(2)
+                    threading.Event().wait(2)
             
             # Show test results
             self.show_test_results()

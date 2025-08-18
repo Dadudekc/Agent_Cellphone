@@ -331,16 +331,16 @@ class TestFSMOrchestratorIntegration:
         
         # Start monitoring
         import threading
-        monitor_thread = threading.Thread(
-            target=orchestrator.monitor_inbox,
-            kwargs={"poll_interval": 1},
-            daemon=True
-        )
+        start_event = threading.Event()
+
+        def run():
+            start_event.set()
+            orchestrator.monitor_inbox(poll_interval=1)
+
+        monitor_thread = threading.Thread(target=run, daemon=True)
         monitor_thread.start()
-        
-        # Wait for monitoring to start
-        import time
-        time.sleep(0.1)
+
+        assert start_event.wait(timeout=1)
         assert orchestrator.is_monitoring()
         
         # Stop monitoring
