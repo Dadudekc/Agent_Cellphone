@@ -37,7 +37,7 @@ class CursorDBWatcher:
 
     def _save_seen(self, agent: str, sigs: set[str]):
         """Save the set of seen message signatures for an agent"""
-        (SEEN_DIR / f"{agent}.json").write_text(json.dumps(sorted(sigs)), encoding="utf-8")
+        atomic_write(SEEN_DIR / f"{agent}.json", json.dumps(sorted(sigs)))
 
     def get_stats(self) -> Dict:
         """Get current watcher statistics"""
