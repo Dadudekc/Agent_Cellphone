@@ -27,28 +27,32 @@ def test_minimal_interfaces():
 def test_file_tail_and_pipeline(tmp_path):
     from src.core.inbox_listener import InboxListener
     from src.core.message_pipeline import MessagePipeline
+    import threading
 
     inbox = tmp_path / "inbox"
     inbox.mkdir()
     pipeline = MessagePipeline()
     listener = InboxListener(inbox_dir=str(inbox), pipeline=pipeline, poll_interval_s=0.05)
+    processed = threading.Event()
+
+    orig_enqueue = pipeline.enqueue
+
+    def enqueue_and_signal(to_agent, message):
+        orig_enqueue(to_agent, message)
+        processed.set()
+
+    pipeline.enqueue = enqueue_and_signal  # type: ignore[method-assign]
+
     try:
         listener.start()
-        # Create a message file
         msg = inbox / "001.json"
         msg.write_text('{"from":"Agent-1","to":"Agent-2","message":"hello"}', encoding='utf-8')
-        # Wait briefly for polling
-        import time
-        for _ in range(20):
-            item = pipeline.process_once()
-            if item is not None:
-                to_agent, message = item
-                assert to_agent == "Agent-2"
-                assert message == "hello"
-                break
-            time.sleep(0.05)
-        else:
-            raise AssertionError("Listener did not enqueue message in time")
+        assert processed.wait(timeout=2), "Listener did not enqueue message in time"
+        item = pipeline.process_once()
+        assert item is not None
+        to_agent, message = item
+        assert to_agent == "Agent-2"
+        assert message == "hello"
     finally:
         listener.stop()
 

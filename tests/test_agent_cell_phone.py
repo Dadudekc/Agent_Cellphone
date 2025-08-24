@@ -1,5 +1,5 @@
 import os
-import time
+import threading
 from pathlib import Path
 
 import pytest
@@ -71,14 +71,24 @@ def test_clear_queue_removes_pending_messages_and_locks():
 
     queue.stop_processing()
 
-def test_heartbeat_envelope_written():
+def test_heartbeat_envelope_written(monkeypatch):
     inbox = Path("runtime/agent_comms/inbox")
     if inbox.exists():
         for f in inbox.glob("heartbeat_*.json"):
             f.unlink()
     os.environ["ACP_HEARTBEAT_SEC"] = "1"
+
+    triggered = threading.Event()
+    orig_emit = AgentCellPhone._emit_heartbeat
+
+    def emit_and_signal(self):
+        orig_emit(self)
+        triggered.set()
+
+    monkeypatch.setattr(AgentCellPhone, "_emit_heartbeat", emit_and_signal)
+
     acp = AgentCellPhone(layout_mode="2-agent", test=True)
-    time.sleep(1.2)
+    assert triggered.wait(timeout=2), "Heartbeat was not emitted"
     files = list(inbox.glob("heartbeat_*.json"))
     acp.stop()
     os.environ.pop("ACP_HEARTBEAT_SEC", None)

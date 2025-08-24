@@ -164,9 +164,6 @@ class TestAgent5Monitor:
         response_file = agent1_dir / "response.txt"
         response_file.write_text("Test response")
         
-        # Wait a moment for file system
-        time.sleep(0.1)
-        
         # Run tick to update activity
         monitor._tick()
         
@@ -195,7 +192,7 @@ class TestAgent5Monitor:
         assert "Agent-1" in monitor.last_activity
         assert len(monitor.acp.sent) == 0
 
-        time.sleep(1.2)
+        monitor.last_activity["Agent-1"] -= cfg.stall_threshold_sec + 0.2
         monitor._tick()
         assert len(monitor.acp.sent) == 1
     

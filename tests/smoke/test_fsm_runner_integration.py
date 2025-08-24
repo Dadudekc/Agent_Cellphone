@@ -7,7 +7,7 @@ Tests the integration between the FSM orchestrator and the overnight runner.
 
 import json
 import tempfile
-import time
+import threading
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 import pytest
@@ -73,16 +73,16 @@ class TestFSMRunnerIntegration:
         )
         
         # Start monitoring in background thread
-        import threading
-        monitor_thread = threading.Thread(
-            target=orchestrator.monitor_inbox,
-            kwargs={"poll_interval": 1},
-            daemon=True
-        )
+        start_event = threading.Event()
+
+        def run():
+            start_event.set()
+            orchestrator.monitor_inbox(poll_interval=1)
+
+        monitor_thread = threading.Thread(target=run, daemon=True)
         monitor_thread.start()
-        
-        # Wait a bit for monitoring to start
-        time.sleep(0.1)
+
+        assert start_event.wait(timeout=1)
         assert orchestrator.is_monitoring()
         
         # Stop monitoring
@@ -135,16 +135,16 @@ class TestFSMRunnerIntegration:
         )
         
         # Start monitoring in background thread (as runner does)
-        import threading
-        monitor_thread = threading.Thread(
-            target=orchestrator.monitor_inbox,
-            kwargs={"poll_interval": 1},
-            daemon=True
-        )
+        start_event = threading.Event()
+
+        def run():
+            start_event.set()
+            orchestrator.monitor_inbox(poll_interval=1)
+
+        monitor_thread = threading.Thread(target=run, daemon=True)
         monitor_thread.start()
-        
-        # Wait for monitoring to start
-        time.sleep(0.1)
+
+        assert start_event.wait(timeout=1)
         assert orchestrator.is_monitoring()
         
         # Create a test update file
@@ -157,13 +157,21 @@ class TestFSMRunnerIntegration:
             "timestamp": "2025-08-15T22:00:00"
         }
         
+        processed = threading.Event()
+        orig_process = orchestrator.process_fsm_update
+
+        def proc(update):
+            res = orig_process(update)
+            processed.set()
+            return res
+
+        orchestrator.process_fsm_update = proc
+
         update_file = temp_fsm_env["inbox_root"] / "test_update.json"
         update_file.write_text(json.dumps(test_update, indent=2))
-        
-        # Wait for processing
-        time.sleep(2)
-        
-        # Verify task was created
+
+        assert processed.wait(timeout=5)
+
         task_files = list((temp_fsm_env["fsm_root"] / "tasks").glob("*.json"))
         assert len(task_files) >= 1
         
@@ -181,16 +189,16 @@ class TestFSMRunnerIntegration:
         )
         
         # Start monitoring by calling monitor_inbox in a thread
-        import threading
-        monitor_thread = threading.Thread(
-            target=orchestrator.monitor_inbox,
-            kwargs={"poll_interval": 1},
-            daemon=True
-        )
+        start_event = threading.Event()
+
+        def run():
+            start_event.set()
+            orchestrator.monitor_inbox(poll_interval=1)
+
+        monitor_thread = threading.Thread(target=run, daemon=True)
         monitor_thread.start()
-        
-        # Wait for monitoring to start
-        time.sleep(0.1)
+
+        assert start_event.wait(timeout=1)
         assert orchestrator.is_monitoring()
         
         # Simulate graceful shutdown

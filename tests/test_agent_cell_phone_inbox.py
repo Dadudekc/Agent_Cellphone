@@ -1,5 +1,5 @@
 import json
-import time
+import threading
 
 import pytest
 
@@ -11,7 +11,13 @@ def test_listen_loop_dispatches_file_inbox_messages(tmp_path):
     acp = AgentCellPhone(agent_id="Agent-1", layout_mode="2-agent", test=True)
 
     received = []
-    acp.register_handler(MsgTag.SYNC.value, lambda m: received.append(m))
+    processed = threading.Event()
+
+    def handler(m):
+        received.append(m)
+        processed.set()
+
+    acp.register_handler(MsgTag.SYNC.value, handler)
 
     # Override inbox directory to temporary path
     acp._inbox_override = [tmp_path]
@@ -26,11 +32,7 @@ def test_listen_loop_dispatches_file_inbox_messages(tmp_path):
     }
     (tmp_path / "msg_test.json").write_text(json.dumps(message))
 
-    # Wait for listener to process the file
-    for _ in range(20):
-        if received:
-            break
-        time.sleep(0.1)
+    assert processed.wait(timeout=2), "Listener did not process the message in time"
 
     acp.stop_listening()
 
