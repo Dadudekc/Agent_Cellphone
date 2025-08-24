@@ -8,14 +8,14 @@ import argparse
 import sys
 from pathlib import Path
 
-# Ensure src directory is on the import path
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
+# Ensure project root is on the import path so src.* packages resolve
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from services.agent_cell_phone import AgentCellPhone, MsgTag
+from src.services.agent_cell_phone import AgentCellPhone, MsgTag
 
 
-def test_send_message(agent_id: str, target_agent: str, message: str, layout_mode: str = "2-agent", test_mode: bool = True):
-    """Test sending a single message"""
+def send_message(agent_id: str, target_agent: str, message: str, layout_mode: str = "2-agent", test_mode: bool = True):
+    """Send a single message"""
     print(f"🧪 Testing message from {agent_id} to {target_agent} in {layout_mode} mode")
     
     try:
@@ -33,8 +33,8 @@ def test_send_message(agent_id: str, target_agent: str, message: str, layout_mod
         return False
 
 
-def test_broadcast(message: str, layout_mode: str = "2-agent", test_mode: bool = True):
-    """Test broadcasting to all agents"""
+def broadcast_message(message: str, layout_mode: str = "2-agent", test_mode: bool = True):
+    """Broadcast a message to all agents"""
     print(f"📢 Testing broadcast message in {layout_mode} mode")
     
     try:
@@ -52,8 +52,8 @@ def test_broadcast(message: str, layout_mode: str = "2-agent", test_mode: bool =
         return False
 
 
-def test_exec_mode(agent_id: str, mode_key: str, layout_mode: str = "2-agent", test_mode: bool = True, **kwargs):
-    """Test executing a predefined mode"""
+def execute_mode(agent_id: str, mode_key: str, layout_mode: str = "2-agent", test_mode: bool = True, **kwargs):
+    """Execute a predefined mode"""
     print(f"🎯 Testing mode execution for {agent_id} with mode '{mode_key}' in {layout_mode} mode")
     
     try:
@@ -71,8 +71,8 @@ def test_exec_mode(agent_id: str, mode_key: str, layout_mode: str = "2-agent", t
         return False
 
 
-def test_coordinate_loading(layout_mode: str = "2-agent"):
-    """Test coordinate loading and validation for specific layout mode"""
+def load_coordinates(layout_mode: str = "2-agent"):
+    """Load and validate coordinates for the specified layout mode"""
     print(f"🗺️ Testing coordinate loading for {layout_mode} mode")
     
     try:
@@ -195,7 +195,7 @@ def demo_sequence(layout_mode: str = "2-agent"):
     print("=" * 50)
     
     # Test coordinate loading
-    if not test_coordinate_loading(layout_mode):
+    if not load_coordinates(layout_mode):
         return
         
     print()
@@ -206,9 +206,9 @@ def demo_sequence(layout_mode: str = "2-agent"):
         agents = acp.get_available_agents()
         
         if len(agents) >= 2:
-            test_send_message("Agent-1", "Agent-2", "Hello from Agent-1!", layout_mode)
+            send_message("Agent-1", "Agent-2", "Hello from Agent-1!", layout_mode)
             time.sleep(1)
-            test_send_message("Agent-2", "Agent-1", "Hello from Agent-2!", layout_mode)
+            send_message("Agent-2", "Agent-1", "Hello from Agent-2!", layout_mode)
             time.sleep(1)
         else:
             print(f"⚠️  {layout_mode} mode only has {len(agents)} agent(s), skipping individual sends")
@@ -216,19 +216,13 @@ def demo_sequence(layout_mode: str = "2-agent"):
         print()
         
         # Test broadcast
-        test_broadcast("Broadcast test message", layout_mode)
+        broadcast_message("Broadcast test message", layout_mode)
         
         print()
         print("🎉 Demo completed!")
         
     except Exception as e:
         print(f"❌ Error in demo: {e}")
-
-try:
-    from src.agent_cell_phone import AgentCellPhone, MsgTag
-except ImportError:
-    print("Error: Could not import AgentCellPhone")
-    sys.exit(1)
 
 def main():
     """Main test harness function"""
@@ -269,12 +263,8 @@ def main():
             print(f"📤 Sending individual message to {args.target}")
             print(f"[SEND] {args.target}: {args.message}")
             
-            success, result = acp.send(args.target, args.message, msg_tag)
-            
-            if success:
-                print(f"✅ Message sent successfully: '{args.message}'")
-            else:
-                print(f"❌ Failed to send message: {result}")
+            acp.send(args.target, args.message, msg_tag)
+            print(f"✅ Message sent successfully: '{args.message}'")
                 
         else:  # broadcast
             print(f"📢 Testing broadcast message in {args.layout} mode")
