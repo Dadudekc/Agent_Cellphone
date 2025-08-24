@@ -8,12 +8,8 @@ using the advanced inter-agent communication framework
 
 import time
 import json
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
-
-from services.inter_agent_framework import InterAgentFramework, Message, MessageType
+from src.services.inter_agent_framework import InterAgentFramework, Message, MessageType
 
 
 def test_agent_communication() -> None:

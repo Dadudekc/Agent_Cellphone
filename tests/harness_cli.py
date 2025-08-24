@@ -6,12 +6,8 @@ Simple command-line interface for testing agent communication
 
 import argparse
 import sys
-from pathlib import Path
 
-# Ensure src directory is on the import path
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
-
-from services.agent_cell_phone import AgentCellPhone, MsgTag
+from src.services.agent_cell_phone import AgentCellPhone, MsgTag
 
 
 def test_send_message(agent_id: str, target_agent: str, message: str, layout_mode: str = "2-agent", test_mode: bool = True):

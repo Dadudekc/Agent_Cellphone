@@ -2,7 +2,7 @@ import json
 from unittest.mock import patch
 
 from src.orchestrators.lifecycle_orchestrator import LifecycleOrchestrator
-from agent_cell_phone import AgentCellPhone
+from src.services.agent_cell_phone import AgentCellPhone
 
 
 def test_stage_budget_respected():
