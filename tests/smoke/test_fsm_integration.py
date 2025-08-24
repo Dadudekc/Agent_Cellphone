@@ -12,6 +12,11 @@ import tempfile
 from pathlib import Path
 from core.fsm_orchestrator import FSMOrchestrator, FSMUpdate, TaskState
 
+try:
+    import PyQt5  # noqa: F401
+except ImportError:
+    pytest.skip("PyQt5 not available", allow_module_level=True)
+
 
 @pytest.fixture
 def temp_fsm_env():
