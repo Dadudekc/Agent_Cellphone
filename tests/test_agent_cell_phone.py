@@ -1,10 +1,9 @@
-import os
 import time
 from pathlib import Path
 
 import pytest
 
-from agent_cell_phone import AgentCellPhone, MsgTag
+from src.services.agent_cell_phone import AgentCellPhone, MsgTag
 
 
 def test_send_records_cursor_actions():
@@ -71,18 +70,17 @@ def test_clear_queue_removes_pending_messages_and_locks():
 
     queue.stop_processing()
 
-def test_heartbeat_envelope_written():
-    inbox = Path("runtime/agent_comms/inbox")
-    if inbox.exists():
-        for f in inbox.glob("heartbeat_*.json"):
-            f.unlink()
-    os.environ["ACP_HEARTBEAT_SEC"] = "1"
+def test_heartbeat_envelope_written(tmp_path, monkeypatch):
+    import src.services.agent_cell_phone as acp_module
+
+    monkeypatch.setattr(acp_module, "REPO_ROOT", tmp_path)
+    inbox = tmp_path / "runtime" / "agent_comms" / "inbox"
+    monkeypatch.setenv("ACP_HEARTBEAT_SEC", "1")
+
     acp = AgentCellPhone(layout_mode="2-agent", test=True)
     time.sleep(1.2)
     files = list(inbox.glob("heartbeat_*.json"))
     acp.stop()
-    os.environ.pop("ACP_HEARTBEAT_SEC", None)
+
     assert files, "Heartbeat file should be created"
-    for f in files:
-        f.unlink()
 
