@@ -81,8 +81,12 @@ class TestFSMRunnerIntegration:
         )
         monitor_thread.start()
         
-        # Wait a bit for monitoring to start
-        time.sleep(0.1)
+        # Wait for monitoring to start
+        start = time.time()
+        while not orchestrator.is_monitoring():
+            if time.time() - start > 1:
+                pytest.fail("monitor did not start in time")
+            time.sleep(0.01)
         assert orchestrator.is_monitoring()
         
         # Stop monitoring
@@ -144,7 +148,11 @@ class TestFSMRunnerIntegration:
         monitor_thread.start()
         
         # Wait for monitoring to start
-        time.sleep(0.1)
+        start = time.time()
+        while not orchestrator.is_monitoring():
+            if time.time() - start > 1:
+                pytest.fail("monitor did not start in time")
+            time.sleep(0.01)
         assert orchestrator.is_monitoring()
         
         # Create a test update file
@@ -161,7 +169,12 @@ class TestFSMRunnerIntegration:
         update_file.write_text(json.dumps(test_update, indent=2))
         
         # Wait for processing
-        time.sleep(2)
+        start = time.time()
+        tasks_dir = temp_fsm_env["fsm_root"] / "tasks"
+        while not list(tasks_dir.glob("*.json")):
+            if time.time() - start > 2:
+                pytest.fail("update was not processed in time")
+            time.sleep(0.05)
         
         # Verify task was created
         task_files = list((temp_fsm_env["fsm_root"] / "tasks").glob("*.json"))
@@ -190,7 +203,11 @@ class TestFSMRunnerIntegration:
         monitor_thread.start()
         
         # Wait for monitoring to start
-        time.sleep(0.1)
+        start = time.time()
+        while not orchestrator.is_monitoring():
+            if time.time() - start > 1:
+                pytest.fail("monitor did not start in time")
+            time.sleep(0.01)
         assert orchestrator.is_monitoring()
         
         # Simulate graceful shutdown

@@ -118,10 +118,10 @@ class CoordinateTester:
                 result = self.test_agent_coordinates(agent_name)
                 self.test_results[agent_name] = result
                 
-                # Small break between agents
+                # Pause between agents to allow observation
                 if agent_name != "Agent-5":
-                    print("\n⏳ Moving to next agent in 2 seconds...")
-                    time.sleep(2)
+                    print("\n⏳ Ready for next agent")
+                    input("Press Enter to continue...")
             
             # Show test results
             self.show_test_results()

@@ -8,8 +8,10 @@ def test_enforce_triggers_recovery_on_stall():
     recovered = {"called": False}
 
     def stalled_operation(signal_progress):
-        # No progress is signalled; sleep longer than the timeout
-        time.sleep(0.05)
+        # Busy-wait without signalling progress to exceed the timeout
+        end = time.monotonic() + 0.05
+        while time.monotonic() < end:
+            pass
 
     def recover():
         recovered["called"] = True

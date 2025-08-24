@@ -33,22 +33,30 @@ def test_file_tail_and_pipeline(tmp_path):
     pipeline = MessagePipeline()
     listener = InboxListener(inbox_dir=str(inbox), pipeline=pipeline, poll_interval_s=0.05)
     try:
+        from threading import Event
+        event = Event()
+
+        original_enqueue = pipeline.enqueue
+
+        def enqueue_with_event(*args, **kwargs):
+            event.set()
+            return original_enqueue(*args, **kwargs)
+
+        pipeline.enqueue = enqueue_with_event  # type: ignore[assignment]
+
         listener.start()
         # Create a message file
         msg = inbox / "001.json"
         msg.write_text('{"from":"Agent-1","to":"Agent-2","message":"hello"}', encoding='utf-8')
-        # Wait briefly for polling
-        import time
-        for _ in range(20):
-            item = pipeline.process_once()
-            if item is not None:
-                to_agent, message = item
-                assert to_agent == "Agent-2"
-                assert message == "hello"
-                break
-            time.sleep(0.05)
-        else:
-            raise AssertionError("Listener did not enqueue message in time")
+
+        # Wait for listener to enqueue message
+        assert event.wait(timeout=1), "Listener did not enqueue message in time"
+
+        item = pipeline.process_once()
+        assert item is not None
+        to_agent, message = item
+        assert to_agent == "Agent-2"
+        assert message == "hello"
     finally:
         listener.stop()
 
