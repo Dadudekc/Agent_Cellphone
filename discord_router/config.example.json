@@ -1,0 +1,17 @@
+{
+  "channel_whitelist": ["agent-commands", "agent-5", "agent-6"],
+  "role_whitelist": ["Operator", "Victor"],
+  "press_enter_after_typing": true,
+  "typing_mode": "paste",  // "paste" or "type"
+  "typing_delay_ms": 0,
+  "agents": {
+    "agent-5": {
+      "window_title": "Cursor - Agent 5",
+      "coords": { "chat_input": [400, 600] }
+    },
+    "agent-6": {
+      "window_title": "Cursor - Agent 6",
+      "coords": { "chat_input": [420, 620] }
+    }
+  }
+}
