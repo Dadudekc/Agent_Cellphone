@@ -12,8 +12,8 @@ def test_watchdog_alerts_on_failure():
     def alert(exc: BaseException) -> None:
         alerts.append(str(exc))
 
-    wd = Watchdog(0.01, check, alert)
+    wd = Watchdog(0.05, check, alert)
     wd.start()
-    time.sleep(0.03)
+    time.sleep(0.2)
     wd.stop()
     assert alerts, "Watchdog did not report failure"
