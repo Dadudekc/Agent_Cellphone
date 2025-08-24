@@ -15,6 +15,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 import pytest
 import os
+import src.agent_monitors.agent5_monitor as agent5_monitor_module
 
 # Import the monitor
 try:
@@ -174,7 +175,7 @@ class TestAgent5Monitor:
         new_time = monitor.last_activity["Agent-1"]
         assert new_time > old_time, "Activity timestamp should be updated"
 
-    def test_missing_heartbeat_triggers_rescue(self):
+    def test_missing_heartbeat_triggers_rescue(self, monkeypatch):
         """Heartbeat absence should lead to rescue"""
         cfg = MonitorConfig(
             agents=["Agent-1"],
@@ -188,14 +189,17 @@ class TestAgent5Monitor:
         monitor = Agent5Monitor(cfg, test=True)
         monitor.acp = DummyACP()
 
-        hb_file = self.inbox_dir / f"heartbeat_{int(time.time()*1000)}_Agent-1.json"
-        hb_file.write_text(json.dumps({"type": "heartbeat", "agent": "Agent-1", "ts": int(time.time())}))
+        fake_now = [time.time()]
+        monkeypatch.setattr(agent5_monitor_module.time, "time", lambda: fake_now[0])
+
+        hb_file = self.inbox_dir / f"heartbeat_{int(fake_now[0]*1000)}_Agent-1.json"
+        hb_file.write_text(json.dumps({"type": "heartbeat", "agent": "Agent-1", "ts": int(fake_now[0])}))
 
         monitor._tick()
         assert "Agent-1" in monitor.last_activity
         assert len(monitor.acp.sent) == 0
 
-        time.sleep(1.2)
+        fake_now[0] += 2
         monitor._tick()
         assert len(monitor.acp.sent) == 1
     
